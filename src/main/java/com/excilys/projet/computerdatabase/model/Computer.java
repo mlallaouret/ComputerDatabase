@@ -1,19 +1,19 @@
 package com.excilys.projet.computerdatabase.model;
 
-import java.util.Calendar;
+import java.util.Date;
 
 public class Computer {
 
 	private int id;
 	private String name;
-	private Calendar introduced;
-	private Calendar discontinued;
+	private Date introduced;
+	private Date discontinued;
 	private Company company;
 	
 	
 	
-	public Computer(int id, String name, Calendar introduced,
-			Calendar discontinued, Company company) {
+	public Computer(int id, String name, Date introduced,
+			Date discontinued, Company company) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -23,6 +23,11 @@ public class Computer {
 	}
 	
 	
+	public Computer() {
+		super();
+	}
+
+
 	public int getId() {
 		return id;
 	}
@@ -35,16 +40,16 @@ public class Computer {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public Calendar getIntroduced() {
+	public Date getIntroduced() {
 		return introduced;
 	}
-	public void setIntroduced(Calendar introduced) {
+	public void setIntroduced(Date introduced) {
 		this.introduced = introduced;
 	}
-	public Calendar getDiscontinued() {
+	public Date getDiscontinued() {
 		return discontinued;
 	}
-	public void setDiscontinued(Calendar discontinued) {
+	public void setDiscontinued(Date discontinued) {
 		this.discontinued = discontinued;
 	}
 	public Company getCompany() {
