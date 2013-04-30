@@ -1,5 +1,7 @@
 package com.excilys.projet.computerdatabase.servlet;
 
-public class AjoutComputerServlet {
+import javax.servlet.http.HttpServlet;
+
+public class AjoutComputerServlet extends HttpServlet{
 
 }
