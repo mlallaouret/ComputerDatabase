@@ -19,13 +19,30 @@ public class AffichageComputerServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		//super.doGet(req, resp);
+		Integer page=0;
+		Integer total = AffichageComputerService.getInstance().getComputerCount();
+		if(req.getParameter("page")!=null) {
+			page=Integer.parseInt(req.getParameter("page"));
+			req.setAttribute("displayTo", (page +1)*10);
+			if(page<0){
+				page=0;
+			} else if(page>0 && (total - (page)*10<0)){
+				page=0;
+			}
+		}
 		
-		List<Computer> liste = AffichageComputerService.getInstance().getComputers();
+		if((total - (page+1)*10)<1) {
+			req.setAttribute("displayTo", total);
+		} else {
+			req.setAttribute("displayTo", (page +1)*10);
+		}
+		
+		List<Computer> liste = AffichageComputerService.getInstance().getComputers(page);
 		
 		req.setAttribute("computers", liste);
-		req.setAttribute("total", liste.size());
-		
+		req.setAttribute("last", total - (page+1)*10);
+		req.setAttribute("total", total);
+		req.setAttribute("page", page);
 		getServletContext().getRequestDispatcher("/WEB-INF/affichageComputers.jsp").forward(req, resp);
 		
 	}

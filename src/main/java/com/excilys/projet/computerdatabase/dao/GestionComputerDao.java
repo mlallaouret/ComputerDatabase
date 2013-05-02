@@ -19,11 +19,12 @@ public class GestionComputerDao {
 	/**
 	 * Query
 	 */
-	public static final String SELECT_ALL_COMPUTERS_QUERY = "select cpu.id, cpu.name, cpu.introduced, cpu.discontinued, cpy.id, cpy.name  from computer cpu left join company cpy on cpu.company_id=cpy.id";
+	public static final String SELECT_ALL_COMPUTERS_QUERY = "select cpu.id, cpu.name, cpu.introduced, cpu.discontinued, cpy.id, cpy.name  from computer cpu left join company cpy on cpu.company_id=cpy.id limit ?, ?";
 	public static final String SELECT_ONE_COMPUTER_BY_ID_QUERY = "select cpu.id, cpu.name, cpu.introduced, cpu.discontinued, cpy.id, cpy.name  from computer cpu left join company cpy on cpu.company_id=cpy.id where cpu.id = ?";
 	public static final String INSERT_COMPUTER = "insert into computer (name, introduced, discontinued, company_id) values (?,?,?,?)";
 	public static final String DELETE_COMPUTER = "delete from computer where id=?";
 	public static final String UPDATE_COMPUTER = "update computer set name = ?, introduced = ?, discontinued = ? company_id = ? where id =? ";
+	public static final String COUNT_COMPUTER = "select count(id) as count from computer";
 	
 	static {
 		gestionComputerDao = new GestionComputerDao();
@@ -40,13 +41,16 @@ public class GestionComputerDao {
 		return gestionComputerDao;
 	}
 	
-	public List<Computer> getComputers(){
+	public List<Computer> getComputers(int debut, int nombre){
 		PreparedStatement myPreparedStatement=null;
 		List<Computer> liste = new ArrayList<Computer>();
 		
 		Connection conn = JdbcConnexion.getConnection();
 		try {
 			myPreparedStatement = conn.prepareStatement(SELECT_ALL_COMPUTERS_QUERY);
+			myPreparedStatement.setInt(1, debut*10);
+			myPreparedStatement.setInt(2, nombre);
+			
 			ResultSet rs = myPreparedStatement.executeQuery();
 			
 			while(rs.next()){
@@ -87,7 +91,7 @@ public class GestionComputerDao {
 		Connection conn = JdbcConnexion.getConnection();
 		try {
 			myPreparedStatement = conn.prepareStatement(SELECT_ONE_COMPUTER_BY_ID_QUERY);
-			myPreparedStatement.setInt(0, id);
+			myPreparedStatement.setInt(1, id);
 			ResultSet rs = myPreparedStatement.executeQuery();
 			rs.first();
 			Computer c = new Computer();
@@ -115,15 +119,42 @@ public class GestionComputerDao {
 		return computer;
 	}
 	
+public Integer getComputerCount(){
+		
+		Integer count = null;
+		PreparedStatement myPreparedStatement=null;
+		Connection conn = JdbcConnexion.getConnection();
+		try {
+			myPreparedStatement = conn.prepareStatement(COUNT_COMPUTER);
+			ResultSet rs = myPreparedStatement.executeQuery();
+			rs.first();
+			count = rs.getInt("count");
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			Logger.getLogger("main").log(Level.WARNING, "Erreur lors de la récupération du compte des ordinateurs");
+		} finally{
+			try {
+				myPreparedStatement.close();
+			} catch (SQLException e) {
+				Logger.getLogger("main").log(Level.WARNING, "Erreur lors de la récupération du compte des ordinateurs");
+				e.printStackTrace();
+			}
+			JdbcConnexion.closeConnection(conn);
+		}
+		
+		return count;
+	}
+	
 	public void insertComputer(Computer computer) {
 		PreparedStatement myPreparedStatement=null;
 		Connection conn = JdbcConnexion.getConnection();
 		try {
 			myPreparedStatement = conn.prepareStatement(INSERT_COMPUTER);
-			myPreparedStatement.setString(0, computer.getName());
-			myPreparedStatement.setDate(1, new java.sql.Date(computer.getIntroduced().getTime()));
-			myPreparedStatement.setDate(2, new java.sql.Date(computer.getDiscontinued().getTime()));
-			myPreparedStatement.setInt(3, computer.getCompany().getId());
+			myPreparedStatement.setString(1, computer.getName());
+			myPreparedStatement.setDate(2, new java.sql.Date(computer.getIntroduced().getTime()));
+			myPreparedStatement.setDate(3, new java.sql.Date(computer.getDiscontinued().getTime()));
+			myPreparedStatement.setInt(4, computer.getCompany().getId());
 			int result = myPreparedStatement.executeUpdate();
 			
 		} catch (SQLException e) {
@@ -145,7 +176,7 @@ public class GestionComputerDao {
 		Connection conn = JdbcConnexion.getConnection();
 		try {
 			myPreparedStatement = conn.prepareStatement(UPDATE_COMPUTER);
-			myPreparedStatement.setInt(0, computer.getId());
+			myPreparedStatement.setInt(1, computer.getId());
 			int result = myPreparedStatement.executeUpdate();
 			
 		} catch (SQLException e) {
@@ -167,10 +198,10 @@ public class GestionComputerDao {
 		Connection conn = JdbcConnexion.getConnection();
 		try {
 			myPreparedStatement = conn.prepareStatement(UPDATE_COMPUTER);
-			myPreparedStatement.setString(0, computer.getName());
-			myPreparedStatement.setDate(1, new java.sql.Date(computer.getIntroduced().getTime()));
-			myPreparedStatement.setDate(2, new java.sql.Date(computer.getDiscontinued().getTime()));
-			myPreparedStatement.setInt(3, computer.getCompany().getId());
+			myPreparedStatement.setString(1, computer.getName());
+			myPreparedStatement.setDate(2, new java.sql.Date(computer.getIntroduced().getTime()));
+			myPreparedStatement.setDate(3, new java.sql.Date(computer.getDiscontinued().getTime()));
+			myPreparedStatement.setInt(4, computer.getCompany().getId());
 			int result = myPreparedStatement.executeUpdate();
 			
 		} catch (SQLException e) {

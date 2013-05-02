@@ -8,7 +8,7 @@ import com.excilys.projet.computerdatabase.model.Computer;
 public class AffichageComputerService {
 
 	private GestionComputerDao dao;
-	
+	private final static int MAX_AFFICHAGE = 10;
 	private static AffichageComputerService affichageComputerService = null;
 	
 	private AffichageComputerService() {
@@ -23,8 +23,12 @@ public class AffichageComputerService {
 		}
 	}
 	
-	public List<Computer> getComputers(){
-		return dao.getComputers();
+	public List<Computer> getComputers(int debut){
+		return dao.getComputers(debut, MAX_AFFICHAGE);
+	}
+	
+	public Integer getComputerCount(){
+		return dao.getComputerCount();
 	}
 	
 	

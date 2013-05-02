@@ -88,13 +88,21 @@
 
 		<div id="pagination" class="pagination">
 			<ul>
+				<c:if test="${page==0}">
+					<li class="prev disabled"><a>&larr; Previous</a></li>
+				</c:if>
+				<c:if test="${page!=0}">
+					<li class="prev"><a href="/ComputerDatabase/index.html?page=${page -1}">&larr; Previous</a></li>
+				</c:if>
 
-				<li class="prev disabled"><a>&larr; Previous</a></li>
-
-				<li class="current"><a>Displaying 1 to 10 of 574</a></li>
-
-				<li class="next"><a href="/computers?p=1">Next &rarr;</a></li>
-
+				<li class="current"><a>Displaying ${page *10 +1} to ${displayTo} of ${total }</a></li>
+				
+				<c:if test="${last>=1}">
+					<li class="next"><a href="/ComputerDatabase/index.html?page=${page +1}">Next &rarr;</a></li>
+				</c:if>
+				<c:if test="${last<1}">
+					<li class="next disabled"><a >Next &rarr;</a></li>
+				</c:if>
 			</ul>
 		</div>
 
