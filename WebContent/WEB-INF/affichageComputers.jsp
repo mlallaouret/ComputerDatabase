@@ -72,7 +72,7 @@
 
 				<c:forEach items="${computers}" var="computer">		
 					<tr>
-						<td><a href="/affichageComputers/381">${computer.name}</a></td>
+						<td><a href="/ajoutComputer?id=${computer.id}">${computer.name}</a></td>
 						<td><em>${computer.introduced}</em></td>
 						<td><em>${computer.discontinued}</em></td>
 						<td><em>${computer.company.name}</em></td>
