@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,6 +24,7 @@ public class GestionComputerDao {
 	public static final String DELETE_COMPUTER = "delete from computer where id=?";
 	public static final String UPDATE_COMPUTER = "update computer set name = ?, introduced = ?, discontinued = ? company_id = ? where id =? ";
 	public static final String COUNT_COMPUTER = "select count(id) as count from computer";
+	public static final String SELECT_ALL_COMPANIES_QUERY = "select id, name from company";
 	
 	static {
 		gestionComputerDao = new GestionComputerDao();
@@ -94,15 +94,14 @@ public class GestionComputerDao {
 			myPreparedStatement.setInt(1, id);
 			ResultSet rs = myPreparedStatement.executeQuery();
 			rs.first();
-			Computer c = new Computer();
-			c.setId(rs.getInt("cpu.id"));
-			c.setName(rs.getString("cpu.name"));
-			c.setIntroduced(rs.getDate("cpu.introduced"));
-			c.setDiscontinued(rs.getDate("cpu.discontinued"));
+			computer.setId(rs.getInt("cpu.id"));
+			computer.setName(rs.getString("cpu.name"));
+			computer.setIntroduced(rs.getDate("cpu.introduced"));
+			computer.setDiscontinued(rs.getDate("cpu.discontinued"));
 			Company cpy = new Company();
 			cpy.setId(rs.getInt("cpy.id"));
 			cpy.setName(rs.getString("cpy.name"));
-			c.setCompany(cpy);
+			computer.setCompany(cpy);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			Logger.getLogger("main").log(Level.WARNING, "Erreur lors de la récupération d'un ordinateur");
@@ -119,7 +118,7 @@ public class GestionComputerDao {
 		return computer;
 	}
 	
-public Integer getComputerCount(){
+	public Integer getComputerCount(){
 		
 		Integer count = null;
 		PreparedStatement myPreparedStatement=null;
@@ -216,6 +215,41 @@ public Integer getComputerCount(){
 			}
 			JdbcConnexion.closeConnection(conn);
 		}
+	}
+	
+	public List<Company> getCompanies(){
+		PreparedStatement myPreparedStatement=null;
+		List<Company> liste = new ArrayList<Company>();
+		
+		Connection conn = JdbcConnexion.getConnection();
+		try {
+			myPreparedStatement = conn.prepareStatement(SELECT_ALL_COMPANIES_QUERY);
+			
+			ResultSet rs = myPreparedStatement.executeQuery();
+			
+			while(rs.next()){
+				Company cpy = new Company();
+				cpy.setId(rs.getInt("id"));
+				cpy.setName(rs.getString("name"));
+				liste.add(cpy);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			Logger.getLogger("main").log(Level.WARNING, "Erreur lors de la récupération de la liste des sociétés");
+			e.printStackTrace();
+		} finally{
+			try {
+				myPreparedStatement.close();
+			} catch (SQLException e) {
+				Logger.getLogger("main").log(Level.WARNING, "Erreur lors de la récupération de la liste des sociétés");
+				e.printStackTrace();
+			}
+			JdbcConnexion.closeConnection(conn);
+		}
+		
+		
+		
+		return liste;
 	}
 	
 }

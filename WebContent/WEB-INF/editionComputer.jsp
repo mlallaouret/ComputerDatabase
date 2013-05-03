@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,8 +14,7 @@
 
 	<header class="topbar">
 		<h1 class="fill">
-			<a href="/"> Play 2.0 sample application &mdash; Computer
-				database </a>
+			<a href="/"> My super Computer database </a>
 		</h1>
 	</header>
 
@@ -25,7 +25,7 @@
 
 
 
-		<form action="/computers/381" method="POST">
+		<form action="/validation" method="POST">
 
 
 			<fieldset>
@@ -35,7 +35,7 @@
 					<label for="name">Computer name</label>
 					<div class="input">
 
-						<input type="text" id="name" name="name" value="${c.name}"> <span
+						<input type="text" id="name" name="name" value="${computer.name}"> <span
 							class="help-inline">Required</span>
 					</div>
 				</div>
@@ -46,7 +46,7 @@
 					<label for="introduced">Introduced date</label>
 					<div class="input">
 
-						<input type="text" id="introduced" name="introduced" value="">
+						<input type="text" id="introduced" name="introduced" value="${computer.introduced }">
 
 						<span class="help-inline">Date (&#x27;yyyy-MM-dd&#x27;)</span>
 					</div>
@@ -56,7 +56,7 @@
 					<label for="discontinued">Discontinued date</label>
 					<div class="input">
 
-						<input type="text" id="discontinued" name="discontinued" value="">
+						<input type="text" id="discontinued" name="discontinued" value="${computer.discontinued }">
 
 						<span class="help-inline">Date (&#x27;yyyy-MM-dd&#x27;)</span>
 					</div>
@@ -72,7 +72,7 @@
 							<option class="blank" value="">-- Choose a company --</option>
 
 							<c:forEach items="${companies}" var="company">		
-								<option value="${company.id }">${$company.name }</option>
+								<option value="${company.id }">${company.name }</option>
 							</c:forEach>
 
 						</select> <span class="help-inline"></span>
@@ -95,8 +95,8 @@
 
 
 
-		<form action="/computers/381/delete" method="POST" class="topRight">
-
+		<form action="/delete" method="POST" class="topRight">
+			
 			<input type="submit" value="Delete this computer" class="btn danger">
 
 		</form>

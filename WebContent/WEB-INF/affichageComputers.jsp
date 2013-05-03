@@ -39,7 +39,7 @@
 			</form>
 
 
-			<a class="btn success" id="add" href="/affichageComputers/new">Add a new
+			<a class="btn success" id="add" href="ajoutComputer">Add a new
 				computer</a>
 
 		</div>
@@ -72,7 +72,7 @@
 
 				<c:forEach items="${computers}" var="computer">		
 					<tr>
-						<td><a href="/ajoutComputer?id=${computer.id}">${computer.name}</a></td>
+						<td><a href="/ComputerDatabase/ajoutComputer?id=${computer.id}">${computer.name}</a></td>
 						<td><em>${computer.introduced}</em></td>
 						<td><em>${computer.discontinued}</em></td>
 						<td><em>${computer.company.name}</em></td>
