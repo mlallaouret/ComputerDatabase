@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.excilys.projet.computerdatabase.service.EditionComputerService;
 
+@SuppressWarnings("serial")
 @WebServlet("/ajoutcomputer")
 public class AjoutComputerServlet extends HttpServlet{
 

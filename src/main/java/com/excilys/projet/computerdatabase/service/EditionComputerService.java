@@ -42,6 +42,10 @@ public class EditionComputerService {
 	public List<Company> getCompanies(){
 		return dao.getCompanies();
 	}
+	
+	public void insertOrUpdate(Computer computer) {
+		dao.insertOrUpdateComputer(computer);
+	}
 
 	
 }

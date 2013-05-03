@@ -25,6 +25,7 @@ public class GestionComputerDao {
 	public static final String UPDATE_COMPUTER = "update computer set name = ?, introduced = ?, discontinued = ? company_id = ? where id =? ";
 	public static final String COUNT_COMPUTER = "select count(id) as count from computer";
 	public static final String SELECT_ALL_COMPANIES_QUERY = "select id, name from company";
+	public static final String SELECT_ONE_COMPANY_BY_ID_QUERY = "select id, name from company where id = ?";
 	
 	static {
 		gestionComputerDao = new GestionComputerDao();
@@ -66,7 +67,6 @@ public class GestionComputerDao {
 				liste.add(c);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			Logger.getLogger("main").log(Level.WARNING, "Erreur lors de la récupération de la liste des ordinateurs");
 			e.printStackTrace();
 		} finally{
@@ -103,7 +103,6 @@ public class GestionComputerDao {
 			cpy.setName(rs.getString("cpy.name"));
 			computer.setCompany(cpy);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			Logger.getLogger("main").log(Level.WARNING, "Erreur lors de la récupération d'un ordinateur");
 		} finally{
 			try {
@@ -130,7 +129,6 @@ public class GestionComputerDao {
 			count = rs.getInt("count");
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			Logger.getLogger("main").log(Level.WARNING, "Erreur lors de la récupération du compte des ordinateurs");
 		} finally{
 			try {
@@ -157,7 +155,6 @@ public class GestionComputerDao {
 			int result = myPreparedStatement.executeUpdate();
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			Logger.getLogger("main").log(Level.WARNING, "Erreur lors de l'insert d'un ordinateur");
 		} finally{
 			try {
@@ -179,7 +176,6 @@ public class GestionComputerDao {
 			int result = myPreparedStatement.executeUpdate();
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			Logger.getLogger("main").log(Level.WARNING, "Erreur lors de la suppression d'un ordinateur");
 		} finally{
 			try {
@@ -204,13 +200,40 @@ public class GestionComputerDao {
 			int result = myPreparedStatement.executeUpdate();
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			Logger.getLogger("main").log(Level.WARNING, "Erreur lors de l'update d'un ordinateur");
 		} finally{
 			try {
 				myPreparedStatement.close();
 			} catch (SQLException e) {
 				Logger.getLogger("main").log(Level.WARNING, "Erreur lors de l'update d'un ordinateur");
+				e.printStackTrace();
+			}
+			JdbcConnexion.closeConnection(conn);
+		}
+	}
+	
+	public void insertOrUpdateComputer(Computer computer) {
+		PreparedStatement myPreparedStatement=null;
+		Connection conn = JdbcConnexion.getConnection();
+		try {
+			if(computer.getId()==0){
+				myPreparedStatement = conn.prepareStatement(UPDATE_COMPUTER);
+			} else {
+				myPreparedStatement = conn.prepareStatement(INSERT_COMPUTER);
+			}
+			myPreparedStatement.setString(1, computer.getName());
+			myPreparedStatement.setDate(2, new java.sql.Date(computer.getIntroduced().getTime()));
+			myPreparedStatement.setDate(3, new java.sql.Date(computer.getDiscontinued().getTime()));
+			myPreparedStatement.setInt(4, computer.getCompany().getId());
+			int result = myPreparedStatement.executeUpdate();
+			
+		} catch (SQLException e) {
+			Logger.getLogger("main").log(Level.WARNING, "Erreur lors de l'inset/update d'un ordinateur");
+		} finally{
+			try {
+				myPreparedStatement.close();
+			} catch (SQLException e) {
+				Logger.getLogger("main").log(Level.WARNING, "Erreur lors de l'insert/update d'un ordinateur");
 				e.printStackTrace();
 			}
 			JdbcConnexion.closeConnection(conn);
@@ -234,7 +257,6 @@ public class GestionComputerDao {
 				liste.add(cpy);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			Logger.getLogger("main").log(Level.WARNING, "Erreur lors de la récupération de la liste des sociétés");
 			e.printStackTrace();
 		} finally{
@@ -250,6 +272,38 @@ public class GestionComputerDao {
 		
 		
 		return liste;
+	}
+	
+	public Company getCompany(int id){
+		PreparedStatement myPreparedStatement=null;
+		Company company = new Company();
+		
+		Connection conn = JdbcConnexion.getConnection();
+		try {
+			myPreparedStatement = conn.prepareStatement(SELECT_ONE_COMPANY_BY_ID_QUERY);
+			myPreparedStatement.setInt(1, id);
+			
+			ResultSet rs = myPreparedStatement.executeQuery();
+			
+			rs.first();
+			company.setId(rs.getInt("id"));
+			company.setName(rs.getString("name"));
+		} catch (SQLException e) {
+			Logger.getLogger("main").log(Level.WARNING, "Erreur lors de la récupération d'une société");
+			e.printStackTrace();
+		} finally{
+			try {
+				myPreparedStatement.close();
+			} catch (SQLException e) {
+				Logger.getLogger("main").log(Level.WARNING, "Erreur lors de la récupération d'une société");
+				e.printStackTrace();
+			}
+			JdbcConnexion.closeConnection(conn);
+		}
+		
+		
+		
+		return company;
 	}
 	
 }
