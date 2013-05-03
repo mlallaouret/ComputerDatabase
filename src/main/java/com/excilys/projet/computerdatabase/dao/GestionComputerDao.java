@@ -22,7 +22,7 @@ public class GestionComputerDao {
 	public static final String SELECT_ONE_COMPUTER_BY_ID_QUERY = "select cpu.id, cpu.name, cpu.introduced, cpu.discontinued, cpy.id, cpy.name  from computer cpu left join company cpy on cpu.company_id=cpy.id where cpu.id = ?";
 	public static final String INSERT_COMPUTER = "insert into computer (name, introduced, discontinued, company_id) values (?,?,?,?)";
 	public static final String DELETE_COMPUTER = "delete from computer where id=?";
-	public static final String UPDATE_COMPUTER = "update computer set name = ?, introduced = ?, discontinued = ? company_id = ? where id =? ";
+	public static final String UPDATE_COMPUTER = "update computer set name = ?, introduced = ?, discontinued = ?, company_id = ? where id =? ";
 	public static final String COUNT_COMPUTER = "select count(id) as count from computer";
 	public static final String SELECT_ALL_COMPANIES_QUERY = "select id, name from company";
 	public static final String SELECT_ONE_COMPANY_BY_ID_QUERY = "select id, name from company where id = ?";
@@ -217,14 +217,23 @@ public class GestionComputerDao {
 		PreparedStatement myPreparedStatement=null;
 		Connection conn = JdbcConnexion.getConnection();
 		try {
-			if(computer.getId()==0){
+			if(computer.getId()!=0){
 				myPreparedStatement = conn.prepareStatement(UPDATE_COMPUTER);
+				myPreparedStatement.setInt(5, computer.getId());
 			} else {
 				myPreparedStatement = conn.prepareStatement(INSERT_COMPUTER);
 			}
 			myPreparedStatement.setString(1, computer.getName());
-			myPreparedStatement.setDate(2, new java.sql.Date(computer.getIntroduced().getTime()));
-			myPreparedStatement.setDate(3, new java.sql.Date(computer.getDiscontinued().getTime()));
+			if(computer.getIntroduced()!=null) {
+				myPreparedStatement.setDate(2, new java.sql.Date(computer.getIntroduced().getTime()));
+			} else {
+				myPreparedStatement.setDate(2, null);
+			}
+			if(computer.getDiscontinued()!=null) {
+				myPreparedStatement.setDate(3, new java.sql.Date(computer.getDiscontinued().getTime()));
+			} else {
+				myPreparedStatement.setDate(3, null);
+			}
 			myPreparedStatement.setInt(4, computer.getCompany().getId());
 			int result = myPreparedStatement.executeUpdate();
 			

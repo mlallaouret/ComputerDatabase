@@ -25,7 +25,7 @@
 
 
 
-		<form action="/validation" method="POST">
+		<form action="/ComputerDatabase/validation" method="POST">
 
 
 			<fieldset>
@@ -86,7 +86,7 @@
 
 			<div class="actions">
 				<input type="submit" value="Save this computer" class="btn primary">
-				or <a href="/ComputerDatabase/index.html" class="btn">Cancel</a>
+				or <a href="/ComputerDatabase/index" class="btn">Cancel</a>
 			</div>
 
 

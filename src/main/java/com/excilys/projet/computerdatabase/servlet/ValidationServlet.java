@@ -62,6 +62,9 @@ public class ValidationServlet extends HttpServlet {
 					error = true;
 					req.setAttribute("introducedError", "La date n'est pas au bon format");
 				}
+				
+			}else{
+				error = true;
 			}
 		}
 		
@@ -77,14 +80,25 @@ public class ValidationServlet extends HttpServlet {
 					error = true;
 					req.setAttribute("discontinuedError", "La date n'est pas au bon format");
 				}
+			}else{
+				error = true;
 			}
+			
 		}
 		
 		if(!error) {
 			ValidationService.getInstance().insertOrUpdate(computer);
-			getServletContext().getRequestDispatcher("/index.html").forward(req, resp);
-		}	
+			resp.sendRedirect("/ComputerDatabase/index");
+		} else {
+			if(req.getParameter("id")!=null){
+				
+				getServletContext().getRequestDispatcher("/editionComputer").forward(req, resp);
+			}else {
+				getServletContext().getRequestDispatcher("/ajoutComputer").forward(req, resp);
+			}
+			
+		}
 		
 	}
-	
+
 }

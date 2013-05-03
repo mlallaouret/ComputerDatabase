@@ -27,8 +27,6 @@
 
 		<div id="actions">
 
-
-
 			<form action="/affichageComputers" method="GET">
 
 				<input type="search" id="searchbox" name="f" value=""
@@ -39,7 +37,7 @@
 			</form>
 
 
-			<a class="btn success" id="add" href="ajoutComputer">Add a new
+			<a class="btn success" id="add" href="/ComputerDatabase/ajoutComputer">Add a new
 				computer</a>
 
 		</div>
@@ -72,7 +70,7 @@
 
 				<c:forEach items="${computers}" var="computer">		
 					<tr>
-						<td><a href="/ComputerDatabase/ajoutComputer?id=${computer.id}">${computer.name}</a></td>
+						<td><a href="/ComputerDatabase/editionComputer?id=${computer.id}">${computer.name}</a></td>
 						<td><em>${computer.introduced}</em></td>
 						<td><em>${computer.discontinued}</em></td>
 						<td><em>${computer.company.name}</em></td>
@@ -92,13 +90,13 @@
 					<li class="prev disabled"><a>&larr; Previous</a></li>
 				</c:if>
 				<c:if test="${page!=0}">
-					<li class="prev"><a href="/ComputerDatabase/index.html?page=${page -1}">&larr; Previous</a></li>
+					<li class="prev"><a href="/ComputerDatabase/index?page=${page -1}">&larr; Previous</a></li>
 				</c:if>
 
 				<li class="current"><a>Displaying ${displayFrom} to ${displayTo} of ${total }</a></li>
 				
 				<c:if test="${last>=1}">
-					<li class="next"><a href="/ComputerDatabase/index.html?page=${page +1}">Next &rarr;</a></li>
+					<li class="next"><a href="/ComputerDatabase/index?page=${page +1}">Next &rarr;</a></li>
 				</c:if>
 				<c:if test="${last<1}">
 					<li class="next disabled"><a >Next &rarr;</a></li>

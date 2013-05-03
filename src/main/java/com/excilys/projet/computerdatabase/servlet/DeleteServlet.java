@@ -19,7 +19,7 @@ public class DeleteServlet extends HttpServlet {
 			throws ServletException, IOException {
 		EditionComputerService.getInstance().deleteComputer(Integer.parseInt(req.getParameter("id")));
 		
-		getServletContext().getRequestDispatcher("/inde.html").forward(req, resp);
+		getServletContext().getRequestDispatcher("/index").forward(req, resp);
 	}
 
 }

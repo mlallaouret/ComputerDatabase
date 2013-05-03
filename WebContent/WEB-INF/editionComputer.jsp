@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,7 +26,7 @@
 
 
 
-		<form action="/validation" method="POST">
+		<form action="/ComputerDatabase/validation" method="POST">
 
 			<input type="hidden" name="id" value="${param.id }"/>
 			<fieldset>
@@ -46,7 +47,7 @@
 					<label for="introduced">Introduced date</label>
 					<div class="input">
 
-						<input type="text" id="introduced" name="introduced" value="${computer.introduced }">
+						<input type="text" id="introduced" name="introduced" value="<fmt:formatDate value="${computer.introduced }" pattern="yyyy-MM-dd" />">
 
 						<span class="help-inline">Date (&#x27;yyyy-MM-dd&#x27;)</span>
 					</div>
@@ -56,7 +57,7 @@
 					<label for="discontinued">Discontinued date</label>
 					<div class="input">
 
-						<input type="text" id="discontinued" name="discontinued" value="${computer.discontinued }">
+						<input type="text" id="discontinued" name="discontinued" value="<fmt:formatDate value="${computer.discontinued }" pattern="yyyy-MM-dd" />">
 
 						<span class="help-inline">Date (&#x27;yyyy-MM-dd&#x27;)</span>
 					</div>
@@ -72,7 +73,7 @@
 							<option class="blank" value="">-- Choose a company --</option>
 
 							<c:forEach items="${companies}" var="company">		
-								<option value="${company.id }">${company.name }</option>
+								<option value="${company.id }" <c:if test="${company.id==computer.company.id }">selected </c:if> >${company.name }</option>
 							</c:forEach>
 
 						</select> <span class="help-inline"></span>
@@ -86,7 +87,7 @@
 
 			<div class="actions">
 				<input type="submit" value="Save this computer" class="btn primary">
-				or <a href="/ComputerDatabase/index.html" class="btn">Cancel</a>
+				or <a href="/ComputerDatabase/index" class="btn">Cancel</a>
 			</div>
 
 

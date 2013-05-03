@@ -13,7 +13,7 @@ import com.excilys.projet.computerdatabase.model.Computer;
 import com.excilys.projet.computerdatabase.service.AffichageComputerService;
 
 @SuppressWarnings("serial")
-@WebServlet("/index.html")
+@WebServlet("/index")
 public class AffichageComputerServlet extends HttpServlet {
 
 	@Override
