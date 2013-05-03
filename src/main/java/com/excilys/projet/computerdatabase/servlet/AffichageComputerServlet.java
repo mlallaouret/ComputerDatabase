@@ -36,7 +36,8 @@ public class AffichageComputerServlet extends HttpServlet {
 		} else {
 			req.setAttribute("displayTo", (page +1)*10);
 		}
-		
+		int displayFrom = page *AffichageComputerService.MAX_AFFICHAGE +1;
+		req.setAttribute("displayFrom", displayFrom);
 		List<Computer> liste = AffichageComputerService.getInstance().getComputers(page);
 		
 		req.setAttribute("computers", liste);

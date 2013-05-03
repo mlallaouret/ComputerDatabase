@@ -18,16 +18,21 @@ public class EditionComputerServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		
-		int id=-1;
+		int id=0;
 		
 		if(req.getParameter("id")!=null) {
 			id = Integer.parseInt(req.getParameter("id"));
 		}
+		if(!EditionComputerService.getInstance().isIdExists(id)) {
+			getServletContext().getRequestDispatcher("/index.html").forward(req, resp);
+		} else {
+			req.setAttribute("computer", EditionComputerService.getInstance().getComputer(id));
+			req.setAttribute("companies", EditionComputerService.getInstance().getCompanies());
+			
+			getServletContext().getRequestDispatcher("/WEB-INF/editionComputer.jsp").forward(req, resp);
+		}
 		
-		req.setAttribute("computer", EditionComputerService.getInstance().getComputer(id));
-		req.setAttribute("companies", EditionComputerService.getInstance().getCompanies());
 		
-		getServletContext().getRequestDispatcher("/WEB-INF/editionComputer.jsp").forward(req, resp);
 		
 	}
 

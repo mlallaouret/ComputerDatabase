@@ -95,7 +95,7 @@
 					<li class="prev"><a href="/ComputerDatabase/index.html?page=${page -1}">&larr; Previous</a></li>
 				</c:if>
 
-				<li class="current"><a>Displaying ${page *10 +1} to ${displayTo} of ${total }</a></li>
+				<li class="current"><a>Displaying ${displayFrom} to ${displayTo} of ${total }</a></li>
 				
 				<c:if test="${last>=1}">
 					<li class="next"><a href="/ComputerDatabase/index.html?page=${page +1}">Next &rarr;</a></li>

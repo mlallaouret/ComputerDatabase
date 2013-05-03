@@ -27,10 +27,10 @@
 
 		<form action="/validation" method="POST">
 
-
+			<input type="hidden" name="id" value="${param.id }"/>
 			<fieldset>
 
-
+				
 				<div class="clearfix ">
 					<label for="name">Computer name</label>
 					<div class="input">
@@ -96,8 +96,8 @@
 
 
 		<form action="/delete" method="POST" class="topRight">
-			
-			<input type="submit" value="Delete this computer" class="btn danger">
+			<input type="hidden" value="${computer.id}" name="id" />
+			<input type="submit" value="Delete this computer" class="btn danger"/>
 
 		</form>
 

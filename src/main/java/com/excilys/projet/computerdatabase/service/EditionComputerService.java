@@ -31,8 +31,8 @@ public class EditionComputerService {
 		dao.updateComputer(c);
 	}
 	
-	public void deleteComputer(Computer c){
-		dao.deleteComputer(c);
+	public void deleteComputer(int id){
+		dao.deleteComputer(id);
 	}
 	
 	public Computer getComputer(int id){
@@ -45,6 +45,10 @@ public class EditionComputerService {
 	
 	public void insertOrUpdate(Computer computer) {
 		dao.insertOrUpdateComputer(computer);
+	}
+	
+	public boolean isIdExists(int id) {
+		return dao.isIdExists(id);
 	}
 
 	

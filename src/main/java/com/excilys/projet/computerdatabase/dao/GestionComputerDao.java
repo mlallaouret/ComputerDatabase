@@ -26,6 +26,7 @@ public class GestionComputerDao {
 	public static final String COUNT_COMPUTER = "select count(id) as count from computer";
 	public static final String SELECT_ALL_COMPANIES_QUERY = "select id, name from company";
 	public static final String SELECT_ONE_COMPANY_BY_ID_QUERY = "select id, name from company where id = ?";
+	public static final String ID_EXISTS_QUERY = "select count(id) as count from computer where id = ?";
 	
 	static {
 		gestionComputerDao = new GestionComputerDao();
@@ -167,12 +168,12 @@ public class GestionComputerDao {
 		}
 	}
 	
-	public void deleteComputer(Computer computer){
+	public void deleteComputer(int id){
 		PreparedStatement myPreparedStatement=null;
 		Connection conn = JdbcConnexion.getConnection();
 		try {
 			myPreparedStatement = conn.prepareStatement(UPDATE_COMPUTER);
-			myPreparedStatement.setInt(1, computer.getId());
+			myPreparedStatement.setInt(1, id);
 			int result = myPreparedStatement.executeUpdate();
 			
 		} catch (SQLException e) {
@@ -304,6 +305,35 @@ public class GestionComputerDao {
 		
 		
 		return company;
+	}
+	
+	public boolean isIdExists(int id) {
+		PreparedStatement myPreparedStatement=null;
+		
+		Connection conn = JdbcConnexion.getConnection();
+		try {
+			myPreparedStatement = conn.prepareStatement(ID_EXISTS_QUERY);
+			myPreparedStatement.setInt(1, id);
+			
+			ResultSet rs = myPreparedStatement.executeQuery();
+			
+			rs.first();
+			if(rs.getInt("count")==1) {
+				return true;
+			}
+		} catch (SQLException e) {
+			Logger.getLogger("main").log(Level.WARNING, "Erreur lors de la récupération d'une société");
+			e.printStackTrace();
+		} finally{
+			try {
+				myPreparedStatement.close();
+			} catch (SQLException e) {
+				Logger.getLogger("main").log(Level.WARNING, "Erreur lors de la récupération d'une société");
+				e.printStackTrace();
+			}
+			JdbcConnexion.closeConnection(conn);
+		}
+		return false;
 	}
 	
 }

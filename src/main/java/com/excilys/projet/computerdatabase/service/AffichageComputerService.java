@@ -8,7 +8,7 @@ import com.excilys.projet.computerdatabase.model.Computer;
 public class AffichageComputerService {
 
 	private GestionComputerDao dao;
-	private final static int MAX_AFFICHAGE = 10;
+	public final static int MAX_AFFICHAGE = 10;
 	private static AffichageComputerService affichageComputerService = null;
 	
 	private AffichageComputerService() {
