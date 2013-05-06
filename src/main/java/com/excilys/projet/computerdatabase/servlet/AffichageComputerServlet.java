@@ -10,17 +10,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.excilys.projet.computerdatabase.model.Computer;
-import com.excilys.projet.computerdatabase.service.AffichageComputerService;
+import com.excilys.projet.computerdatabase.service.GestionComputerService;
 
 @SuppressWarnings("serial")
 @WebServlet("/index")
 public class AffichageComputerServlet extends HttpServlet {
 
+	private final static int MAX_AFFICHAGE = 10;
+	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		Integer page=0;
-		Integer total = AffichageComputerService.getInstance().getComputerCount();
+		Integer total = GestionComputerService.getInstance().getComputerCount();
 		if(req.getParameter("page")!=null) {
 			page=Integer.parseInt(req.getParameter("page"));
 			req.setAttribute("displayTo", (page +1)*10);
@@ -36,9 +38,9 @@ public class AffichageComputerServlet extends HttpServlet {
 		} else {
 			req.setAttribute("displayTo", (page +1)*10);
 		}
-		int displayFrom = page *AffichageComputerService.MAX_AFFICHAGE +1;
+		int displayFrom = page * MAX_AFFICHAGE +1;
 		req.setAttribute("displayFrom", displayFrom);
-		List<Computer> liste = AffichageComputerService.getInstance().getComputers(page);
+		List<Computer> liste = GestionComputerService.getInstance().getComputers(page, MAX_AFFICHAGE);
 		
 		req.setAttribute("computers", liste);
 		req.setAttribute("last", total - (page+1)*10);

@@ -6,25 +6,39 @@ import com.excilys.projet.computerdatabase.dao.GestionComputerDao;
 import com.excilys.projet.computerdatabase.model.Company;
 import com.excilys.projet.computerdatabase.model.Computer;
 
-public class EditionComputerService {
+public class GestionComputerService {
 
-	
 	private GestionComputerDao dao;
-	private static EditionComputerService editionComputerService = null;
+	private static GestionComputerService gestionComputerService = null;
 	
-	private EditionComputerService() {
+	private GestionComputerService() {
 		dao = GestionComputerDao.getInstance(); 
 	}
 	
-	public static EditionComputerService getInstance() {
+	public static GestionComputerService getInstance() {
 		
-		if(editionComputerService==null) {
-			return new EditionComputerService();
+		if(gestionComputerService==null) {
+			return new GestionComputerService();
 		} else {
-			return editionComputerService;
+			return gestionComputerService;
 		}
 		
-		
+	}
+	
+	public Company getCompany(int id){
+		return dao.getCompany(id);
+	}
+	
+	public void insertOrUpdate(Computer computer){
+		dao.insertOrUpdateComputer(computer);
+	}
+	
+	public List<Computer> getComputers(int debut, int nombre){
+		return dao.getComputers(debut, nombre);
+	}
+	
+	public Integer getComputerCount(){
+		return dao.getComputerCount();
 	}
 	
 	public void updateComputer(Computer c){
@@ -43,13 +57,10 @@ public class EditionComputerService {
 		return dao.getCompanies();
 	}
 	
-	public void insertOrUpdate(Computer computer) {
-		dao.insertOrUpdateComputer(computer);
-	}
 	
 	public boolean isIdExists(int id) {
 		return dao.isIdExists(id);
 	}
-
+	
 	
 }

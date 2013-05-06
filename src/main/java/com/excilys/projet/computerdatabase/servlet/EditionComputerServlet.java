@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.excilys.projet.computerdatabase.model.Computer;
-import com.excilys.projet.computerdatabase.service.EditionComputerService;
+import com.excilys.projet.computerdatabase.service.GestionComputerService;
 
 @SuppressWarnings("serial")
 @WebServlet("/editionComputer")
@@ -31,13 +31,13 @@ public class EditionComputerServlet extends HttpServlet {
 		if(req.getParameter("id")!=null) {
 			id = Integer.parseInt(req.getParameter("id"));
 		}
-		if(!EditionComputerService.getInstance().isIdExists(id)) {
+		if(!GestionComputerService.getInstance().isIdExists(id)) {
 			getServletContext().getRequestDispatcher("/index").forward(req, resp);
 		} else {
-			Computer computer = EditionComputerService.getInstance().getComputer(id);
+			Computer computer = GestionComputerService.getInstance().getComputer(id);
 			
-			req.setAttribute("computer", EditionComputerService.getInstance().getComputer(id));
-			req.setAttribute("companies", EditionComputerService.getInstance().getCompanies());
+			req.setAttribute("computer", GestionComputerService.getInstance().getComputer(id));
+			req.setAttribute("companies", GestionComputerService.getInstance().getCompanies());
 			
 			getServletContext().getRequestDispatcher("/WEB-INF/editionComputer.jsp").forward(req, resp);
 		}

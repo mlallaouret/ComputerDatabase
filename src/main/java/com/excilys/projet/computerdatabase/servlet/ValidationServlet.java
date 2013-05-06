@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.excilys.projet.computerdatabase.model.Computer;
-import com.excilys.projet.computerdatabase.service.ValidationService;
+import com.excilys.projet.computerdatabase.service.GestionComputerService;
 
 @WebServlet("/validation")
 @SuppressWarnings("serial")
@@ -45,7 +45,7 @@ public class ValidationServlet extends HttpServlet {
 			error=true;
 			req.setAttribute("companyError", "Le nom de l'ordinateur doit être précisé");
 		} else {
-			computer.setCompany(ValidationService.getInstance().getCompany(Integer.parseInt(req.getParameter("company"))));
+			computer.setCompany(GestionComputerService.getInstance().getCompany(Integer.parseInt(req.getParameter("company"))));
 		}
 		
 		//Check des dates
@@ -87,7 +87,7 @@ public class ValidationServlet extends HttpServlet {
 		}
 		
 		if(!error) {
-			ValidationService.getInstance().insertOrUpdate(computer);
+			GestionComputerService.getInstance().insertOrUpdate(computer);
 			resp.sendRedirect("/ComputerDatabase/index");
 		} else {
 			if(req.getParameter("id")!=null){

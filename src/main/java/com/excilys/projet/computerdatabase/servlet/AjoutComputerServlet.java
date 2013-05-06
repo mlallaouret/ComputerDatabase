@@ -8,7 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.excilys.projet.computerdatabase.service.EditionComputerService;
+import com.excilys.projet.computerdatabase.service.GestionComputerService;
+
 
 @SuppressWarnings("serial")
 @WebServlet("/ajoutcomputer")
@@ -18,7 +19,7 @@ public class AjoutComputerServlet extends HttpServlet{
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		
-		req.setAttribute("companies", EditionComputerService.getInstance().getCompanies());
+		req.setAttribute("companies", GestionComputerService.getInstance().getCompanies());
 		
 		getServletContext().getRequestDispatcher("/WEB-INF/ajoutComputer.jsp").forward(req, resp);
 	}
