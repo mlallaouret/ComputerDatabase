@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.excilys.projet.computerdatabase.model.Computer;
 import com.excilys.projet.computerdatabase.service.GestionComputerService;
+import com.excilys.projet.computerdatabase.utils.SqlRequestOptions;
 
 @SuppressWarnings("serial")
 @WebServlet("/index")
@@ -21,8 +22,12 @@ public class AffichageComputerServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
+		
+		SqlRequestOptions sqlRequestoptions = new SqlRequestOptions();
+		sqlRequestoptions.setTri(req.getParameter("s"));
+		sqlRequestoptions.setFilter(req.getParameter("f"));
 		Integer page=0;
-		Integer total = GestionComputerService.getInstance().getComputerCount();
+		Integer total = GestionComputerService.getInstance().getComputerCount(sqlRequestoptions);
 		if(req.getParameter("page")!=null) {
 			page=Integer.parseInt(req.getParameter("page"));
 			req.setAttribute("displayTo", (page +1)*10);
@@ -40,12 +45,15 @@ public class AffichageComputerServlet extends HttpServlet {
 		}
 		int displayFrom = page * MAX_AFFICHAGE +1;
 		req.setAttribute("displayFrom", displayFrom);
-		List<Computer> liste = GestionComputerService.getInstance().getComputers(page, MAX_AFFICHAGE);
+		
+		List<Computer> liste = GestionComputerService.getInstance().getComputers(page, MAX_AFFICHAGE, sqlRequestoptions);
 		
 		req.setAttribute("computers", liste);
 		req.setAttribute("last", total - (page+1)*10);
 		req.setAttribute("total", total);
 		req.setAttribute("page", page);
+		req.setAttribute("filter", sqlRequestoptions.getFilter());
+		req.setAttribute("tri", sqlRequestoptions.getTri());
 		getServletContext().getRequestDispatcher("/WEB-INF/affichageComputers.jsp").forward(req, resp);
 		
 	}

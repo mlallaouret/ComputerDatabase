@@ -5,6 +5,7 @@ import java.util.List;
 import com.excilys.projet.computerdatabase.dao.GestionComputerDao;
 import com.excilys.projet.computerdatabase.model.Company;
 import com.excilys.projet.computerdatabase.model.Computer;
+import com.excilys.projet.computerdatabase.utils.SqlRequestOptions;
 
 public class GestionComputerService {
 
@@ -33,12 +34,12 @@ public class GestionComputerService {
 		dao.insertOrUpdateComputer(computer);
 	}
 	
-	public List<Computer> getComputers(int debut, int nombre){
-		return dao.getComputers(debut, nombre);
+	public List<Computer> getComputers(int debut, int nombre, SqlRequestOptions sqlRequestOptions){
+		return dao.getComputers(debut, nombre, sqlRequestOptions);
 	}
 	
-	public Integer getComputerCount(){
-		return dao.getComputerCount();
+	public Integer getComputerCount(SqlRequestOptions sqlRequestOptions){
+		return dao.getComputerCount(sqlRequestOptions);
 	}
 	
 	public void updateComputer(Computer c){

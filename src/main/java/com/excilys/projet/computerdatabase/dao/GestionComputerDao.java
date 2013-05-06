@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Formatter;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -12,21 +13,22 @@ import java.util.logging.Logger;
 import com.excilys.projet.computerdatabase.model.Company;
 import com.excilys.projet.computerdatabase.model.Computer;
 import com.excilys.projet.computerdatabase.utils.JdbcConnexion;
+import com.excilys.projet.computerdatabase.utils.SqlRequestOptions;
 
 public class GestionComputerDao {
 
 	/**
 	 * Query
 	 */
-	public static final String SELECT_ALL_COMPUTERS_QUERY = "select cpu.id, cpu.name, cpu.introduced, cpu.discontinued, cpy.id, cpy.name  from computer cpu left join company cpy on cpu.company_id=cpy.id limit ?, ?";
-	public static final String SELECT_ONE_COMPUTER_BY_ID_QUERY = "select cpu.id, cpu.name, cpu.introduced, cpu.discontinued, cpy.id, cpy.name  from computer cpu left join company cpy on cpu.company_id=cpy.id where cpu.id = ?";
-	public static final String INSERT_COMPUTER = "insert into computer (name, introduced, discontinued, company_id) values (?,?,?,?)";
-	public static final String DELETE_COMPUTER = "delete from computer where id=?";
-	public static final String UPDATE_COMPUTER = "update computer set name = ?, introduced = ?, discontinued = ?, company_id = ? where id =? ";
-	public static final String COUNT_COMPUTER = "select count(id) as count from computer";
-	public static final String SELECT_ALL_COMPANIES_QUERY = "select id, name from company";
-	public static final String SELECT_ONE_COMPANY_BY_ID_QUERY = "select id, name from company where id = ?";
-	public static final String ID_EXISTS_QUERY = "select count(id) as count from computer where id = ?";
+	private static final String SELECT_ALL_COMPUTERS_QUERY = "select cpu.id, cpu.name, cpu.introduced, cpu.discontinued, cpy.id, cpy.name  from computer cpu left join company cpy on cpu.company_id=cpy.id where cpu.name LIKE ? order by %s limit ?, ? ";
+	private static final String SELECT_ONE_COMPUTER_BY_ID_QUERY = "select cpu.id, cpu.name, cpu.introduced, cpu.discontinued, cpy.id, cpy.name  from computer cpu left join company cpy on cpu.company_id=cpy.id where cpu.id = ?";
+	private static final String INSERT_COMPUTER = "insert into computer (name, introduced, discontinued, company_id) values (?,?,?,?)";
+	private static final String DELETE_COMPUTER = "delete from computer where id=?";
+	private static final String UPDATE_COMPUTER = "update computer set name = ?, introduced = ?, discontinued = ?, company_id = ? where id =? ";
+	private static final String COUNT_COMPUTER = "select count(cpu.id) as count from computer cpu where cpu.name LIKE ?";
+	private static final String SELECT_ALL_COMPANIES_QUERY = "select id, name from company";
+	private static final String SELECT_ONE_COMPANY_BY_ID_QUERY = "select id, name from company where id = ?";
+	private static final String ID_EXISTS_QUERY = "select count(id) as count from computer where id = ?";
 	
 	static {
 		gestionComputerDao = new GestionComputerDao();
@@ -43,16 +45,21 @@ public class GestionComputerDao {
 		return gestionComputerDao;
 	}
 	
-	public List<Computer> getComputers(int debut, int nombre){
+	public List<Computer> getComputers(int debut, int nombre, SqlRequestOptions sqlRequestOptions){
 		PreparedStatement myPreparedStatement=null;
 		List<Computer> liste = new ArrayList<Computer>();
 		
 		Connection conn = JdbcConnexion.getConnection();
 		try {
-			myPreparedStatement = conn.prepareStatement(SELECT_ALL_COMPUTERS_QUERY);
-			myPreparedStatement.setInt(1, debut*10);
-			myPreparedStatement.setInt(2, nombre);
+			Formatter f = new Formatter();
+			f.format(SELECT_ALL_COMPUTERS_QUERY, sqlRequestOptions.getSqlTri());
 			
+			myPreparedStatement = conn.prepareStatement(f.toString());
+			f.close();
+			myPreparedStatement.setString(1, sqlRequestOptions.getSqlFilter());
+			myPreparedStatement.setInt(2, debut*10);
+			myPreparedStatement.setInt(3, nombre);
+			System.out.println(myPreparedStatement);
 			ResultSet rs = myPreparedStatement.executeQuery();
 			
 			while(rs.next()){
@@ -118,13 +125,14 @@ public class GestionComputerDao {
 		return computer;
 	}
 	
-	public Integer getComputerCount(){
+	public Integer getComputerCount(SqlRequestOptions sqlRequestOptions){
 		
 		Integer count = null;
 		PreparedStatement myPreparedStatement=null;
 		Connection conn = JdbcConnexion.getConnection();
 		try {
 			myPreparedStatement = conn.prepareStatement(COUNT_COMPUTER);
+			myPreparedStatement.setString(1, sqlRequestOptions.getSqlFilter());
 			ResultSet rs = myPreparedStatement.executeQuery();
 			rs.first();
 			count = rs.getInt("count");
@@ -172,12 +180,13 @@ public class GestionComputerDao {
 		PreparedStatement myPreparedStatement=null;
 		Connection conn = JdbcConnexion.getConnection();
 		try {
-			myPreparedStatement = conn.prepareStatement(UPDATE_COMPUTER);
+			myPreparedStatement = conn.prepareStatement(DELETE_COMPUTER);
 			myPreparedStatement.setInt(1, id);
 			int result = myPreparedStatement.executeUpdate();
 			
 		} catch (SQLException e) {
 			Logger.getLogger("main").log(Level.WARNING, "Erreur lors de la suppression d'un ordinateur");
+			e.printStackTrace();
 		} finally{
 			try {
 				myPreparedStatement.close();

@@ -12,7 +12,7 @@ import com.excilys.projet.computerdatabase.service.GestionComputerService;
 
 
 @SuppressWarnings("serial")
-@WebServlet("/ajoutcomputer")
+@WebServlet("/ajoutComputer")
 public class AjoutComputerServlet extends HttpServlet{
 
 	@Override

@@ -1,7 +1,6 @@
 package com.excilys.projet.computerdatabase.servlet;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,7 +8,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.excilys.projet.computerdatabase.model.Computer;
 import com.excilys.projet.computerdatabase.service.GestionComputerService;
 
 @SuppressWarnings("serial")
@@ -34,7 +32,6 @@ public class EditionComputerServlet extends HttpServlet {
 		if(!GestionComputerService.getInstance().isIdExists(id)) {
 			getServletContext().getRequestDispatcher("/index").forward(req, resp);
 		} else {
-			Computer computer = GestionComputerService.getInstance().getComputer(id);
 			
 			req.setAttribute("computer", GestionComputerService.getInstance().getComputer(id));
 			req.setAttribute("companies", GestionComputerService.getInstance().getCompanies());

@@ -50,7 +50,7 @@ public class ValidationServlet extends HttpServlet {
 		
 		//Check des dates
 		Pattern p = Pattern.compile("\\d\\d\\d\\d-\\d\\d-\\d\\d");
-		if(req.getParameter("introduced")==null) {
+		if(req.getParameter("introduced").equals("")) {
 			computer.setIntroduced(null);
 		} else {
 			
@@ -68,7 +68,7 @@ public class ValidationServlet extends HttpServlet {
 			}
 		}
 		
-		if(req.getParameter("discontinued")==null) {
+		if(req.getParameter("discontinued").equals("")) {
 			computer.setDiscontinued(null);
 		} else {
 			
@@ -89,7 +89,7 @@ public class ValidationServlet extends HttpServlet {
 		if(!error) {
 			GestionComputerService.getInstance().insertOrUpdate(computer);
 			resp.sendRedirect("/ComputerDatabase/index");
-		} else {
+		} else { 
 			if(req.getParameter("id")!=null){
 				
 				getServletContext().getRequestDispatcher("/editionComputer").forward(req, resp);
