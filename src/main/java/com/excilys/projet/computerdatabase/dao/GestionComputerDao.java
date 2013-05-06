@@ -20,7 +20,7 @@ public class GestionComputerDao {
 	/**
 	 * Query
 	 */
-	private static final String SELECT_ALL_COMPUTERS_QUERY = "select cpu.id, cpu.name, cpu.introduced, cpu.discontinued, cpy.id, cpy.name  from computer cpu left join company cpy on cpu.company_id=cpy.id where cpu.name LIKE ? order by %s limit ?, ? ";
+	private static final String SELECT_ALL_COMPUTERS_QUERY = "select cpu.id, cpu.name, cpu.introduced, cpu.discontinued, cpy.id, cpy.name  from computer cpu left join company cpy on cpu.company_id=cpy.id where cpu.name LIKE ? order by ISNULL (%1$s),%1$s %2$s limit ?, ? ";
 	private static final String SELECT_ONE_COMPUTER_BY_ID_QUERY = "select cpu.id, cpu.name, cpu.introduced, cpu.discontinued, cpy.id, cpy.name  from computer cpu left join company cpy on cpu.company_id=cpy.id where cpu.id = ?";
 	private static final String INSERT_COMPUTER = "insert into computer (name, introduced, discontinued, company_id) values (?,?,?,?)";
 	private static final String DELETE_COMPUTER = "delete from computer where id=?";
@@ -52,7 +52,7 @@ public class GestionComputerDao {
 		Connection conn = JdbcConnexion.getConnection();
 		try {
 			Formatter f = new Formatter();
-			f.format(SELECT_ALL_COMPUTERS_QUERY, sqlRequestOptions.getSqlTri());
+			f.format(SELECT_ALL_COMPUTERS_QUERY, sqlRequestOptions.getSqlTri(), sqlRequestOptions.getSqlOrder());
 			
 			myPreparedStatement = conn.prepareStatement(f.toString());
 			f.close();

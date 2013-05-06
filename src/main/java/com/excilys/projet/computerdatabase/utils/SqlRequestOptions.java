@@ -6,6 +6,10 @@ public class SqlRequestOptions {
 	
 	private int tri;
 	
+	private enum Order{
+		ASC,DESC;
+	}
+	
 	public SqlRequestOptions() {
 		filter=null;
 		tri = 2;
@@ -17,45 +21,37 @@ public class SqlRequestOptions {
 	}
 	
 	
+	public String getSqlOrder(){
+		if(tri<0){
+			return Order.DESC.toString();
+		} else {
+			return Order.ASC.toString();
+		}
+	}
+	
 	public String getSqlTri(){
 		
 		String sqlTri = null;
-		switch(tri) {
-				
-			case -2:
-				sqlTri= "cpu.name DESC";
-				break;
+		switch(Math.abs(tri)) {
 				
 			case 2:
-				sqlTri= "cpu.name ASC";
-				break;
-				
-			case -3:
-				sqlTri= "cpu.introduced DESC";
+				sqlTri= "cpu.name";
 				break;
 				
 			case 3:
-				sqlTri= "cpu.introduced ASC";
-				break;
-				
-			case -4:
-				sqlTri= "cpu.discontinued DESC";
+				sqlTri= "cpu.introduced";
 				break;
 				
 			case 4:
-				sqlTri= "cpu.discontinued ASC";
-				break;
-				
-			case -5:
-				sqlTri= "cpy.name DESC";
+				sqlTri= "cpu.discontinued";
 				break;
 				
 			case 5:
-				sqlTri= "cpy.name ASC";
+				sqlTri= "cpy.name";
 				break;
 				
 			default:
-				sqlTri= "cpu.name ASC";
+				sqlTri= "cpu.name";
 				break;
 		}
 		return sqlTri;

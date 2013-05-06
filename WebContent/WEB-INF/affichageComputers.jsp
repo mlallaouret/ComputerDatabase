@@ -48,22 +48,22 @@
 			<thead>
 				<tr>
 
-					<th class="col2 header ${tri eq '2' ? 'headerSortUp': s eq '-2' ? 'headerSortDown': empty s ? 'headerSortUp': ''}">
+					<th class="col2 header ${tri eq '2' ? 'headerSortUp': tri eq '-2' ? 'headerSortDown': empty tri ? 'headerSortUp': ''}">
 						<a href="/ComputerDatabase/index?f=${filter}&s=${tri eq '2' ? '-2': '2'} ">Computer name</a>
 					</th>
 
 
-					<th class="col3 header ${tri eq '3' ? 'headerSortUp': s eq '-3' ? 'headerSortDown': ''} ">
+					<th class="col3 header ${tri eq '3' ? 'headerSortUp': tri eq '-3' ? 'headerSortDown': ''} ">
 						<a href="/ComputerDatabase/index?f=${filter}&s=${tri eq '3' ? '-3': '3'}">Introduced</a>
 					</th>
 
 
-					<th class="col4 header ${tri eq '4' ? 'headerSortUp': s eq '-4' ? 'headerSortDown': ''}">
+					<th class="col4 header ${tri eq '4' ? 'headerSortUp':tri eq '-4' ? 'headerSortDown': ''}">
 						<a href="/ComputerDatabase/index?f=${filter}&s=${tri eq '4' ? '-4': '4'}">Discontinued</a>
 					</th>
 
 
-					<th class="col5 header ${tri eq '5' ? 'headerSortUp': s eq '-5' ? 'headerSortDown': ''}">
+					<th class="col5 header ${tri eq '5' ? 'headerSortUp':tri eq '-5' ? 'headerSortDown': ''}">
 						<a href="/ComputerDatabase/index?f=${filter}&s=${tri eq '5' ? '-5': '5'}">Company</a>
 					</th>
 
@@ -75,9 +75,12 @@
 				<c:forEach items="${computers}" var="computer">		
 					<tr>
 						<td><a href="/ComputerDatabase/editionComputer?id=${computer.id}">${computer.name}</a></td>
-						<td><em>${computer.introduced}</em></td>
-						<td><em>${computer.discontinued}</em></td>
-						<td><em>${computer.company.name}</em></td>
+						<td><c:if test= "${empty computer.introduced}"><em>-</em></c:if>
+						<c:if test= "${not empty computer.introduced}">${computer.introduced }</c:if></td>
+						<td><c:if test= "${empty computer.discontinued}"><em>-</em></c:if>
+						<c:if test= "${not empty computer.discontinued}">${computer.discontinued }</c:if></td>
+						<td><c:if test= "${empty computer.company.name}"><em>-</em></c:if>
+						<c:if test= "${not empty computer.company.name}">${computer.company.name }</c:if></td>
 					</tr>
 				</c:forEach>
 				
