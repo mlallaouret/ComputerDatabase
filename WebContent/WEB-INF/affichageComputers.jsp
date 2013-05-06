@@ -29,7 +29,7 @@
 
 			<form action="/ComputerDatabase/index" method="GET">
 
-				<input type="search" id="searchbox" name="f" value=""
+				<input type="search" id="searchbox" name="f" value="${filter }"
 					placeholder="Filter by computer name..."> <input
 					type="submit" id="searchsubmit" value="Filter by name"
 					class="btn primary">

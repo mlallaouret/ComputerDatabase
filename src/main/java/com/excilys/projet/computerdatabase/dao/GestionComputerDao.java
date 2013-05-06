@@ -20,15 +20,18 @@ public class GestionComputerDao {
 	/**
 	 * Query
 	 */
-	private static final String SELECT_ALL_COMPUTERS_QUERY = "select cpu.id, cpu.name, cpu.introduced, cpu.discontinued, cpy.id, cpy.name  from computer cpu left join company cpy on cpu.company_id=cpy.id where cpu.name LIKE ? order by ISNULL (%1$s),%1$s %2$s limit ?, ? ";
+	private static final String SELECT_ALL_COMPUTERS_QUERY = "select cpu.id, cpu.name, cpu.introduced, cpu.discontinued, cpy.id, cpy.name  from computer cpu left join company cpy on cpu.company_id=cpy.id";
 	private static final String SELECT_ONE_COMPUTER_BY_ID_QUERY = "select cpu.id, cpu.name, cpu.introduced, cpu.discontinued, cpy.id, cpy.name  from computer cpu left join company cpy on cpu.company_id=cpy.id where cpu.id = ?";
 	private static final String INSERT_COMPUTER = "insert into computer (name, introduced, discontinued, company_id) values (?,?,?,?)";
 	private static final String DELETE_COMPUTER = "delete from computer where id=?";
 	private static final String UPDATE_COMPUTER = "update computer set name = ?, introduced = ?, discontinued = ?, company_id = ? where id =? ";
-	private static final String COUNT_COMPUTER = "select count(cpu.id) as count from computer cpu where cpu.name LIKE ?";
+	private static final String COUNT_COMPUTER = "select count(cpu.id) as count from computer cpu";
 	private static final String SELECT_ALL_COMPANIES_QUERY = "select id, name from company";
 	private static final String SELECT_ONE_COMPANY_BY_ID_QUERY = "select id, name from company where id = ?";
 	private static final String ID_EXISTS_QUERY = "select count(id) as count from computer where id = ?";
+	private static final String SELECT_WHERE = " where cpu.name LIKE '%1$s' ";
+	private static final String SELECT_ORDER_BY = " order by ISNULL (%1$s),%1$s %2$s limit %3$s, %4$s";
+	
 	
 	static {
 		gestionComputerDao = new GestionComputerDao();
@@ -48,17 +51,18 @@ public class GestionComputerDao {
 	public List<Computer> getComputers(int debut, int nombre, SqlRequestOptions sqlRequestOptions){
 		PreparedStatement myPreparedStatement=null;
 		List<Computer> liste = new ArrayList<Computer>();
-		
+		Formatter f = new Formatter();
 		Connection conn = JdbcConnexion.getConnection();
 		try {
-			Formatter f = new Formatter();
-			f.format(SELECT_ALL_COMPUTERS_QUERY, sqlRequestOptions.getSqlTri(), sqlRequestOptions.getSqlOrder());
 			
-			myPreparedStatement = conn.prepareStatement(f.toString());
-			f.close();
-			myPreparedStatement.setString(1, sqlRequestOptions.getSqlFilter());
-			myPreparedStatement.setInt(2, debut*10);
-			myPreparedStatement.setInt(3, nombre);
+			StringBuilder sb = new StringBuilder(SELECT_ALL_COMPUTERS_QUERY);
+			
+			if(sqlRequestOptions.getFilter()!=null && !sqlRequestOptions.getFilter().equals("")){
+				f.format(SELECT_WHERE, sqlRequestOptions.getSqlFilter());
+			}
+			f.format(SELECT_ORDER_BY, sqlRequestOptions.getSqlTri(), sqlRequestOptions.getSqlOrder(), debut*10, nombre);
+			sb.append(f.toString());
+			myPreparedStatement = conn.prepareStatement(sb.toString());
 			System.out.println(myPreparedStatement);
 			ResultSet rs = myPreparedStatement.executeQuery();
 			
@@ -78,6 +82,7 @@ public class GestionComputerDao {
 			Logger.getLogger("main").log(Level.WARNING, "Erreur lors de la récupération de la liste des ordinateurs");
 			e.printStackTrace();
 		} finally{
+			f.close();
 			try {
 				myPreparedStatement.close();
 			} catch (SQLException e) {
@@ -130,16 +135,25 @@ public class GestionComputerDao {
 		Integer count = null;
 		PreparedStatement myPreparedStatement=null;
 		Connection conn = JdbcConnexion.getConnection();
+		Formatter f = new Formatter();
 		try {
-			myPreparedStatement = conn.prepareStatement(COUNT_COMPUTER);
-			myPreparedStatement.setString(1, sqlRequestOptions.getSqlFilter());
+			
+			StringBuilder sb = new StringBuilder(COUNT_COMPUTER);
+			if(sqlRequestOptions.getFilter()!=null && !sqlRequestOptions.getFilter().equals("")){
+				f.format(SELECT_WHERE, sqlRequestOptions.getSqlFilter());
+				sb.append(f);
+			}
+			myPreparedStatement = conn.prepareStatement(sb.toString());
+			System.out.println(myPreparedStatement);
 			ResultSet rs = myPreparedStatement.executeQuery();
 			rs.first();
 			count = rs.getInt("count");
 
 		} catch (SQLException e) {
 			Logger.getLogger("main").log(Level.WARNING, "Erreur lors de la récupération du compte des ordinateurs");
+			e.printStackTrace();
 		} finally{
+			f.close();
 			try {
 				myPreparedStatement.close();
 			} catch (SQLException e) {
