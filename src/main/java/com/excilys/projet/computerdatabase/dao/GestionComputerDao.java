@@ -30,7 +30,7 @@ public class GestionComputerDao {
 	private static final String SELECT_ALL_COMPANIES_QUERY = "select id, name from company order by name";
 	private static final String SELECT_ONE_COMPANY_BY_ID_QUERY = "select id, name from company where id = ?";
 	private static final String ID_EXISTS_QUERY = "select count(id) as count from computer where id = ?";
-	private static final String SELECT_WHERE = " where cpu.name LIKE '%1$s' ";
+	private static final String SELECT_WHERE = " where cpu.name LIKE \"%1$s\"" ;
 	private static final String SELECT_ORDER_BY = " order by ISNULL (%1$s),%1$s %2$s limit %3$s, %4$s";
 	
 	
@@ -57,7 +57,6 @@ public class GestionComputerDao {
 		try {
 			
 			StringBuilder sb = new StringBuilder(SELECT_ALL_COMPUTERS_QUERY);
-			
 			if(sqlRequestOptions.getFilter()!=null && !sqlRequestOptions.getFilter().equals("")){
 				f.format(SELECT_WHERE, sqlRequestOptions.getSqlFilter());
 			}

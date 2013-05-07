@@ -15,46 +15,60 @@ public class Page {
 	private int displayFrom;
 	private int displayTo;
 	private List<Computer> computers;
+	private final int maxAffichage;
 	
 	public Page(String filter, String tri, int page, int maxAffichage) {
 		sqlRequestOptions = new SqlRequestOptions();
 		sqlRequestOptions.setFilter(filter);
 		sqlRequestOptions.setTri(tri);
-		this.pageNumber = page;
+		this.maxAffichage = maxAffichage;
 		total = GestionComputerService.getInstance().getComputerCount(sqlRequestOptions);
 		
-		if(page<0){
+		if(page<0 || (page>0 && (total - page*maxAffichage<0))){
 			pageNumber=0;
-		} else if(page>0 && (total - page*10<0)){
-			pageNumber=0;
+		} else {
+			this.pageNumber = page;
 		}
 		
 		//Liste des ordinateurs
 		computers = GestionComputerService.getInstance().getComputers(pageNumber, maxAffichage, sqlRequestOptions);
 		
-		//displayFrom
-		displayFrom = total == 0 ? 0 : (pageNumber * maxAffichage +1);
-		
-		//DisplayTo
-		if((total - (pageNumber+1)*10)<1) {
-			displayTo = total;
+		computeDisplayFrom();	
+		computeDisplayTo();	
+		computeFirstPage();	
+		computeLastPage();
+	}
+	
+	private void computeLastPage(){
+		//Derniere page
+		if(total - (pageNumber+1)*maxAffichage >=1){
+			last = false;
 		} else {
-			displayTo = (pageNumber +1)*10;
+			last = true;
 		}
-		
+	}
+	
+	private void computeFirstPage(){
 		//Première page
 		if(pageNumber == 0) {
 			first = true;
 		} else {
 			first = false;
 		}
-		
-		//Derniere page
-		if(total - (pageNumber+1)*10 >=1){
-			last = false;
+	}
+	
+	private void computeDisplayTo(){
+		//DisplayTo
+		if((total - (pageNumber+1)*maxAffichage)<1) {
+			displayTo = total;
 		} else {
-			last = true;
+			displayTo = (pageNumber +1)*maxAffichage;
 		}
+	}
+	
+	private void computeDisplayFrom(){
+		//displayFrom
+		displayFrom = total == 0 ? 0 : (pageNumber * maxAffichage +1);
 	}
 	
 	public int getPageNumber() {
