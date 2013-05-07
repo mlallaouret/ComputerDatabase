@@ -86,7 +86,7 @@
 
 			<div class="actions">
 				<input type="submit" value="Save this computer" class="btn primary">
-				or <a href="index" class="btn">Cancel</a>
+				or <a href="affichageComputers" class="btn">Cancel</a>
 			</div>
 
 

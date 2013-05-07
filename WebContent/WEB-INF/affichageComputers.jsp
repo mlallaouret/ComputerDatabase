@@ -21,15 +21,15 @@
 
 	<section id="main">
 
-		<h1>${total} computers found</h1>
+		<h1>${page.total} computers found</h1>
 
 
 
 		<div id="actions">
 
-			<form action="index" method="GET">
+			<form action="affichageComputers" method="GET">
 
-				<input type="search" id="searchbox" name="f" value="${filter }"
+				<input type="search" id="searchbox" name="f" value="${page.sqlRequestOptions.filter }"
 					placeholder="Filter by computer name..."> <input
 					type="submit" id="searchsubmit" value="Filter by name"
 					class="btn primary">
@@ -48,23 +48,23 @@
 			<thead>
 				<tr>
 
-					<th class="col2 header ${tri eq '2' ? 'headerSortUp': tri eq '-2' ? 'headerSortDown': empty tri ? 'headerSortUp': ''}">
-						<a href="index?f=${filter}&s=${tri eq '2' ? '-2': '2'} ">Computer name</a>
+					<th class="col2 header ${page.sqlRequestOptions.tri eq '2' ? 'headerSortUp': page.sqlRequestOptions.tri eq '-2' ? 'headerSortDown': empty page.sqlRequestOptions.tri ? 'headerSortUp': ''}">
+						<a href="affichageComputers?f=${page.sqlRequestOptions.filter}&s=${page.sqlRequestOptions.tri eq '2' ? '-2': '2'} ">Computer name</a>
 					</th>
 
 
-					<th class="col3 header ${tri eq '3' ? 'headerSortUp': tri eq '-3' ? 'headerSortDown': ''} ">
-						<a href="index?f=${filter}&s=${tri eq '3' ? '-3': '3'}">Introduced</a>
+					<th class="col3 header ${page.sqlRequestOptions.tri eq '3' ? 'headerSortUp': page.sqlRequestOptions.tri eq '-3' ? 'headerSortDown': ''} ">
+						<a href="affichageComputers?f=${page.sqlRequestOptions.filter}&s=${page.sqlRequestOptions.tri eq '3' ? '-3': '3'}">Introduced</a>
 					</th>
 
 
-					<th class="col4 header ${tri eq '4' ? 'headerSortUp':tri eq '-4' ? 'headerSortDown': ''}">
-						<a href="index?f=${filter}&s=${tri eq '4' ? '-4': '4'}">Discontinued</a>
+					<th class="col4 header ${page.sqlRequestOptions.tri eq '4' ? 'headerSortUp':page.sqlRequestOptions.tri eq '-4' ? 'headerSortDown': ''}">
+						<a href="affichageComputers?f=${page.sqlRequestOptions.filter}&s=${page.sqlRequestOptions.tri eq '4' ? '-4': '4'}">Discontinued</a>
 					</th>
 
 
-					<th class="col5 header ${tri eq '5' ? 'headerSortUp':tri eq '-5' ? 'headerSortDown': ''}">
-						<a href="index?f=${filter}&s=${tri eq '5' ? '-5': '5'}">Company</a>
+					<th class="col5 header ${page.sqlRequestOptions.tri eq '5' ? 'headerSortUp':page.sqlRequestOptions.tri eq '-5' ? 'headerSortDown': ''}">
+						<a href="affichageComputers?f=${page.sqlRequestOptions.filter}&s=${page.sqlRequestOptions.tri eq '5' ? '-5': '5'}">Company</a>
 					</th>
 
 				</tr>
@@ -72,7 +72,7 @@
 			</thead>
 			<tbody>
 
-				<c:forEach items="${computers}" var="computer">		
+				<c:forEach items="${page.computers}" var="computer">		
 					<tr>
 						<td><a href="editionComputer?id=${computer.id}">${computer.name}</a></td>
 						<td><c:if test= "${empty computer.introduced}"><em>-</em></c:if>
@@ -93,19 +93,19 @@
 
 		<div id="pagination" class="pagination">
 			<ul>
-				<c:if test="${page==0}">
+				<c:if test="${page.first}">
 					<li class="prev disabled"><a>&larr; Previous</a></li>
 				</c:if>
-				<c:if test="${page!=0}">
-					<li class="prev"><a href="affichageComputers?s=${tri}&f=${filter}&page=${page -1}">&larr; Previous</a></li>
+				<c:if test="${!page.first}">
+					<li class="prev"><a href="affichageComputers?s=${page.sqlRequestOptions.tri}&f=${page.sqlRequestOptions.filter}&page=${page.pageNumber -1}">&larr; Previous</a></li>
 				</c:if>
 
-				<li class="current"><a>Displaying ${displayFrom} to ${displayTo} of ${total }</a></li>
+				<li class="current"><a>Displaying ${page.displayFrom} to ${page.displayTo} of ${page.total }</a></li>
 				
-				<c:if test="${last>=1}">
-					<li class="next"><a href="affichageComputers?s=${tri}&f=${filter}&page=${page +1}">Next &rarr;</a></li>
+				<c:if test="${!page.last}">
+					<li class="next"><a href="affichageComputers?s=${page.sqlRequestOptions.tri}&f=${page.sqlRequestOptions.filter}&page=${page.pageNumber +1}">Next &rarr;</a></li>
 				</c:if>
-				<c:if test="${last<1}">
+				<c:if test="${page.last}">
 					<li class="next disabled"><a >Next &rarr;</a></li>
 				</c:if>
 			</ul>
