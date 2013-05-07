@@ -1,7 +1,6 @@
 package com.excilys.projet.computerdatabase.servlet;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,12 +8,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.excilys.projet.computerdatabase.model.Computer;
 import com.excilys.projet.computerdatabase.service.GestionComputerService;
 import com.excilys.projet.computerdatabase.utils.SqlRequestOptions;
 
 @SuppressWarnings("serial")
-@WebServlet("/index")
+@WebServlet("/affichageComputers")
 public class AffichageComputerServlet extends HttpServlet {
 
 	private final static int MAX_AFFICHAGE = 10;
@@ -44,11 +42,10 @@ public class AffichageComputerServlet extends HttpServlet {
 			req.setAttribute("displayTo", (page +1)*10);
 		}
 		int displayFrom = page * MAX_AFFICHAGE +1;
-		req.setAttribute("displayFrom", displayFrom);
+		req.setAttribute("displayFrom", total ==0 ? 0:displayFrom);
 		
-		List<Computer> liste = GestionComputerService.getInstance().getComputers(page, MAX_AFFICHAGE, sqlRequestoptions);
 		
-		req.setAttribute("computers", liste);
+		req.setAttribute("computers", GestionComputerService.getInstance().getComputers(page, MAX_AFFICHAGE, sqlRequestoptions));
 		req.setAttribute("last", total - (page+1)*10);
 		req.setAttribute("total", total);
 		req.setAttribute("page", page);

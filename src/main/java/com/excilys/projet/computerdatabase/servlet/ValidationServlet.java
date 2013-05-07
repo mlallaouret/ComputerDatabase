@@ -3,8 +3,6 @@ package com.excilys.projet.computerdatabase.servlet;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.excilys.projet.computerdatabase.model.Computer;
 import com.excilys.projet.computerdatabase.service.GestionComputerService;
+import com.mysql.jdbc.StringUtils;
 
 @WebServlet("/validation")
 @SuppressWarnings("serial")
@@ -32,69 +31,52 @@ public class ValidationServlet extends HttpServlet {
 		}
 		
 		//Check du nom de l'ordinateur
-		if(req.getParameter("name")==null) {
+		if(StringUtils.isNullOrEmpty(req.getParameter("name"))) {
 			error = true;
-			req.setAttribute("nameError", "Le nom de l'ordinateur doit être précisé");
+			req.setAttribute("nameError", "error");
 			
 		} else {
 			computer.setName(req.getParameter("name"));
 		}
 		
 		//Check de la compagnie
-		if(req.getParameter("company")==""){
-			error=true;
-			req.setAttribute("companyError", "Le nom de l'ordinateur doit être précisé");
-		} else {
+		if(!StringUtils.isNullOrEmpty(req.getParameter("company"))){
 			computer.setCompany(GestionComputerService.getInstance().getCompany(Integer.parseInt(req.getParameter("company"))));
 		}
 		
 		//Check des dates
-		Pattern p = Pattern.compile("\\d\\d\\d\\d-\\d\\d-\\d\\d");
 		if(req.getParameter("introduced").equals("")) {
 			computer.setIntroduced(null);
 		} else {
-			
-			Matcher m = p.matcher(req.getParameter("introduced"));
-			if(m.find()){
-				try {
-					computer.setIntroduced(new SimpleDateFormat("yyyy-MM-dd").parse(req.getParameter("introduced")));
-				} catch (ParseException e) {
-					error = true;
-					req.setAttribute("introducedError", "La date n'est pas au bon format");
-				}
-				
-			}else{
+			try {
+				computer.setIntroduced(new SimpleDateFormat("yyyy-MM-dd").parse(req.getParameter("introduced")));
+			} catch (ParseException e) {
 				error = true;
+				req.setAttribute("introducedError", "error");
 			}
 		}
 		
 		if(req.getParameter("discontinued").equals("")) {
 			computer.setDiscontinued(null);
-		} else {
-			
-			Matcher m = p.matcher(req.getParameter("discontinued"));
-			if(m.find()){
-				try {
-					computer.setDiscontinued(new SimpleDateFormat("yyyy-MM-dd").parse(req.getParameter("discontinued")));
-				} catch (ParseException e) {
-					error = true;
-					req.setAttribute("discontinuedError", "La date n'est pas au bon format");
-				}
-			}else{
+		} else {	
+			try {
+				computer.setDiscontinued(new SimpleDateFormat("yyyy-MM-dd").parse(req.getParameter("discontinued")));
+			} catch (ParseException e) {
 				error = true;
-			}
-			
+				req.setAttribute("discontinuedError", "error");
+			}	
 		}
 		
 		if(!error) {
 			GestionComputerService.getInstance().insertOrUpdate(computer);
-			resp.sendRedirect("/ComputerDatabase/index");
+			resp.sendRedirect("index.jsp");
 		} else { 
+			req.setAttribute("computer", computer);
 			if(req.getParameter("id")!=null){
 				
-				getServletContext().getRequestDispatcher("/editionComputer").forward(req, resp);
+				getServletContext().getRequestDispatcher("/WEB-INF/editionComputer.jsp").forward(req, resp);
 			}else {
-				getServletContext().getRequestDispatcher("/ajoutComputer").forward(req, resp);
+				getServletContext().getRequestDispatcher("/WEB-INF/ajoutComputer.jsp").forward(req, resp);
 			}
 			
 		}

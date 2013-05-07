@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
@@ -26,7 +27,7 @@ public class GestionComputerDao {
 	private static final String DELETE_COMPUTER = "delete from computer where id=?";
 	private static final String UPDATE_COMPUTER = "update computer set name = ?, introduced = ?, discontinued = ?, company_id = ? where id =? ";
 	private static final String COUNT_COMPUTER = "select count(cpu.id) as count from computer cpu";
-	private static final String SELECT_ALL_COMPANIES_QUERY = "select id, name from company";
+	private static final String SELECT_ALL_COMPANIES_QUERY = "select id, name from company order by name";
 	private static final String SELECT_ONE_COMPANY_BY_ID_QUERY = "select id, name from company where id = ?";
 	private static final String ID_EXISTS_QUERY = "select count(id) as count from computer where id = ?";
 	private static final String SELECT_WHERE = " where cpu.name LIKE '%1$s' ";
@@ -166,29 +167,6 @@ public class GestionComputerDao {
 		return count;
 	}
 	
-	public void insertComputer(Computer computer) {
-		PreparedStatement myPreparedStatement=null;
-		Connection conn = JdbcConnexion.getConnection();
-		try {
-			myPreparedStatement = conn.prepareStatement(INSERT_COMPUTER);
-			myPreparedStatement.setString(1, computer.getName());
-			myPreparedStatement.setDate(2, new java.sql.Date(computer.getIntroduced().getTime()));
-			myPreparedStatement.setDate(3, new java.sql.Date(computer.getDiscontinued().getTime()));
-			myPreparedStatement.setInt(4, computer.getCompany().getId());
-			int result = myPreparedStatement.executeUpdate();
-			
-		} catch (SQLException e) {
-			Logger.getLogger("main").log(Level.WARNING, "Erreur lors de l'insert d'un ordinateur");
-		} finally{
-			try {
-				myPreparedStatement.close();
-			} catch (SQLException e) {
-				Logger.getLogger("main").log(Level.WARNING, "Erreur lors de l'insert d'un ordinateur");
-				e.printStackTrace();
-			}
-			JdbcConnexion.closeConnection(conn);
-		}
-	}
 	
 	public void deleteComputer(int id){
 		PreparedStatement myPreparedStatement=null;
@@ -196,7 +174,7 @@ public class GestionComputerDao {
 		try {
 			myPreparedStatement = conn.prepareStatement(DELETE_COMPUTER);
 			myPreparedStatement.setInt(1, id);
-			int result = myPreparedStatement.executeUpdate();
+			myPreparedStatement.executeUpdate();
 			
 		} catch (SQLException e) {
 			Logger.getLogger("main").log(Level.WARNING, "Erreur lors de la suppression d'un ordinateur");
@@ -221,7 +199,7 @@ public class GestionComputerDao {
 			myPreparedStatement.setDate(2, new java.sql.Date(computer.getIntroduced().getTime()));
 			myPreparedStatement.setDate(3, new java.sql.Date(computer.getDiscontinued().getTime()));
 			myPreparedStatement.setInt(4, computer.getCompany().getId());
-			int result = myPreparedStatement.executeUpdate();
+			myPreparedStatement.executeUpdate();
 			
 		} catch (SQLException e) {
 			Logger.getLogger("main").log(Level.WARNING, "Erreur lors de l'update d'un ordinateur");
@@ -257,8 +235,12 @@ public class GestionComputerDao {
 			} else {
 				myPreparedStatement.setDate(3, null);
 			}
-			myPreparedStatement.setInt(4, computer.getCompany().getId());
-			int result = myPreparedStatement.executeUpdate();
+			if(computer.getCompany()==null){
+				myPreparedStatement.setNull(4, Types.NULL);
+			} else {
+				myPreparedStatement.setInt(4, computer.getCompany().getId());
+			}
+			myPreparedStatement.executeUpdate();
 			
 		} catch (SQLException e) {
 			Logger.getLogger("main").log(Level.WARNING, "Erreur lors de l'inset/update d'un ordinateur");

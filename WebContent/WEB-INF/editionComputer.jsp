@@ -26,13 +26,13 @@
 
 
 
-		<form action="/ComputerDatabase/validation" method="POST">
+		<form action="validation" method="POST">
 
 			<input type="hidden" name="id" value="${param.id }"/>
 			<fieldset>
 
 				
-				<div class="clearfix ">
+				<div class="clearfix ${nameError }">
 					<label for="name">Computer name</label>
 					<div class="input">
 
@@ -43,7 +43,7 @@
 
 
 
-				<div class="clearfix ">
+				<div class="clearfix ${introducedError }">
 					<label for="introduced">Introduced date</label>
 					<div class="input">
 
@@ -53,7 +53,7 @@
 					</div>
 				</div>
 
-				<div class="clearfix ">
+				<div class="clearfix ${discontinuedError }">
 					<label for="discontinued">Discontinued date</label>
 					<div class="input">
 
@@ -64,7 +64,7 @@
 				</div>
 
 
-				<div class="clearfix ">
+				<div class="clearfix">
 					<label for="company">Company</label>
 					<div class="input">
 
@@ -87,7 +87,7 @@
 
 			<div class="actions">
 				<input type="submit" value="Save this computer" class="btn primary">
-				or <a href="/ComputerDatabase/index" class="btn">Cancel</a>
+				or <a href="index" class="btn">Cancel</a>
 			</div>
 
 
@@ -96,7 +96,7 @@
 
 
 
-		<form action="/ComputerDatabase/delete" method="POST" class="topRight">
+		<form action="delete" method="POST" class="topRight">
 			<input type="hidden" value="${computer.id}" name="id" />
 			<input type="submit" value="Delete this computer" class="btn danger"/>
 

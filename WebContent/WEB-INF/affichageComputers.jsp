@@ -27,7 +27,7 @@
 
 		<div id="actions">
 
-			<form action="/ComputerDatabase/index" method="GET">
+			<form action="index" method="GET">
 
 				<input type="search" id="searchbox" name="f" value="${filter }"
 					placeholder="Filter by computer name..."> <input
@@ -37,7 +37,7 @@
 			</form>
 
 
-			<a class="btn success" id="add" href="/ComputerDatabase/ajoutComputer">Add a new
+			<a class="btn success" id="add" href="ajoutComputer">Add a new
 				computer</a>
 
 		</div>
@@ -49,22 +49,22 @@
 				<tr>
 
 					<th class="col2 header ${tri eq '2' ? 'headerSortUp': tri eq '-2' ? 'headerSortDown': empty tri ? 'headerSortUp': ''}">
-						<a href="/ComputerDatabase/index?f=${filter}&s=${tri eq '2' ? '-2': '2'} ">Computer name</a>
+						<a href="index?f=${filter}&s=${tri eq '2' ? '-2': '2'} ">Computer name</a>
 					</th>
 
 
 					<th class="col3 header ${tri eq '3' ? 'headerSortUp': tri eq '-3' ? 'headerSortDown': ''} ">
-						<a href="/ComputerDatabase/index?f=${filter}&s=${tri eq '3' ? '-3': '3'}">Introduced</a>
+						<a href="index?f=${filter}&s=${tri eq '3' ? '-3': '3'}">Introduced</a>
 					</th>
 
 
 					<th class="col4 header ${tri eq '4' ? 'headerSortUp':tri eq '-4' ? 'headerSortDown': ''}">
-						<a href="/ComputerDatabase/index?f=${filter}&s=${tri eq '4' ? '-4': '4'}">Discontinued</a>
+						<a href="index?f=${filter}&s=${tri eq '4' ? '-4': '4'}">Discontinued</a>
 					</th>
 
 
 					<th class="col5 header ${tri eq '5' ? 'headerSortUp':tri eq '-5' ? 'headerSortDown': ''}">
-						<a href="/ComputerDatabase/index?f=${filter}&s=${tri eq '5' ? '-5': '5'}">Company</a>
+						<a href="index?f=${filter}&s=${tri eq '5' ? '-5': '5'}">Company</a>
 					</th>
 
 				</tr>
@@ -74,7 +74,7 @@
 
 				<c:forEach items="${computers}" var="computer">		
 					<tr>
-						<td><a href="/ComputerDatabase/editionComputer?id=${computer.id}">${computer.name}</a></td>
+						<td><a href="editionComputer?id=${computer.id}">${computer.name}</a></td>
 						<td><c:if test= "${empty computer.introduced}"><em>-</em></c:if>
 						<c:if test= "${not empty computer.introduced}">${computer.introduced }</c:if></td>
 						<td><c:if test= "${empty computer.discontinued}"><em>-</em></c:if>
@@ -97,13 +97,13 @@
 					<li class="prev disabled"><a>&larr; Previous</a></li>
 				</c:if>
 				<c:if test="${page!=0}">
-					<li class="prev"><a href="/ComputerDatabase/index?s=${tri}&f=${filter}&page=${page -1}">&larr; Previous</a></li>
+					<li class="prev"><a href="affichageComputers?s=${tri}&f=${filter}&page=${page -1}">&larr; Previous</a></li>
 				</c:if>
 
 				<li class="current"><a>Displaying ${displayFrom} to ${displayTo} of ${total }</a></li>
 				
 				<c:if test="${last>=1}">
-					<li class="next"><a href="/ComputerDatabase/index?s=${tri}&f=${filter}&page=${page +1}">Next &rarr;</a></li>
+					<li class="next"><a href="affichageComputers?s=${tri}&f=${filter}&page=${page +1}">Next &rarr;</a></li>
 				</c:if>
 				<c:if test="${last<1}">
 					<li class="next disabled"><a >Next &rarr;</a></li>
