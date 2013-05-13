@@ -58,31 +58,31 @@
 						<tr>
 
 							<th
-								class="col2 header ${page.sqlRequestOptions.tri eq '2' ? 'headerSortUp': page.sqlRequestOptions.tri eq '-2' ? 'headerSortDown': empty page.sqlRequestOptions.tri ? 'headerSortUp': ''}">
+								class="col2 header ${tri eq '2' ? 'headerSortUp': tri eq '-2' ? 'headerSortDown': empty tri ? 'headerSortUp': ''}">
 								<a
-								href="affichageComputers?f=${page.sqlRequestOptions.filter}&s=${page.sqlRequestOptions.tri eq '2' ? '-2': '2'} ">Computer
+								href="affichageComputers?f=${page.sqlRequestOptions.filter}&s=${tri eq '2' ? '-2': '2'} ">Computer
 									name</a>
 							</th>
 
 
 							<th
-								class="col3 header ${page.sqlRequestOptions.tri eq '3' ? 'headerSortUp': page.sqlRequestOptions.tri eq '-3' ? 'headerSortDown': ''} ">
+								class="col3 header ${tri eq '3' ? 'headerSortUp': tri eq '-3' ? 'headerSortDown': ''} ">
 								<a
-								href="affichageComputers?f=${page.sqlRequestOptions.filter}&s=${page.sqlRequestOptions.tri eq '3' ? '-3': '3'}">Introduced</a>
+								href="affichageComputers?f=${page.sqlRequestOptions.filter}&s=${tri eq '3' ? '-3': '3'}">Introduced</a>
 							</th>
 
 
 							<th
-								class="col4 header ${page.sqlRequestOptions.tri eq '4' ? 'headerSortUp':page.sqlRequestOptions.tri eq '-4' ? 'headerSortDown': ''}">
+								class="col4 header ${tri eq '4' ? 'headerSortUp':tri eq '-4' ? 'headerSortDown': ''}">
 								<a
-								href="affichageComputers?f=${page.sqlRequestOptions.filter}&s=${page.sqlRequestOptions.tri eq '4' ? '-4': '4'}">Discontinued</a>
+								href="affichageComputers?f=${page.sqlRequestOptions.filter}&s=${tri eq '4' ? '-4': '4'}">Discontinued</a>
 							</th>
 
 
 							<th
-								class="col5 header ${page.sqlRequestOptions.tri eq '5' ? 'headerSortUp':page.sqlRequestOptions.tri eq '-5' ? 'headerSortDown': ''}">
+								class="col5 header ${tri eq '5' ? 'headerSortUp':tri eq '-5' ? 'headerSortDown': ''}">
 								<a
-								href="affichageComputers?f=${page.sqlRequestOptions.filter}&s=${page.sqlRequestOptions.tri eq '5' ? '-5': '5'}">Company</a>
+								href="affichageComputers?f=${page.sqlRequestOptions.filter}&s=${tri eq '5' ? '-5': '5'}">Company</a>
 							</th>
 
 						</tr>
@@ -119,7 +119,7 @@
 						</c:if>
 						<c:if test="${!page.first}">
 							<li class="prev"><a
-								href="affichageComputers?s=${page.sqlRequestOptions.tri}&f=${page.sqlRequestOptions.filter}&page=${page.pageNumber -1}">&larr;
+								href="affichageComputers?s=${tri}&f=${page.sqlRequestOptions.filter}&page=${page.pageNumber -1}">&larr;
 									Previous</a></li>
 						</c:if>
 
@@ -128,7 +128,7 @@
 
 						<c:if test="${!page.last}">
 							<li class="next"><a
-								href="affichageComputers?s=${page.sqlRequestOptions.tri}&f=${page.sqlRequestOptions.filter}&page=${page.pageNumber +1}">Next
+								href="affichageComputers?s=${tri}&f=${page.sqlRequestOptions.filter}&page=${page.pageNumber +1}">Next
 									&rarr;</a></li>
 						</c:if>
 						<c:if test="${page.last}">

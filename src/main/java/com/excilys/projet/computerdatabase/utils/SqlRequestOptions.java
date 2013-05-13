@@ -4,57 +4,78 @@ public class SqlRequestOptions {
 
 	private String filter;
 	
-	private int tri;
+	private String order;
+	private String tri;
 	
 	private enum Order{
 		ASC,DESC;
 	}
 	
+	private enum Column{
+		NAME("cpu.name"), INTRODUCED("cpu.introduced"), DISCONTINUED("cpu.discontinued"), COMPANY_NAME("cpy.name");
+		
+		private String field;
+		
+		private Column(String field){
+			this.field = field;
+		}
+		
+		@Override
+		public String toString(){
+			return field;
+		}
+	}
+	
 	public SqlRequestOptions() {
 		filter=null;
-		tri = 2;
+		tri = Column.NAME.toString();
 	}
 	
 	public SqlRequestOptions(String filter, int tri) {
 		this.filter = filter;
-		this.tri = tri;
+		
+		setSort(tri);
 	}
 	
 	
-	public String getSqlOrder(){
+	private void setSort(int tri){
 		if(tri<0){
-			return Order.DESC.toString();
+			order = Order.DESC.toString();
 		} else {
-			return Order.ASC.toString();
+			order = Order.ASC.toString();
 		}
+		
+		switch(Math.abs(tri)) {
+		
+		case 2:
+			this.tri = Column.NAME.toString();
+			break;
+			
+		case 3:
+			this.tri = Column.INTRODUCED.toString();
+			break;
+			
+		case 4:
+			this.tri = Column.DISCONTINUED.toString();
+			break;
+			
+		case 5:
+			this.tri = Column.COMPANY_NAME.toString();
+			break;
+			
+		default:
+			this.tri = Column.NAME.toString();
+			break;
+	}
+	}
+	
+	public String getSqlOrder(){
+		return order;
 	}
 	
 	public String getSqlTri(){
 		
-		String sqlTri = null;
-		switch(Math.abs(tri)) {
-				
-			case 2:
-				sqlTri= "cpu.name";
-				break;
-				
-			case 3:
-				sqlTri= "cpu.introduced";
-				break;
-				
-			case 4:
-				sqlTri= "cpu.discontinued";
-				break;
-				
-			case 5:
-				sqlTri= "cpy.name";
-				break;
-				
-			default:
-				sqlTri= "cpu.name";
-				break;
-		}
-		return sqlTri;
+		return this.tri;
 	}
 	
 	public String getSqlFilter(){
@@ -68,47 +89,6 @@ public class SqlRequestOptions {
 
 	public void setFilter(String filter) {
 		this.filter = filter;
-	}
-
-	public void setTri(int tri) {
-		if(tri<-5 || tri>5) {
-			this.tri=2;
-		} else if(tri > -2 && tri<2){
-			this.tri = 2;
-		} else {
-			this.tri=tri;
-		}
-		
-		
-	}
-	
-	public void setTri(String tri) {
-		if(tri ==null) {
-			this.tri = 2;
-			return;
-		}
-		
-		int t= 2;
-		try{
-			t= Integer.parseInt(tri);
-		} catch (NumberFormatException e){
-			this.tri = 2;
-			return;
-		}
-		
-		if(t<-5 || t>5) {
-			this.tri=2;
-		} else if(t > -2 && t<2){
-			this.tri = 2;
-		} else {
-			this.tri=t;
-		}
-		
-		
-	}
-
-	public int getTri() {
-		return tri;
 	}
 
 	public String getFilter() {

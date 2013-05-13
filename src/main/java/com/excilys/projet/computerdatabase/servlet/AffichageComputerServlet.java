@@ -31,6 +31,7 @@ public class AffichageComputerServlet extends HttpServlet {
 		}
 		page = new Page(req.getParameter("f"), req.getParameter("s"), pageNumber, MAX_AFFICHAGE);
 		req.setAttribute("page", page);
+		req.setAttribute("tri", req.getParameter("s"));
 
 		getServletContext().getRequestDispatcher("/WEB-INF/affichageComputers.jsp").forward(req, resp);
 		

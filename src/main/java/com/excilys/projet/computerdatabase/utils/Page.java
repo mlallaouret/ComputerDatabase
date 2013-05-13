@@ -18,9 +18,14 @@ public class Page {
 	private final int maxAffichage;
 	
 	public Page(String filter, String tri, int page, int maxAffichage) {
-		sqlRequestOptions = new SqlRequestOptions();
+		int sort=1;
+		try{
+			sort = Integer.parseInt(tri);
+		} catch (NumberFormatException e){
+			sort = 2;
+		}
+		sqlRequestOptions = new SqlRequestOptions(filter,sort);
 		sqlRequestOptions.setFilter(filter);
-		sqlRequestOptions.setTri(tri);
 		this.maxAffichage = maxAffichage;
 		total = GestionComputerService.getInstance().getComputerCount(sqlRequestOptions);
 		
