@@ -6,6 +6,7 @@ import com.excilys.projet.computerdatabase.dao.GestionCompanyDao;
 import com.excilys.projet.computerdatabase.dao.GestionComputerDao;
 import com.excilys.projet.computerdatabase.model.Company;
 import com.excilys.projet.computerdatabase.model.Computer;
+import com.excilys.projet.computerdatabase.model.Page;
 import com.excilys.projet.computerdatabase.utils.SqlRequestOptions;
 
 public class GestionComputerService {
@@ -62,8 +63,21 @@ public class GestionComputerService {
 	}
 	
 	
-	public boolean isIdExists(int id) {
-		return computerDao.isIdExists(id);
+	public boolean isComputerExists(int id) {
+		return computerDao.isComputerExists(id);
+	}
+	
+	public Page createPage(int page, int maxAffichage, SqlRequestOptions sqlRequestOptions){
+		int total = getComputerCount(sqlRequestOptions);
+		int pageNumber = 0;
+		if(page<0 || (page>0 && (total - page*maxAffichage<0))){
+			pageNumber=0;
+		} else {
+			pageNumber = page;
+		}
+		
+		return new Page(pageNumber, maxAffichage, getComputerCount(sqlRequestOptions),
+				getComputers(pageNumber, maxAffichage, sqlRequestOptions));
 	}
 	
 	

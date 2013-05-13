@@ -23,7 +23,7 @@ public class EditionComputerServlet extends HttpServlet {
 		if(req.getParameter("id")!=null) {
 			id = Integer.parseInt(req.getParameter("id"));
 		}
-		if(!GestionComputerService.getInstance().isIdExists(id)) {
+		if(!GestionComputerService.getInstance().isComputerExists(id)) {
 			getServletContext().getRequestDispatcher("/index").forward(req, resp);
 		} else {
 			

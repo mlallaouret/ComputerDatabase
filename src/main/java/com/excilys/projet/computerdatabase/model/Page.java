@@ -2,14 +2,10 @@ package com.excilys.projet.computerdatabase.model;
 
 import java.util.List;
 
-import com.excilys.projet.computerdatabase.service.GestionComputerService;
-import com.excilys.projet.computerdatabase.utils.SqlRequestOptions;
-
 public class Page {
 
 	private boolean first;
 	private boolean last;
-	private SqlRequestOptions sqlRequestOptions;
 	private int pageNumber;
 	private int total;
 	private int displayFrom;
@@ -17,26 +13,15 @@ public class Page {
 	private List<Computer> computers;
 	private final int maxAffichage;
 	
-	public Page(String filter, String tri, int page, int maxAffichage) {
-		int sort=1;
-		try{
-			sort = Integer.parseInt(tri);
-		} catch (NumberFormatException e){
-			sort = 2;
-		}
-		sqlRequestOptions = new SqlRequestOptions(filter,sort);
-		sqlRequestOptions.setFilter(filter);
-		this.maxAffichage = maxAffichage;
-		total = GestionComputerService.getInstance().getComputerCount(sqlRequestOptions);
+	public Page(int page, int maxAffichage, int totalComputers, List<Computer> listeComputers) {
 		
-		if(page<0 || (page>0 && (total - page*maxAffichage<0))){
-			pageNumber=0;
-		} else {
-			this.pageNumber = page;
-		}
+		this.maxAffichage = maxAffichage;
+		total = totalComputers;
+		
+		pageNumber = page;
 		
 		//Liste des ordinateurs
-		computers = GestionComputerService.getInstance().getComputers(pageNumber, maxAffichage, sqlRequestOptions);
+		computers = listeComputers;
 		
 		computeDisplayFrom();	
 		computeDisplayTo();	
@@ -88,10 +73,6 @@ public class Page {
 		return computers;
 	}
 	
-	
-	public SqlRequestOptions getSqlRequestOptions() {
-		return sqlRequestOptions;
-	}
 
 	public void setPageNumber(int pageNumber) {
 		this.pageNumber = pageNumber;

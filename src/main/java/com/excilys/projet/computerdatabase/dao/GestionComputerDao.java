@@ -251,7 +251,7 @@ public class GestionComputerDao {
 	
 	
 	
-	public boolean isIdExists(int id) {
+	public boolean isComputerExists(int id) {
 		PreparedStatement myPreparedStatement=null;
 		
 		Connection conn = JdbcConnexion.getConnection();
