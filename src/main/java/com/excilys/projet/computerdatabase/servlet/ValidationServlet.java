@@ -23,7 +23,6 @@ public class ValidationServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		boolean error = false;
-		
 		Computer computer = new Computer();
 		
 		//Check de l'id
@@ -77,6 +76,7 @@ public class ValidationServlet extends HttpServlet {
 			resp.sendRedirect("index.jsp");
 		} else { 
 			req.setAttribute("computer", computer);
+			req.setAttribute("companies", GestionComputerService.getInstance().getCompanies());
 			if(req.getParameter("id")!=null) {
 				
 				getServletContext().getRequestDispatcher("/WEB-INF/editionComputer.jsp").forward(req, resp);

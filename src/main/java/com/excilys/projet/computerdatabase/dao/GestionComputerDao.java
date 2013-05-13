@@ -27,8 +27,6 @@ public class GestionComputerDao {
 	private static final String DELETE_COMPUTER = "delete from computer where id=?";
 	private static final String UPDATE_COMPUTER = "update computer set name = ?, introduced = ?, discontinued = ?, company_id = ? where id =? ";
 	private static final String COUNT_COMPUTER = "select count(cpu.id) as count from computer cpu";
-	private static final String SELECT_ALL_COMPANIES_QUERY = "select id, name from company order by name";
-	private static final String SELECT_ONE_COMPANY_BY_ID_QUERY = "select id, name from company where id = ?";
 	private static final String ID_EXISTS_QUERY = "select count(id) as count from computer where id = ?";
 	private static final String SELECT_WHERE = " where cpu.name LIKE \"%1$s\"" ;
 	private static final String SELECT_ORDER_BY = " order by ISNULL (%1$s),%1$s %2$s limit %3$s, %4$s";
@@ -251,71 +249,7 @@ public class GestionComputerDao {
 		}
 	}
 	
-	public List<Company> getCompanies(){
-		PreparedStatement myPreparedStatement=null;
-		List<Company> liste = new ArrayList<Company>();
-		
-		Connection conn = JdbcConnexion.getConnection();
-		try {
-			myPreparedStatement = conn.prepareStatement(SELECT_ALL_COMPANIES_QUERY);
-			
-			ResultSet rs = myPreparedStatement.executeQuery();
-			
-			while(rs.next()){
-				Company cpy = new Company();
-				cpy.setId(rs.getInt("id"));
-				cpy.setName(rs.getString("name"));
-				liste.add(cpy);
-			}
-		} catch (SQLException e) {
-			Logger.getLogger("main").log(Level.WARNING, "Erreur lors de la récupération de la liste des sociétés");
-			e.printStackTrace();
-		} finally{
-			try {
-				myPreparedStatement.close();
-			} catch (SQLException e) {
-				Logger.getLogger("main").log(Level.WARNING, "Erreur lors de la récupération de la liste des sociétés");
-				e.printStackTrace();
-			}
-			JdbcConnexion.closeConnection(conn);
-		}
-		
-		
-		
-		return liste;
-	}
 	
-	public Company getCompany(int id){
-		PreparedStatement myPreparedStatement=null;
-		Company company = new Company();
-		
-		Connection conn = JdbcConnexion.getConnection();
-		try {
-			myPreparedStatement = conn.prepareStatement(SELECT_ONE_COMPANY_BY_ID_QUERY);
-			myPreparedStatement.setInt(1, id);
-			
-			ResultSet rs = myPreparedStatement.executeQuery();
-			
-			rs.first();
-			company.setId(rs.getInt("id"));
-			company.setName(rs.getString("name"));
-		} catch (SQLException e) {
-			Logger.getLogger("main").log(Level.WARNING, "Erreur lors de la récupération d'une société");
-			e.printStackTrace();
-		} finally{
-			try {
-				myPreparedStatement.close();
-			} catch (SQLException e) {
-				Logger.getLogger("main").log(Level.WARNING, "Erreur lors de la récupération d'une société");
-				e.printStackTrace();
-			}
-			JdbcConnexion.closeConnection(conn);
-		}
-		
-		
-		
-		return company;
-	}
 	
 	public boolean isIdExists(int id) {
 		PreparedStatement myPreparedStatement=null;

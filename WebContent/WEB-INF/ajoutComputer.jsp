@@ -73,7 +73,7 @@
 							<option class="blank" value="">-- Choose a company --</option>
 
 							<c:forEach items="${companies}" var="company">		
-								<option value="${company.id }">${company.name }</option>
+								<option value="${company.id }" <c:if test="${company.id==computer.company.id }">selected </c:if> >${company.name }</option>
 							</c:forEach>
 
 						</select> <span class="help-inline"></span>

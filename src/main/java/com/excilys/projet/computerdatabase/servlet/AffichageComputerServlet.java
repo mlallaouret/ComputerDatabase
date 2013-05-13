@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.excilys.projet.computerdatabase.utils.Page;
+import com.excilys.projet.computerdatabase.model.Page;
 
 @SuppressWarnings("serial")
 @WebServlet("/affichageComputers")

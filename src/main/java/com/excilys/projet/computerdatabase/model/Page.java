@@ -1,9 +1,9 @@
-package com.excilys.projet.computerdatabase.utils;
+package com.excilys.projet.computerdatabase.model;
 
 import java.util.List;
 
-import com.excilys.projet.computerdatabase.model.Computer;
 import com.excilys.projet.computerdatabase.service.GestionComputerService;
+import com.excilys.projet.computerdatabase.utils.SqlRequestOptions;
 
 public class Page {
 
