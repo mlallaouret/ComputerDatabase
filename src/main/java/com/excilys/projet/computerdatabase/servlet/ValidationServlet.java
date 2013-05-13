@@ -1,6 +1,7 @@
 package com.excilys.projet.computerdatabase.servlet;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
@@ -45,11 +46,15 @@ public class ValidationServlet extends HttpServlet {
 		}
 		
 		//Check des dates
+		SimpleDateFormat df = (SimpleDateFormat) DateFormat.getDateInstance();
+		df.applyPattern("yyyy-MM-dd");
+		df.setLenient(false);
+		
 		if(req.getParameter("introduced").equals("")) {
 			computer.setIntroduced(null);
 		} else {
 			try {
-				computer.setIntroduced(new SimpleDateFormat("yyyy-MM-dd").parse(req.getParameter("introduced")));
+				computer.setIntroduced(df.parse(req.getParameter("introduced")));
 			} catch (ParseException e) {
 				error = true;
 				req.setAttribute("introducedError", "error");
@@ -60,7 +65,7 @@ public class ValidationServlet extends HttpServlet {
 			computer.setDiscontinued(null);
 		} else {	
 			try {
-				computer.setDiscontinued(new SimpleDateFormat("yyyy-MM-dd").parse(req.getParameter("discontinued")));
+				computer.setDiscontinued(df.parse(req.getParameter("discontinued")));
 			} catch (ParseException e) {
 				error = true;
 				req.setAttribute("discontinuedError", "error");
@@ -72,10 +77,10 @@ public class ValidationServlet extends HttpServlet {
 			resp.sendRedirect("index.jsp");
 		} else { 
 			req.setAttribute("computer", computer);
-			if(req.getParameter("id")!=null){
+			if(req.getParameter("id")!=null) {
 				
 				getServletContext().getRequestDispatcher("/WEB-INF/editionComputer.jsp").forward(req, resp);
-			}else {
+			} else {
 				getServletContext().getRequestDispatcher("/WEB-INF/ajoutComputer.jsp").forward(req, resp);
 			}
 			

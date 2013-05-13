@@ -14,7 +14,7 @@
 
 	<header class="topbar">
 		<h1 class="fill">
-			<a href="/"> My super Computer database </a>
+			<a href="affichageComputers"> My super Computer database </a>
 		</h1>
 	</header>
 

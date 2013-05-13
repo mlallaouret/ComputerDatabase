@@ -15,104 +15,131 @@
 
 	<header class="topbar">
 		<h1 class="fill">
-			<a href="/"> My super Computer database </a>
+			<a href="affichageComputers"> My super Computer database </a>
 		</h1>
 	</header>
 
 	<section id="main">
 
-		<h1>${page.total} computers found</h1>
+
+		<h1>${page.total eq 0 ? 'No': page.total } computers found</h1>
+
+				<div id="actions">
+
+					<form action="affichageComputers" method="GET">
+
+						<input type="search" id="searchbox" name="f"
+							value="${page.sqlRequestOptions.filter }"
+							placeholder="Filter by computer name..."> <input
+							type="submit" id="searchsubmit" value="Filter by name"
+							class="btn primary">
+
+					</form>
 
 
+					<a class="btn success" id="add" href="ajoutComputer">Add a new
+						computer</a>
 
-		<div id="actions">
+				</div>
 
-			<form action="affichageComputers" method="GET">
-
-				<input type="search" id="searchbox" name="f" value="${page.sqlRequestOptions.filter }"
-					placeholder="Filter by computer name..."> <input
-					type="submit" id="searchsubmit" value="Filter by name"
-					class="btn primary">
-
-			</form>
-
-
-			<a class="btn success" id="add" href="ajoutComputer">Add a new
-				computer</a>
-
-		</div>
-
-
-
-		<table class="computers zebra-striped">
-			<thead>
-				<tr>
-
-					<th class="col2 header ${page.sqlRequestOptions.tri eq '2' ? 'headerSortUp': page.sqlRequestOptions.tri eq '-2' ? 'headerSortDown': empty page.sqlRequestOptions.tri ? 'headerSortUp': ''}">
-						<a href="affichageComputers?f=${page.sqlRequestOptions.filter}&s=${page.sqlRequestOptions.tri eq '2' ? '-2': '2'} ">Computer name</a>
-					</th>
-
-
-					<th class="col3 header ${page.sqlRequestOptions.tri eq '3' ? 'headerSortUp': page.sqlRequestOptions.tri eq '-3' ? 'headerSortDown': ''} ">
-						<a href="affichageComputers?f=${page.sqlRequestOptions.filter}&s=${page.sqlRequestOptions.tri eq '3' ? '-3': '3'}">Introduced</a>
-					</th>
-
-
-					<th class="col4 header ${page.sqlRequestOptions.tri eq '4' ? 'headerSortUp':page.sqlRequestOptions.tri eq '-4' ? 'headerSortDown': ''}">
-						<a href="affichageComputers?f=${page.sqlRequestOptions.filter}&s=${page.sqlRequestOptions.tri eq '4' ? '-4': '4'}">Discontinued</a>
-					</th>
-
-
-					<th class="col5 header ${page.sqlRequestOptions.tri eq '5' ? 'headerSortUp':page.sqlRequestOptions.tri eq '-5' ? 'headerSortDown': ''}">
-						<a href="affichageComputers?f=${page.sqlRequestOptions.filter}&s=${page.sqlRequestOptions.tri eq '5' ? '-5': '5'}">Company</a>
-					</th>
-
-				</tr>
-
-			</thead>
-			<tbody>
-
-				<c:forEach items="${page.computers}" var="computer">		
-					<tr>
-						<td><a href="editionComputer?id=${computer.id}">${computer.name}</a></td>
-						<td><c:if test= "${empty computer.introduced}"><em>-</em></c:if>
-						<c:if test= "${not empty computer.introduced}">${computer.introduced }</c:if></td>
-						<td><c:if test= "${empty computer.discontinued}"><em>-</em></c:if>
-						<c:if test= "${not empty computer.discontinued}">${computer.discontinued }</c:if></td>
-						<td><c:if test= "${empty computer.company.name}"><em>-</em></c:if>
-						<c:if test= "${not empty computer.company.name}">${computer.company.name }</c:if></td>
-					</tr>
-				</c:forEach>
+		<c:choose>
+			<c:when test="${page.total == 0}">
 				
 
-				
+				<div class="well">
+					<em>Nothing to display</em>
+				</div>
+			</c:when>
+			<c:otherwise>
+
+			
+				<table class="computers zebra-striped">
+					<thead>
+						<tr>
+
+							<th
+								class="col2 header ${page.sqlRequestOptions.tri eq '2' ? 'headerSortUp': page.sqlRequestOptions.tri eq '-2' ? 'headerSortDown': empty page.sqlRequestOptions.tri ? 'headerSortUp': ''}">
+								<a
+								href="affichageComputers?f=${page.sqlRequestOptions.filter}&s=${page.sqlRequestOptions.tri eq '2' ? '-2': '2'} ">Computer
+									name</a>
+							</th>
 
 
-			</tbody>
-		</table>
-
-		<div id="pagination" class="pagination">
-			<ul>
-				<c:if test="${page.first}">
-					<li class="prev disabled"><a>&larr; Previous</a></li>
-				</c:if>
-				<c:if test="${!page.first}">
-					<li class="prev"><a href="affichageComputers?s=${page.sqlRequestOptions.tri}&f=${page.sqlRequestOptions.filter}&page=${page.pageNumber -1}">&larr; Previous</a></li>
-				</c:if>
-
-				<li class="current"><a>Displaying ${page.displayFrom} to ${page.displayTo} of ${page.total }</a></li>
-				
-				<c:if test="${!page.last}">
-					<li class="next"><a href="affichageComputers?s=${page.sqlRequestOptions.tri}&f=${page.sqlRequestOptions.filter}&page=${page.pageNumber +1}">Next &rarr;</a></li>
-				</c:if>
-				<c:if test="${page.last}">
-					<li class="next disabled"><a >Next &rarr;</a></li>
-				</c:if>
-			</ul>
-		</div>
+							<th
+								class="col3 header ${page.sqlRequestOptions.tri eq '3' ? 'headerSortUp': page.sqlRequestOptions.tri eq '-3' ? 'headerSortDown': ''} ">
+								<a
+								href="affichageComputers?f=${page.sqlRequestOptions.filter}&s=${page.sqlRequestOptions.tri eq '3' ? '-3': '3'}">Introduced</a>
+							</th>
 
 
+							<th
+								class="col4 header ${page.sqlRequestOptions.tri eq '4' ? 'headerSortUp':page.sqlRequestOptions.tri eq '-4' ? 'headerSortDown': ''}">
+								<a
+								href="affichageComputers?f=${page.sqlRequestOptions.filter}&s=${page.sqlRequestOptions.tri eq '4' ? '-4': '4'}">Discontinued</a>
+							</th>
 
+
+							<th
+								class="col5 header ${page.sqlRequestOptions.tri eq '5' ? 'headerSortUp':page.sqlRequestOptions.tri eq '-5' ? 'headerSortDown': ''}">
+								<a
+								href="affichageComputers?f=${page.sqlRequestOptions.filter}&s=${page.sqlRequestOptions.tri eq '5' ? '-5': '5'}">Company</a>
+							</th>
+
+						</tr>
+
+					</thead>
+					<tbody>
+
+						<c:forEach items="${page.computers}" var="computer">
+							<tr>
+								<td><a href="editionComputer?id=${computer.id}">${computer.name}</a></td>
+								<td><c:if test="${empty computer.introduced}">
+										<em>-</em>
+									</c:if> <c:if test="${not empty computer.introduced}">${computer.introduced }</c:if></td>
+								<td><c:if test="${empty computer.discontinued}">
+										<em>-</em>
+									</c:if> <c:if test="${not empty computer.discontinued}">${computer.discontinued }</c:if></td>
+								<td><c:if test="${empty computer.company.name}">
+										<em>-</em>
+									</c:if> <c:if test="${not empty computer.company.name}">${computer.company.name }</c:if></td>
+							</tr>
+						</c:forEach>
+
+
+
+
+
+					</tbody>
+				</table>
+
+				<div id="pagination" class="pagination">
+					<ul>
+						<c:if test="${page.first}">
+							<li class="prev disabled"><a>&larr; Previous</a></li>
+						</c:if>
+						<c:if test="${!page.first}">
+							<li class="prev"><a
+								href="affichageComputers?s=${page.sqlRequestOptions.tri}&f=${page.sqlRequestOptions.filter}&page=${page.pageNumber -1}">&larr;
+									Previous</a></li>
+						</c:if>
+
+						<li class="current"><a>Displaying ${page.displayFrom} to
+								${page.displayTo} of ${page.total }</a></li>
+
+						<c:if test="${!page.last}">
+							<li class="next"><a
+								href="affichageComputers?s=${page.sqlRequestOptions.tri}&f=${page.sqlRequestOptions.filter}&page=${page.pageNumber +1}">Next
+									&rarr;</a></li>
+						</c:if>
+						<c:if test="${page.last}">
+							<li class="next disabled"><a>Next &rarr;</a></li>
+						</c:if>
+					</ul>
+				</div>
+
+
+			</c:otherwise>
+		</c:choose>
 
 
 	</section>

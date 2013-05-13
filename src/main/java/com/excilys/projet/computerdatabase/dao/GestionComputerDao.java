@@ -91,9 +91,6 @@ public class GestionComputerDao {
 			}
 			JdbcConnexion.closeConnection(conn);
 		}
-		
-		
-		
 		return liste;
 	}
 	
