@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -35,7 +36,7 @@
 					<label for="name">Computer name</label>
 					<div class="input">
 
-						<input type="text" id="name" name="name" value=""> <span
+						<input type="text" id="name" name="name" value="${computer.name}"> <span
 							class="help-inline">Required</span>
 					</div>
 				</div>
@@ -46,7 +47,7 @@
 					<label for="introduced">Introduced date</label>
 					<div class="input">
 
-						<input type="text" id="introduced" name="introduced" value="">
+						<input type="text" id="introduced" name="introduced" value="<fmt:formatDate value="${computer.introduced }" pattern="yyyy-MM-dd" />">
 
 						<span class="help-inline">Date (&#x27;yyyy-MM-dd&#x27;)</span>
 					</div>
@@ -56,7 +57,7 @@
 					<label for="discontinued">Discontinued date</label>
 					<div class="input">
 
-						<input type="text" id="discontinued" name="discontinued" value="">
+						<input type="text" id="discontinued" name="discontinued" value="<fmt:formatDate value="${computer.discontinued }" pattern="yyyy-MM-dd" />">
 
 						<span class="help-inline">Date (&#x27;yyyy-MM-dd&#x27;)</span>
 					</div>

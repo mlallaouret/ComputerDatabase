@@ -22,6 +22,12 @@ public class Computer {
 		this.company = company;
 	}
 	
+	public Computer(int id, String name) {
+		super();
+		this.id = id;
+		this.name = name;;
+	}
+	
 	
 	public Computer() {
 		super();

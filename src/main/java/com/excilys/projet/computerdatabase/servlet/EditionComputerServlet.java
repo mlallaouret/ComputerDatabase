@@ -14,12 +14,6 @@ import com.excilys.projet.computerdatabase.service.GestionComputerService;
 @WebServlet("/editionComputer")
 public class EditionComputerServlet extends HttpServlet {
 
-	/*@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		getServletContext().getRequestDispatcher("/WEB-INF/editionComputer.jsp").forward(req, resp);
-	}*/
-
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
