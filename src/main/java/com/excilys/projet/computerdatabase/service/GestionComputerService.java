@@ -30,14 +30,17 @@ public class GestionComputerService {
 		
 	}
 	
+
 	public Company getCompany(int id){
 		return companyDao.getCompany(id);
 	}
 	
+
 	public void insertOrUpdate(Computer computer){
 		computerDao.insertOrUpdateComputer(computer);
 	}
 	
+
 	public List<Computer> getComputers(int debut, int nombre, SqlRequestOptions sqlRequestOptions){
 		return computerDao.getComputers(debut, nombre, sqlRequestOptions);
 	}
@@ -62,22 +65,17 @@ public class GestionComputerService {
 		return companyDao.getCompanies();
 	}
 	
-	
 	public boolean isComputerExists(int id) {
 		return computerDao.isComputerExists(id);
 	}
-	
+
 	public Page createPage(int page, int maxAffichage, SqlRequestOptions sqlRequestOptions){
 		int total = getComputerCount(sqlRequestOptions);
-		int pageNumber = 0;
 		if(page<0 || (page>0 && (total - page*maxAffichage<0))){
-			pageNumber=0;
-		} else {
-			pageNumber = page;
+			page=0;
 		}
-		
-		return new Page(pageNumber, maxAffichage, getComputerCount(sqlRequestOptions),
-				getComputers(pageNumber, maxAffichage, sqlRequestOptions));
+		return new Page(page, maxAffichage, total,
+				getComputers(page*maxAffichage, maxAffichage, sqlRequestOptions));
 	}
 	
 	

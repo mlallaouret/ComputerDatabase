@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.excilys.projet.computerdatabase.model.Page;
 import com.excilys.projet.computerdatabase.service.GestionComputerService;
 import com.excilys.projet.computerdatabase.utils.SqlRequestOptions;
+import com.mysql.jdbc.StringUtils;
 
 @SuppressWarnings("serial")
 @WebServlet("/affichageComputers")
@@ -39,6 +40,13 @@ public class AffichageComputerServlet extends HttpServlet {
 		}
 
 		page = GestionComputerService.getInstance().createPage(pageNumber, MAX_AFFICHAGE, new SqlRequestOptions(req.getParameter("f"), sort));
+		
+		String info = (String) req.getSession().getAttribute("info");
+
+		if(!StringUtils.isNullOrEmpty(info)) {
+			req.setAttribute("info", info);
+			req.getSession().removeAttribute("info");
+		}
 		req.setAttribute("page", page);
 		req.setAttribute("tri", req.getParameter("s"));
 		req.setAttribute("filter", req.getParameter("f"));

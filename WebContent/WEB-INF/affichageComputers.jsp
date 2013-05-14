@@ -23,7 +23,11 @@
 
 
 		<h1>${page.total eq 0 ? 'No': page.total } computers found</h1>
-
+		<c:if test="${! empty info }">
+			 <div class="alert-message warning">
+	            <strong>Done ! </strong>${info }
+	        </div>
+        </c:if>
 				<div id="actions">
 
 					<form action="affichageComputers" method="GET">

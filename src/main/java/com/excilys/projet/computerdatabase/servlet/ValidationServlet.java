@@ -73,6 +73,13 @@ public class ValidationServlet extends HttpServlet {
 		
 		if(!error) {
 			GestionComputerService.getInstance().insertOrUpdate(computer);
+			StringBuilder sb = new StringBuilder("Computer ").append(computer.getName()).append(" has been ");
+			if(req.getParameter("id")!=null){
+				sb.append("updated");
+			} else {
+				sb.append("created");
+			}
+			req.getSession().setAttribute("info", sb.toString());
 			resp.sendRedirect("index.jsp");
 		} else { 
 			req.setAttribute("computer", computer);

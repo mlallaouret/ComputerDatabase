@@ -58,7 +58,7 @@ public class GestionComputerDao {
 			if(sqlRequestOptions.getFilter()!=null && !sqlRequestOptions.getFilter().equals("")){
 				f.format(SELECT_WHERE, sqlRequestOptions.getSqlFilter());
 			}
-			f.format(SELECT_ORDER_BY, sqlRequestOptions.getSqlTri(), sqlRequestOptions.getSqlOrder(), debut*10, nombre);
+			f.format(SELECT_ORDER_BY, sqlRequestOptions.getSqlTri(), sqlRequestOptions.getSqlOrder(), debut, nombre);
 			sb.append(f.toString());
 			myPreparedStatement = conn.prepareStatement(sb.toString());
 			System.out.println(myPreparedStatement);

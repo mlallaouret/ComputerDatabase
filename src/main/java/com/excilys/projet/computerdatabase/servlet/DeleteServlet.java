@@ -18,7 +18,7 @@ public class DeleteServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		GestionComputerService.getInstance().deleteComputer(Integer.parseInt(req.getParameter("id")));
-		
+		req.getSession().setAttribute("info", "Computer has been deleted");
 		resp.sendRedirect("/ComputerDatabase/affichageComputers");
 	}
 
