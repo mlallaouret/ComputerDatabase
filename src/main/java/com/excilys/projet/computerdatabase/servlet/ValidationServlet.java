@@ -31,10 +31,9 @@ public class ValidationServlet extends HttpServlet {
 		}
 		
 		//Check du nom de l'ordinateur
-		if(StringUtils.isNullOrEmpty(req.getParameter("name"))) {
+		if(req.getParameter("name")==null || req.getParameter("name").trim().length()==0){
 			error = true;
-			req.setAttribute("nameError", "error");
-			
+			req.setAttribute("nameError", "error");	
 		} else {
 			computer.setName(req.getParameter("name"));
 		}
