@@ -79,7 +79,7 @@ public class ValidationServlet extends HttpServlet {
 				sb.append("created");
 			}
 			req.getSession().setAttribute("info", sb.toString());
-			resp.sendRedirect("index.jsp");
+			resp.sendRedirect("affichageComputers");
 		} else { 
 			req.setAttribute("computer", computer);
 			req.setAttribute("companies", GestionComputerService.getInstance().getCompanies());
