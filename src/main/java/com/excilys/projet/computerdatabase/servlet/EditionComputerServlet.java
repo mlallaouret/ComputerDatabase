@@ -21,17 +21,22 @@ public class EditionComputerServlet extends HttpServlet {
 		int id=0;
 		
 		if(req.getParameter("id")!=null) {
-			id = Integer.parseInt(req.getParameter("id"));
+			try{
+				id = Integer.parseInt(req.getParameter("id"));
+				if(!GestionComputerService.getInstance().isComputerExists(id)) {
+					getServletContext().getRequestDispatcher("/index").forward(req, resp);
+				} else {
+					
+					req.setAttribute("computer", GestionComputerService.getInstance().getComputer(id));
+					req.setAttribute("companies", GestionComputerService.getInstance().getCompanies());
+					
+					getServletContext().getRequestDispatcher("/WEB-INF/editionComputer.jsp").forward(req, resp);
+				}
+			}catch(NumberFormatException e){
+				resp.sendRedirect("affichageComputers");
+			}
 		}
-		if(!GestionComputerService.getInstance().isComputerExists(id)) {
-			getServletContext().getRequestDispatcher("/index").forward(req, resp);
-		} else {
-			
-			req.setAttribute("computer", GestionComputerService.getInstance().getComputer(id));
-			req.setAttribute("companies", GestionComputerService.getInstance().getCompanies());
-			
-			getServletContext().getRequestDispatcher("/WEB-INF/editionComputer.jsp").forward(req, resp);
-		}
+		
 		
 		
 		
