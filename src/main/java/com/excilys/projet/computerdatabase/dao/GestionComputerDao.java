@@ -28,7 +28,7 @@ public class GestionComputerDao {
 	private static final String UPDATE_COMPUTER = "update computer set name = ?, introduced = ?, discontinued = ?, company_id = ? where id =? ";
 	private static final String COUNT_COMPUTER = "select count(cpu.id) as count from computer cpu";
 	private static final String ID_EXISTS_QUERY = "select count(id) as count from computer where id = ?";
-	private static final String SELECT_WHERE = " where cpu.name LIKE \"%1$s\"" ;
+	private static final String SELECT_WHERE = " where cpu.name LIKE ?" ;
 	private static final String SELECT_ORDER_BY = " order by ISNULL (%1$s),%1$s %2$s limit %3$s, %4$s";
 	
 	
@@ -56,11 +56,15 @@ public class GestionComputerDao {
 			
 			StringBuilder sb = new StringBuilder(SELECT_ALL_COMPUTERS_QUERY);
 			if(sqlRequestOptions.getFilter()!=null && !sqlRequestOptions.getFilter().equals("")){
-				f.format(SELECT_WHERE, sqlRequestOptions.getSqlFilter());
+				sb.append(SELECT_WHERE);
 			}
 			f.format(SELECT_ORDER_BY, sqlRequestOptions.getSqlTri(), sqlRequestOptions.getSqlOrder(), debut, nombre);
 			sb.append(f.toString());
 			myPreparedStatement = conn.prepareStatement(sb.toString());
+			if(sqlRequestOptions.getFilter()!=null && !sqlRequestOptions.getFilter().equals("")){
+				myPreparedStatement.setString(1, sqlRequestOptions.getSqlFilter());
+			}
+			
 			System.out.println(myPreparedStatement);
 			ResultSet rs = myPreparedStatement.executeQuery();
 			
@@ -135,10 +139,12 @@ public class GestionComputerDao {
 			
 			StringBuilder sb = new StringBuilder(COUNT_COMPUTER);
 			if(sqlRequestOptions.getFilter()!=null && !sqlRequestOptions.getFilter().equals("")){
-				f.format(SELECT_WHERE, sqlRequestOptions.getSqlFilter());
-				sb.append(f);
+				sb.append(SELECT_WHERE);
 			}
 			myPreparedStatement = conn.prepareStatement(sb.toString());
+			if(sqlRequestOptions.getFilter()!=null && !sqlRequestOptions.getFilter().equals("")){
+				myPreparedStatement.setString(1, sqlRequestOptions.getSqlFilter());
+			}
 			System.out.println(myPreparedStatement);
 			ResultSet rs = myPreparedStatement.executeQuery();
 			rs.first();
