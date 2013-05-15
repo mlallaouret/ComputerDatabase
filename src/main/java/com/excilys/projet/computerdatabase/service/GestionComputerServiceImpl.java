@@ -1,7 +1,11 @@
 package com.excilys.projet.computerdatabase.service;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.excilys.projet.computerdatabase.dao.GestionCompanyDao;
 import com.excilys.projet.computerdatabase.dao.GestionCompanyDaoImpl;
@@ -15,6 +19,11 @@ import com.excilys.projet.computerdatabase.utils.SqlRequestOptions;
 
 public class GestionComputerServiceImpl implements GestionComputerService {
 
+	/**
+	 * Logger
+	 */
+	private static final Logger logger = LoggerFactory.getLogger(GestionComputerServiceImpl.class);
+	
 	private GestionComputerDao computerDao;
 	private GestionCompanyDao companyDao;
 	private static GestionComputerService gestionComputerService = null;
@@ -37,7 +46,12 @@ public class GestionComputerServiceImpl implements GestionComputerService {
 	@Override
 	public Company getCompany(int id){
 		Connection conn = JdbcConnexion.getConnection();
-		Company c = companyDao.getCompany(conn, id);
+		Company c = null;
+		try {
+			c = companyDao.getCompany(conn, id);
+		} catch(SQLException e) {
+			
+		}
 		JdbcConnexion.closeConnection(conn);
 		return c;
 	}
@@ -45,14 +59,23 @@ public class GestionComputerServiceImpl implements GestionComputerService {
 	@Override
 	public void insertOrUpdate(Computer computer){
 		Connection conn = JdbcConnexion.getConnection();
-		computerDao.insertOrUpdateComputer(conn, computer);
+		try {
+			computerDao.insertOrUpdateComputer(conn, computer);
+		} catch(SQLException e) {
+			logger.warn("Erreur lors de l'inset/update d'un ordinateur");
+		}
 		JdbcConnexion.closeConnection(conn);
 	}
 	
 	@Override
 	public List<Computer> getComputers(int debut, int nombre, SqlRequestOptions sqlRequestOptions){
 		Connection conn = JdbcConnexion.getConnection();
-		List<Computer> computers = computerDao.getComputers(conn, debut, nombre, sqlRequestOptions);
+		List<Computer> computers = null;
+		try{
+			computers = computerDao.getComputers(conn, debut, nombre, sqlRequestOptions);
+		} catch (SQLException e){
+			logger.warn("Erreur lors de la récupération de la liste des ordinateurs");
+		}
 		JdbcConnexion.closeConnection(conn);
 		return computers;
 	}
@@ -60,7 +83,12 @@ public class GestionComputerServiceImpl implements GestionComputerService {
 	@Override
 	public Integer getComputerCount(SqlRequestOptions sqlRequestOptions){
 		Connection conn = JdbcConnexion.getConnection();
-		Integer i = computerDao.getComputerCount(conn, sqlRequestOptions);
+		Integer i = null;
+		try {
+			i = computerDao.getComputerCount(conn, sqlRequestOptions);
+		} catch(SQLException e){
+			logger.warn("Erreur lors de la récupération du compte des ordinateurs");
+		}
 		JdbcConnexion.closeConnection(conn);
 		
 		return i;
@@ -69,21 +97,34 @@ public class GestionComputerServiceImpl implements GestionComputerService {
 	@Override
 	public void updateComputer(Computer c){
 		Connection conn = JdbcConnexion.getConnection();
-		computerDao.updateComputer(conn, c);
+		try {
+			computerDao.updateComputer(conn, c);
+		} catch(SQLException e) {
+			logger.warn("Erreur lors de l'update d'un ordinateur");
+		}
 		JdbcConnexion.closeConnection(conn);
 	}
 	
 	@Override
 	public void deleteComputer(int id){
 		Connection conn = JdbcConnexion.getConnection();
-		computerDao.deleteComputer(conn, id);
+		try{
+			computerDao.deleteComputer(conn, id);
+		} catch(SQLException e){
+			logger.warn("Erreur lors de la suppression d'un ordinateur");
+		}
 		JdbcConnexion.closeConnection(conn);
 	}
 	
 	@Override
 	public Computer getComputer(int id){
 		Connection conn = JdbcConnexion.getConnection();
-		Computer c = computerDao.getComputer(conn, id);
+		Computer c = null;
+		try {
+			c = computerDao.getComputer(conn, id);
+		} catch (SQLException e) {
+			logger.warn("Erreur lors de la récupération d'un ordinateur");
+		}
 		JdbcConnexion.closeConnection(conn);
 		return c;
 	}
@@ -91,7 +132,12 @@ public class GestionComputerServiceImpl implements GestionComputerService {
 	@Override
 	public List<Company> getCompanies(){
 		Connection conn = JdbcConnexion.getConnection();
-		List<Company> companies = companyDao.getCompanies(conn);
+		List<Company> companies = null;
+		try {
+			companies = companyDao.getCompanies(conn);
+		} catch (SQLException e){
+			logger.warn("Erreur lors de la récupération de la liste des sociétés");
+		}
 		JdbcConnexion.closeConnection(conn);
 		return companies;
 	}
@@ -99,7 +145,13 @@ public class GestionComputerServiceImpl implements GestionComputerService {
 	@Override
 	public boolean isComputerExists(int id) {
 		Connection conn = JdbcConnexion.getConnection();
-		boolean b = computerDao.isComputerExists(conn, id);
+		
+		boolean b = false;
+		try {
+			b = computerDao.isComputerExists(conn, id);
+		} catch(SQLException e){
+			logger.warn("Erreur lors de la récupération d'une société");
+		}
 		JdbcConnexion.closeConnection(conn);
 		return b;
 	}

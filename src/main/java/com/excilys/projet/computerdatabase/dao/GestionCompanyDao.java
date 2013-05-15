@@ -1,14 +1,15 @@
 package com.excilys.projet.computerdatabase.dao;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
 import com.excilys.projet.computerdatabase.model.Company;
 
 public interface GestionCompanyDao {
 
-	public abstract List<Company> getCompanies(Connection conn);
+	List<Company> getCompanies(Connection conn) throws SQLException;
 
-	public abstract Company getCompany(Connection conn, int id);
+	Company getCompany(Connection conn, int id) throws SQLException;
 
 }

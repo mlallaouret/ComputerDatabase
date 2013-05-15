@@ -1,6 +1,7 @@
 package com.excilys.projet.computerdatabase.dao;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
 import com.excilys.projet.computerdatabase.model.Computer;
@@ -8,19 +9,19 @@ import com.excilys.projet.computerdatabase.utils.SqlRequestOptions;
 
 public interface GestionComputerDao {
 
-	public abstract List<Computer> getComputers(Connection conn, int debut, int nombre,
-			SqlRequestOptions sqlRequestOptions);
+	List<Computer> getComputers(Connection conn, int debut, int nombre,
+			SqlRequestOptions sqlRequestOptions) throws SQLException;
 
-	public abstract Computer getComputer(Connection conn, int id);
+	Computer getComputer(Connection conn, int id) throws SQLException;
 
-	public abstract Integer getComputerCount(Connection conn, SqlRequestOptions sqlRequestOptions);
+	Integer getComputerCount(Connection conn, SqlRequestOptions sqlRequestOptions) throws SQLException;
 
-	public abstract void deleteComputer(Connection conn, int id);
+	void deleteComputer(Connection conn, int id) throws SQLException;
 
-	public abstract void updateComputer(Connection conn, Computer computer);
+	void updateComputer(Connection conn, Computer computer) throws SQLException;
 
-	public abstract void insertOrUpdateComputer(Connection conn, Computer computer);
+	void insertOrUpdateComputer(Connection conn, Computer computer) throws SQLException;
 
-	public abstract boolean isComputerExists(Connection conn, int id);
+	boolean isComputerExists(Connection conn, int id) throws SQLException;
 
 }

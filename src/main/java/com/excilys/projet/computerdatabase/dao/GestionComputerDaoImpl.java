@@ -9,19 +9,11 @@ import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.excilys.projet.computerdatabase.model.Company;
 import com.excilys.projet.computerdatabase.model.Computer;
 import com.excilys.projet.computerdatabase.utils.SqlRequestOptions;
 
 public class GestionComputerDaoImpl implements GestionComputerDao {
-
-	/**
-	 * Logger
-	 */
-		final static Logger logger = LoggerFactory.getLogger(GestionComputerDaoImpl.class);
 	
 	/**
 	 * Query
@@ -53,7 +45,7 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 	}
 	
 	@Override
-	public List<Computer> getComputers(Connection conn, int debut, int nombre, SqlRequestOptions sqlRequestOptions){
+	public List<Computer> getComputers(Connection conn, int debut, int nombre, SqlRequestOptions sqlRequestOptions) throws SQLException{
 		PreparedStatement myPreparedStatement=null;
 		List<Computer> liste = new ArrayList<Computer>();
 		Formatter f = new Formatter();
@@ -84,21 +76,15 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 				c.setCompany(cpy);
 				liste.add(c);
 			}
-		} catch (SQLException e) {
-			logger.warn("Erreur lors de la récupération de la liste des ordinateurs");
 		} finally{
 			f.close();
-			try {
-				myPreparedStatement.close();
-			} catch (SQLException e) {
-				logger.warn("Erreur lors de la récupération de la liste des ordinateurs (fermeture prepared statement)");
-			}
+			myPreparedStatement.close();
 		}
 		return liste;
 	}
 	
 	@Override
-	public Computer getComputer(Connection conn, int id){
+	public Computer getComputer(Connection conn, int id) throws SQLException{
 		
 		Computer computer= new Computer();
 		PreparedStatement myPreparedStatement=null;
@@ -115,21 +101,15 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 			cpy.setId(rs.getInt("cpy.id"));
 			cpy.setName(rs.getString("cpy.name"));
 			computer.setCompany(cpy);
-		} catch (SQLException e) {
-			logger.warn("Erreur lors de la récupération d'un ordinateur");
 		} finally{
-			try {
-				myPreparedStatement.close();
-			} catch (SQLException e) {
-				logger.warn("Erreur lors de la récupération d'un ordinateur (fermeture prepared statement)");
-			}
+			myPreparedStatement.close();
 		}
 		
 		return computer;
 	}
 	
 	@Override
-	public Integer getComputerCount(Connection conn, SqlRequestOptions sqlRequestOptions){
+	public Integer getComputerCount(Connection conn, SqlRequestOptions sqlRequestOptions) throws SQLException{
 		
 		Integer count = null;
 		PreparedStatement myPreparedStatement=null;
@@ -148,41 +128,29 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 			rs.first();
 			count = rs.getInt("count");
 
-		} catch (SQLException e) {
-			logger.warn("Erreur lors de la récupération du compte des ordinateurs");
 		} finally{
 			f.close();
-			try {
-				myPreparedStatement.close();
-			} catch (SQLException e) {
-				logger.warn("Erreur lors de la récupération du compte des ordinateurs (fermeture prepared statement)");
-			}
+			myPreparedStatement.close();
 		}
 		
 		return count;
 	}
 	
 	@Override
-	public void deleteComputer(Connection conn, int id){
+	public void deleteComputer(Connection conn, int id) throws SQLException{
 		PreparedStatement myPreparedStatement=null;
 		try {
 			myPreparedStatement = conn.prepareStatement(DELETE_COMPUTER);
 			myPreparedStatement.setInt(1, id);
 			myPreparedStatement.executeUpdate();
 			
-		} catch (SQLException e) {
-			logger.warn("Erreur lors de la suppression d'un ordinateur");
 		} finally{
-			try {
-				myPreparedStatement.close();
-			} catch (SQLException e) {
-				logger.warn("Erreur lors de la suppression d'un ordinateur (fermeture prepared statement)");
-			}
+			myPreparedStatement.close();
 		}
 	}
 	
 	@Override
-	public void updateComputer(Connection conn, Computer computer) {
+	public void updateComputer(Connection conn, Computer computer) throws SQLException{
 		PreparedStatement myPreparedStatement=null;
 		try {
 			myPreparedStatement = conn.prepareStatement(UPDATE_COMPUTER);
@@ -192,19 +160,13 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 			myPreparedStatement.setInt(4, computer.getCompany().getId());
 			myPreparedStatement.executeUpdate();
 			
-		} catch (SQLException e) {
-			logger.warn("Erreur lors de l'update d'un ordinateur");
-		} finally{
-			try {
-				myPreparedStatement.close();
-			} catch (SQLException e) {
-				logger.warn("Erreur lors de l'update d'un ordinateur (fermeture prepared statement)");
-			}
+		}finally{
+			myPreparedStatement.close();
 		}
 	}
 	
 	@Override
-	public void insertOrUpdateComputer(Connection conn, Computer computer) {
+	public void insertOrUpdateComputer(Connection conn, Computer computer) throws SQLException{
 		PreparedStatement myPreparedStatement=null;
 		try {
 			if(computer.getId()!=0){
@@ -231,19 +193,13 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 			}
 			myPreparedStatement.executeUpdate();
 			
-		} catch (SQLException e) {
-			logger.warn("Erreur lors de l'inset/update d'un ordinateur");
 		} finally{
-			try {
-				myPreparedStatement.close();
-			} catch (SQLException e) {
-				logger.warn("Erreur lors de l'inset/update d'un ordinateur (fermeture prepared statement)");
-			}
+			myPreparedStatement.close();
 		}
 	}
 	
 	@Override
-	public boolean isComputerExists(Connection conn, int id) {
+	public boolean isComputerExists(Connection conn, int id) throws SQLException{
 		PreparedStatement myPreparedStatement=null;
 		
 		try {
@@ -256,14 +212,8 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 			if(rs.getInt("count")==1) {
 				return true;
 			}
-		} catch (SQLException e) {
-			logger.warn("Erreur lors de la récupération d'une société");
-		} finally{
-			try {
-				myPreparedStatement.close();
-			} catch (SQLException e) {
-				logger.warn("Erreur lors de la récupération d'une société (fermeture prepared statement)");
-			}
+		} finally {
+			myPreparedStatement.close();
 		}
 		return false;
 	}

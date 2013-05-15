@@ -9,26 +9,26 @@ import com.excilys.projet.computerdatabase.utils.SqlRequestOptions;
 
 public interface GestionComputerService {
 
-	public abstract Company getCompany(int id);
+	Company getCompany(int id);
 
-	public abstract void insertOrUpdate(Computer computer);
+	void insertOrUpdate(Computer computer);
 
-	public abstract List<Computer> getComputers(int debut, int nombre,
+	List<Computer> getComputers(int debut, int nombre,
 			SqlRequestOptions sqlRequestOptions);
 
-	public abstract Integer getComputerCount(SqlRequestOptions sqlRequestOptions);
+	Integer getComputerCount(SqlRequestOptions sqlRequestOptions);
 
-	public abstract void updateComputer(Computer c);
+	void updateComputer(Computer c);
 
-	public abstract void deleteComputer(int id);
+	void deleteComputer(int id);
 
-	public abstract Computer getComputer(int id);
+	Computer getComputer(int id);
 
-	public abstract List<Company> getCompanies();
+	List<Company> getCompanies();
 
-	public abstract boolean isComputerExists(int id);
+	boolean isComputerExists(int id);
 
-	public abstract Page createPage(int page, int maxAffichage,
+	Page createPage(int page, int maxAffichage,
 			SqlRequestOptions sqlRequestOptions);
 
 }

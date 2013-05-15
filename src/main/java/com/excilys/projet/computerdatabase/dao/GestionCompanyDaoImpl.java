@@ -7,17 +7,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.excilys.projet.computerdatabase.model.Company;
 
 public class GestionCompanyDaoImpl implements GestionCompanyDao {
-
-	/**
-	 * Logger
-	 */
-	final static Logger logger = LoggerFactory.getLogger(GestionCompanyDaoImpl.class);
 	
 	/**
 	 * Query
@@ -41,7 +33,7 @@ public class GestionCompanyDaoImpl implements GestionCompanyDao {
 	}
 	
 	@Override
-	public List<Company> getCompanies(Connection conn){
+	public List<Company> getCompanies(Connection conn) throws SQLException{
 		PreparedStatement myPreparedStatement=null;
 		List<Company> liste = new ArrayList<Company>();
 		
@@ -56,23 +48,15 @@ public class GestionCompanyDaoImpl implements GestionCompanyDao {
 				cpy.setName(rs.getString("name"));
 				liste.add(cpy);
 			}
-		} catch (SQLException e) {
-			logger.warn("Erreur lors de la récupération de la liste des sociétés");
-		} finally{
-			try {
-				myPreparedStatement.close();
-			} catch (SQLException e) {
-				logger.warn("Erreur lors de la récupération de la liste des sociétés (fermeture prepared statement)");
-			}
+		} finally {
+			myPreparedStatement.close();
 		}
-		
-		
-		
+
 		return liste;
 	}
 	
 	@Override
-	public Company getCompany(Connection conn, int id){
+	public Company getCompany(Connection conn, int id) throws SQLException{
 		PreparedStatement myPreparedStatement=null;
 		Company company = new Company();
 		
@@ -85,14 +69,8 @@ public class GestionCompanyDaoImpl implements GestionCompanyDao {
 			rs.first();
 			company.setId(rs.getInt("id"));
 			company.setName(rs.getString("name"));
-		} catch (SQLException e) {
-			logger.warn("Erreur lors de la récupération d'une société");
-		} finally{
-			try {
-				myPreparedStatement.close();
-			} catch (SQLException e) {
-				logger.warn("Erreur lors de la récupération d'une société (fermeture prepared statement)");
-			}
+		} finally {
+			myPreparedStatement.close();
 		}
 		
 		
