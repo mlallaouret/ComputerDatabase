@@ -2,81 +2,33 @@ package com.excilys.projet.computerdatabase.service;
 
 import java.util.List;
 
-import com.excilys.projet.computerdatabase.dao.GestionCompanyDao;
-import com.excilys.projet.computerdatabase.dao.GestionComputerDao;
 import com.excilys.projet.computerdatabase.model.Company;
 import com.excilys.projet.computerdatabase.model.Computer;
 import com.excilys.projet.computerdatabase.model.Page;
 import com.excilys.projet.computerdatabase.utils.SqlRequestOptions;
 
-public class GestionComputerService {
+public interface GestionComputerService {
 
-	private GestionComputerDao computerDao;
-	private GestionCompanyDao companyDao;
-	private static GestionComputerService gestionComputerService = null;
-	
-	private GestionComputerService() {
-		computerDao = GestionComputerDao.getInstance(); 
-		companyDao = GestionCompanyDao.getInstance(); 
-	}
-	
-	public static GestionComputerService getInstance() {
-		
-		if(gestionComputerService==null) {
-			return new GestionComputerService();
-		} else {
-			return gestionComputerService;
-		}
-		
-	}
-	
+	public abstract Company getCompany(int id);
 
-	public Company getCompany(int id){
-		return companyDao.getCompany(id);
-	}
-	
+	public abstract void insertOrUpdate(Computer computer);
 
-	public void insertOrUpdate(Computer computer){
-		computerDao.insertOrUpdateComputer(computer);
-	}
-	
+	public abstract List<Computer> getComputers(int debut, int nombre,
+			SqlRequestOptions sqlRequestOptions);
 
-	public List<Computer> getComputers(int debut, int nombre, SqlRequestOptions sqlRequestOptions){
-		return computerDao.getComputers(debut, nombre, sqlRequestOptions);
-	}
-	
-	public Integer getComputerCount(SqlRequestOptions sqlRequestOptions){
-		return computerDao.getComputerCount(sqlRequestOptions);
-	}
-	
-	public void updateComputer(Computer c){
-		computerDao.updateComputer(c);
-	}
-	
-	public void deleteComputer(int id){
-		computerDao.deleteComputer(id);
-	}
-	
-	public Computer getComputer(int id){
-		return computerDao.getComputer(id);
-	}
-	
-	public List<Company> getCompanies(){
-		return companyDao.getCompanies();
-	}
-	
-	public boolean isComputerExists(int id) {
-		return computerDao.isComputerExists(id);
-	}
+	public abstract Integer getComputerCount(SqlRequestOptions sqlRequestOptions);
 
-	public Page createPage(int page, int maxAffichage, SqlRequestOptions sqlRequestOptions){
-		int total = getComputerCount(sqlRequestOptions);
-		if(page<0 || (page>0 && (total - page*maxAffichage<0))){
-			page=0;
-		}
-		return new Page(page, maxAffichage, total,
-				getComputers(page*maxAffichage, maxAffichage, sqlRequestOptions));
-	}
-	
-	
+	public abstract void updateComputer(Computer c);
+
+	public abstract void deleteComputer(int id);
+
+	public abstract Computer getComputer(int id);
+
+	public abstract List<Company> getCompanies();
+
+	public abstract boolean isComputerExists(int id);
+
+	public abstract Page createPage(int page, int maxAffichage,
+			SqlRequestOptions sqlRequestOptions);
+
 }

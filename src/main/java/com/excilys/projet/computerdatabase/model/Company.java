@@ -7,11 +7,11 @@ public class Company {
 	
 	
 	public Company() {
-		super();
+		
 	}
 	
 	public Company(int id, String name) {
-		super();
+		
 		this.id = id;
 		this.name = name;
 	}

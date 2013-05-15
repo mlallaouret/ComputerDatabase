@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.excilys.projet.computerdatabase.service.GestionComputerService;
+import com.excilys.projet.computerdatabase.service.GestionComputerServiceImpl;
 
 @SuppressWarnings("serial")
 @WebServlet("/editionComputer")
@@ -20,26 +20,20 @@ public class EditionComputerServlet extends HttpServlet {
 		
 		int id=0;
 		
-		if(req.getParameter("id")!=null) {
-			try{
-				id = Integer.parseInt(req.getParameter("id"));
-				if(!GestionComputerService.getInstance().isComputerExists(id)) {
-					getServletContext().getRequestDispatcher("/index").forward(req, resp);
-				} else {
-					
-					req.setAttribute("computer", GestionComputerService.getInstance().getComputer(id));
-					req.setAttribute("companies", GestionComputerService.getInstance().getCompanies());
-					
-					getServletContext().getRequestDispatcher("/WEB-INF/editionComputer.jsp").forward(req, resp);
-				}
-			}catch(NumberFormatException e){
+		try{
+			id = Integer.parseInt(req.getParameter("id"));
+			if(!GestionComputerServiceImpl.getInstance().isComputerExists(id)) {
 				resp.sendRedirect("affichageComputers");
+			} else {
+				
+				req.setAttribute("computer", GestionComputerServiceImpl.getInstance().getComputer(id));
+				req.setAttribute("companies", GestionComputerServiceImpl.getInstance().getCompanies());
+				
+				getServletContext().getRequestDispatcher("/WEB-INF/editionComputer.jsp").forward(req, resp);
 			}
+		}catch(NumberFormatException e){
+			resp.sendRedirect("affichageComputers");
 		}
-		
-		
-		
-		
 	}
 
 }

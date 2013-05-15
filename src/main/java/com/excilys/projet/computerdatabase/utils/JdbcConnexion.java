@@ -3,11 +3,16 @@ package com.excilys.projet.computerdatabase.utils;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JdbcConnexion {
 
+	/**
+	 * Logger
+	 */
+	final static Logger logger = LoggerFactory.getLogger(JdbcConnexion.class);
 	
 	/**
 	 * Identifiants de connexion
@@ -20,7 +25,8 @@ public class JdbcConnexion {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
-			Logger.getLogger("main").log(Level.SEVERE, "Impossible de charger le driver MySql");
+			logger.error("Impossible de charger le driver MySql");
+			
 		}
 	}
 
@@ -29,7 +35,7 @@ public class JdbcConnexion {
 		try {
 			return DriverManager.getConnection(URL, USER, PASSWORD);
 		} catch (SQLException e) {
-			Logger.getLogger("main").log(Level.SEVERE, "Erreur de recuperation de la connexion");
+			logger.error("Erreur de recuperation de la connexion");
 		}
 		return null;
 	}
@@ -38,7 +44,7 @@ public class JdbcConnexion {
 		try {
 			connection.close();
 		} catch (SQLException e) {
-			Logger.getLogger("main").log(Level.SEVERE, "Erreur lors de la fermeture de la connexion");
+			logger.error("Erreur lors de la fermeture de la connexion");
 		}
 	}
 		

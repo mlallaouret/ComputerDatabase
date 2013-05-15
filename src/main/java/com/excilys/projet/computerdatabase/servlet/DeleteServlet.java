@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.excilys.projet.computerdatabase.service.GestionComputerService;
+import com.excilys.projet.computerdatabase.service.GestionComputerServiceImpl;
 
 @WebServlet("/delete")
 @SuppressWarnings("serial")
@@ -17,7 +17,7 @@ public class DeleteServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		GestionComputerService.getInstance().deleteComputer(Integer.parseInt(req.getParameter("id")));
+		GestionComputerServiceImpl.getInstance().deleteComputer(Integer.parseInt(req.getParameter("id")));
 		req.getSession().setAttribute("info", "Computer has been deleted");
 		resp.sendRedirect("affichageComputers");
 	}

@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.excilys.projet.computerdatabase.model.Page;
-import com.excilys.projet.computerdatabase.service.GestionComputerService;
+import com.excilys.projet.computerdatabase.service.GestionComputerServiceImpl;
 import com.excilys.projet.computerdatabase.utils.SqlRequestOptions;
 import com.mysql.jdbc.StringUtils;
 
@@ -39,7 +39,7 @@ public class AffichageComputerServlet extends HttpServlet {
 			sort = 2;
 		}
 
-		page = GestionComputerService.getInstance().createPage(pageNumber, MAX_AFFICHAGE, new SqlRequestOptions(req.getParameter("f"), sort));
+		page = GestionComputerServiceImpl.getInstance().createPage(pageNumber, MAX_AFFICHAGE, new SqlRequestOptions(req.getParameter("f"), sort));
 		
 		String info = (String) req.getSession().getAttribute("info");
 

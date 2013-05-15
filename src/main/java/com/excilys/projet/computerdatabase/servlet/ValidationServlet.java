@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.excilys.projet.computerdatabase.model.Computer;
-import com.excilys.projet.computerdatabase.service.GestionComputerService;
+import com.excilys.projet.computerdatabase.service.GestionComputerServiceImpl;
 import com.mysql.jdbc.StringUtils;
 
 @WebServlet("/validation")
@@ -40,7 +40,7 @@ public class ValidationServlet extends HttpServlet {
 		
 		//Check de la compagnie
 		if(!StringUtils.isNullOrEmpty(req.getParameter("company"))){
-			computer.setCompany(GestionComputerService.getInstance().getCompany(Integer.parseInt(req.getParameter("company"))));
+			computer.setCompany(GestionComputerServiceImpl.getInstance().getCompany(Integer.parseInt(req.getParameter("company"))));
 		}
 		
 		//Check des dates
@@ -48,7 +48,7 @@ public class ValidationServlet extends HttpServlet {
 		df.applyPattern("yyyy-MM-dd");
 		df.setLenient(false);
 		
-		if(req.getParameter("introduced").equals("")) {
+		if(req.getParameter("introduced").isEmpty()) {
 			computer.setIntroduced(null);
 		} else {
 			try {
@@ -59,7 +59,7 @@ public class ValidationServlet extends HttpServlet {
 			}
 		}
 		
-		if(req.getParameter("discontinued").equals("")) {
+		if(req.getParameter("discontinued").isEmpty()) {
 			computer.setDiscontinued(null);
 		} else {	
 			try {
@@ -71,7 +71,7 @@ public class ValidationServlet extends HttpServlet {
 		}
 		
 		if(!error) {
-			GestionComputerService.getInstance().insertOrUpdate(computer);
+			GestionComputerServiceImpl.getInstance().insertOrUpdate(computer);
 			StringBuilder sb = new StringBuilder("Computer ").append(computer.getName()).append(" has been ");
 			if(req.getParameter("id")!=null){
 				sb.append("updated");
@@ -82,7 +82,7 @@ public class ValidationServlet extends HttpServlet {
 			resp.sendRedirect("affichageComputers");
 		} else { 
 			req.setAttribute("computer", computer);
-			req.setAttribute("companies", GestionComputerService.getInstance().getCompanies());
+			req.setAttribute("companies", GestionComputerServiceImpl.getInstance().getCompanies());
 			if(req.getParameter("id")!=null) {
 				
 				getServletContext().getRequestDispatcher("/WEB-INF/editionComputer.jsp").forward(req, resp);
