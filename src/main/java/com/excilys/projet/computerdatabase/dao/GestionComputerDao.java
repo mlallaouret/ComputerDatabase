@@ -65,7 +65,6 @@ public class GestionComputerDao {
 				myPreparedStatement.setString(1, sqlRequestOptions.getSqlFilter());
 			}
 			
-			System.out.println(myPreparedStatement);
 			ResultSet rs = myPreparedStatement.executeQuery();
 			
 			while(rs.next()){
@@ -145,7 +144,6 @@ public class GestionComputerDao {
 			if(sqlRequestOptions.getFilter()!=null && !sqlRequestOptions.getFilter().equals("")){
 				myPreparedStatement.setString(1, sqlRequestOptions.getSqlFilter());
 			}
-			System.out.println(myPreparedStatement);
 			ResultSet rs = myPreparedStatement.executeQuery();
 			rs.first();
 			count = rs.getInt("count");
