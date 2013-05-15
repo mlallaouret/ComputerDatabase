@@ -21,31 +21,55 @@ public class JdbcConnexion {
 	public static final String USER = "root";
 	public static final String PASSWORD = "root";
 	
+	
+	private static JdbcConnexion jdbcConnexion;
+	
+	public ThreadLocal<Connection> threadConnection;
+	
 	static {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
+			jdbcConnexion = new JdbcConnexion();
 		} catch (ClassNotFoundException e) {
 			logger.error("Impossible de charger le driver MySql");
 			
 		}
 	}
 
-	
-	public static Connection getConnection(){
-		try {
-			return DriverManager.getConnection(URL, USER, PASSWORD);
-		} catch (SQLException e) {
-			logger.error("Erreur de recuperation de la connexion");
-		}
-		return null;
+	private JdbcConnexion() {
+		this.threadConnection = new ThreadLocal<Connection>();
 	}
 	
-	public static void closeConnection(Connection connection){
+	public static JdbcConnexion getInstance() {
+		return jdbcConnexion;
+	}
+	
+	public Connection getConnection(){
+		
+		if(threadConnection.get()==null ){
+			try {
+				Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+				conn.setAutoCommit(false);
+				threadConnection.set(conn);
+				return threadConnection.get();
+			} catch (SQLException e) {
+				logger.error("Erreur de recuperation de la connexion");
+				return null;
+			}
+		
+		} else {
+			return threadConnection.get();
+		}
+		
+	}
+	
+	public void closeConnection(){
 		try {
-			connection.close();
+			threadConnection.get().close();
 		} catch (SQLException e) {
 			logger.error("Erreur lors de la fermeture de la connexion");
 		}
+		threadConnection.remove();
 	}
 		
 }

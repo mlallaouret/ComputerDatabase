@@ -5,6 +5,7 @@ import java.util.List;
 import com.excilys.projet.computerdatabase.model.Company;
 import com.excilys.projet.computerdatabase.model.Computer;
 import com.excilys.projet.computerdatabase.model.Page;
+import com.excilys.projet.computerdatabase.model.PageEdition;
 import com.excilys.projet.computerdatabase.utils.SqlRequestOptions;
 
 public interface GestionComputerService {
@@ -30,5 +31,7 @@ public interface GestionComputerService {
 
 	Page createPage(int page, int maxAffichage,
 			SqlRequestOptions sqlRequestOptions);
+	
+	PageEdition createPageEdition(int idComputer);
 
 }

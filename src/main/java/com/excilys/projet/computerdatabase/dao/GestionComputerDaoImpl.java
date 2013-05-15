@@ -1,6 +1,5 @@
 package com.excilys.projet.computerdatabase.dao;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,6 +10,7 @@ import java.util.List;
 
 import com.excilys.projet.computerdatabase.model.Company;
 import com.excilys.projet.computerdatabase.model.Computer;
+import com.excilys.projet.computerdatabase.utils.JdbcConnexion;
 import com.excilys.projet.computerdatabase.utils.SqlRequestOptions;
 
 public class GestionComputerDaoImpl implements GestionComputerDao {
@@ -45,7 +45,7 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 	}
 	
 	@Override
-	public List<Computer> getComputers(Connection conn, int debut, int nombre, SqlRequestOptions sqlRequestOptions) throws SQLException{
+	public List<Computer> getComputers(int debut, int nombre, SqlRequestOptions sqlRequestOptions) throws SQLException{
 		PreparedStatement myPreparedStatement=null;
 		List<Computer> liste = new ArrayList<Computer>();
 		Formatter f = new Formatter();
@@ -57,7 +57,7 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 			}
 			f.format(SELECT_ORDER_BY, sqlRequestOptions.getSqlTri(), sqlRequestOptions.getSqlOrder(), debut, nombre);
 			sb.append(f.toString());
-			myPreparedStatement = conn.prepareStatement(sb.toString());
+			myPreparedStatement = JdbcConnexion.getInstance().getConnection().prepareStatement(sb.toString());
 			if(sqlRequestOptions.getFilter()!=null && !sqlRequestOptions.getFilter().isEmpty()){
 				myPreparedStatement.setString(1, sqlRequestOptions.getSqlFilter());
 			}
@@ -78,18 +78,20 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 			}
 		} finally{
 			f.close();
-			myPreparedStatement.close();
+			if(myPreparedStatement!=null) {
+				myPreparedStatement.close();
+			}
 		}
 		return liste;
 	}
 	
 	@Override
-	public Computer getComputer(Connection conn, int id) throws SQLException{
+	public Computer getComputer(int id) throws SQLException{
 		
 		Computer computer= new Computer();
 		PreparedStatement myPreparedStatement=null;
 		try {
-			myPreparedStatement = conn.prepareStatement(SELECT_ONE_COMPUTER_BY_ID_QUERY);
+			myPreparedStatement = JdbcConnexion.getInstance().getConnection().prepareStatement(SELECT_ONE_COMPUTER_BY_ID_QUERY);
 			myPreparedStatement.setInt(1, id);
 			ResultSet rs = myPreparedStatement.executeQuery();
 			rs.first();
@@ -102,14 +104,16 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 			cpy.setName(rs.getString("cpy.name"));
 			computer.setCompany(cpy);
 		} finally{
-			myPreparedStatement.close();
+			if(myPreparedStatement!=null) {
+				myPreparedStatement.close();
+			}
 		}
 		
 		return computer;
 	}
 	
 	@Override
-	public Integer getComputerCount(Connection conn, SqlRequestOptions sqlRequestOptions) throws SQLException{
+	public Integer getComputerCount(SqlRequestOptions sqlRequestOptions) throws SQLException{
 		
 		Integer count = null;
 		PreparedStatement myPreparedStatement=null;
@@ -120,7 +124,7 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 			if(sqlRequestOptions.getFilter()!=null && !sqlRequestOptions.getFilter().isEmpty()){
 				sb.append(SELECT_WHERE);
 			}
-			myPreparedStatement = conn.prepareStatement(sb.toString());
+			myPreparedStatement = JdbcConnexion.getInstance().getConnection().prepareStatement(sb.toString());
 			if(sqlRequestOptions.getFilter()!=null && !sqlRequestOptions.getFilter().isEmpty()){
 				myPreparedStatement.setString(1, sqlRequestOptions.getSqlFilter());
 			}
@@ -130,30 +134,34 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 
 		} finally{
 			f.close();
-			myPreparedStatement.close();
+			if(myPreparedStatement!=null) {
+				myPreparedStatement.close();
+			}
 		}
 		
 		return count;
 	}
 	
 	@Override
-	public void deleteComputer(Connection conn, int id) throws SQLException{
+	public void deleteComputer(int id) throws SQLException{
 		PreparedStatement myPreparedStatement=null;
 		try {
-			myPreparedStatement = conn.prepareStatement(DELETE_COMPUTER);
+			myPreparedStatement = JdbcConnexion.getInstance().getConnection().prepareStatement(DELETE_COMPUTER);
 			myPreparedStatement.setInt(1, id);
 			myPreparedStatement.executeUpdate();
 			
 		} finally{
-			myPreparedStatement.close();
+			if(myPreparedStatement!=null) {
+				myPreparedStatement.close();
+			}
 		}
 	}
 	
 	@Override
-	public void updateComputer(Connection conn, Computer computer) throws SQLException{
+	public void updateComputer(Computer computer) throws SQLException{
 		PreparedStatement myPreparedStatement=null;
 		try {
-			myPreparedStatement = conn.prepareStatement(UPDATE_COMPUTER);
+			myPreparedStatement = JdbcConnexion.getInstance().getConnection().prepareStatement(UPDATE_COMPUTER);
 			myPreparedStatement.setString(1, computer.getName());
 			myPreparedStatement.setDate(2, new java.sql.Date(computer.getIntroduced().getTime()));
 			myPreparedStatement.setDate(3, new java.sql.Date(computer.getDiscontinued().getTime()));
@@ -161,19 +169,21 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 			myPreparedStatement.executeUpdate();
 			
 		}finally{
-			myPreparedStatement.close();
+			if(myPreparedStatement!=null) {
+				myPreparedStatement.close();
+			}
 		}
 	}
 	
 	@Override
-	public void insertOrUpdateComputer(Connection conn, Computer computer) throws SQLException{
+	public void insertOrUpdateComputer(Computer computer) throws SQLException{
 		PreparedStatement myPreparedStatement=null;
 		try {
 			if(computer.getId()!=0){
-				myPreparedStatement = conn.prepareStatement(UPDATE_COMPUTER);
+				myPreparedStatement = JdbcConnexion.getInstance().getConnection().prepareStatement(UPDATE_COMPUTER);
 				myPreparedStatement.setInt(5, computer.getId());
 			} else {
-				myPreparedStatement = conn.prepareStatement(INSERT_COMPUTER);
+				myPreparedStatement = JdbcConnexion.getInstance().getConnection().prepareStatement(INSERT_COMPUTER);
 			}
 			myPreparedStatement.setString(1, computer.getName());
 			if(computer.getIntroduced()!=null) {
@@ -194,16 +204,18 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 			myPreparedStatement.executeUpdate();
 			
 		} finally{
-			myPreparedStatement.close();
+			if(myPreparedStatement!=null) {
+				myPreparedStatement.close();
+			}
 		}
 	}
 	
 	@Override
-	public boolean isComputerExists(Connection conn, int id) throws SQLException{
+	public boolean isComputerExists(int id) throws SQLException{
 		PreparedStatement myPreparedStatement=null;
 		
 		try {
-			myPreparedStatement = conn.prepareStatement(ID_EXISTS_QUERY);
+			myPreparedStatement = JdbcConnexion.getInstance().getConnection().prepareStatement(ID_EXISTS_QUERY);
 			myPreparedStatement.setInt(1, id);
 			
 			ResultSet rs = myPreparedStatement.executeQuery();
@@ -213,7 +225,9 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 				return true;
 			}
 		} finally {
-			myPreparedStatement.close();
+			if(myPreparedStatement!=null) {
+				myPreparedStatement.close();
+			}
 		}
 		return false;
 	}
