@@ -31,7 +31,8 @@ public class JdbcConnexion {
 			Class.forName("com.mysql.jdbc.Driver");
 			jdbcConnexion = new JdbcConnexion();
 		} catch (ClassNotFoundException e) {
-			logger.error("Impossible de charger le driver MySql");
+			logger.error("Impossible de charger le driver MySql" + e.getMessage());
+			System.exit(1);
 			
 		}
 	}
@@ -51,23 +52,22 @@ public class JdbcConnexion {
 				Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
 				conn.setAutoCommit(false);
 				threadConnection.set(conn);
-				return threadConnection.get();
 			} catch (SQLException e) {
-				logger.error("Erreur de recuperation de la connexion");
+				logger.error("Erreur de recuperation de la connexion" + e.getMessage());
 				return null;
 			}
-		
-		} else {
-			return threadConnection.get();
 		}
+		return threadConnection.get();
 		
 	}
 	
 	public void closeConnection(){
 		try {
-			threadConnection.get().close();
+			if(threadConnection.get()!=null) {
+				threadConnection.get().close();
+			}
 		} catch (SQLException e) {
-			logger.error("Erreur lors de la fermeture de la connexion");
+			logger.error("Erreur lors de la fermeture de la connexion" + e.getMessage());
 		}
 		threadConnection.remove();
 	}

@@ -15,11 +15,11 @@ public interface GestionComputerDao {
 
 	Integer getComputerCount(SqlRequestOptions sqlRequestOptions) throws SQLException;
 
-	void deleteComputer(int id) throws SQLException;
+	int deleteComputer(int id) throws SQLException;
 
-	void updateComputer(Computer computer) throws SQLException;
+	int updateComputer(Computer computer) throws SQLException;
 
-	void insertOrUpdateComputer(Computer computer) throws SQLException;
+	int insertOrUpdateComputer(Computer computer) throws SQLException;
 
 	boolean isComputerExists(int id) throws SQLException;
 

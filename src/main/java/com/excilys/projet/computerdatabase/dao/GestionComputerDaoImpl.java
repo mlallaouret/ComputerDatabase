@@ -143,41 +143,46 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 	}
 	
 	@Override
-	public void deleteComputer(int id) throws SQLException{
+	public int deleteComputer(int id) throws SQLException{
 		PreparedStatement myPreparedStatement=null;
+		int res=0;
 		try {
 			myPreparedStatement = JdbcConnexion.getInstance().getConnection().prepareStatement(DELETE_COMPUTER);
 			myPreparedStatement.setInt(1, id);
-			myPreparedStatement.executeUpdate();
+			res= myPreparedStatement.executeUpdate();
 			
 		} finally{
 			if(myPreparedStatement!=null) {
 				myPreparedStatement.close();
 			}
 		}
+		return res;
 	}
 	
 	@Override
-	public void updateComputer(Computer computer) throws SQLException{
+	public int updateComputer(Computer computer) throws SQLException{
 		PreparedStatement myPreparedStatement=null;
+		int res=0;
 		try {
 			myPreparedStatement = JdbcConnexion.getInstance().getConnection().prepareStatement(UPDATE_COMPUTER);
 			myPreparedStatement.setString(1, computer.getName());
 			myPreparedStatement.setDate(2, new java.sql.Date(computer.getIntroduced().getTime()));
 			myPreparedStatement.setDate(3, new java.sql.Date(computer.getDiscontinued().getTime()));
 			myPreparedStatement.setInt(4, computer.getCompany().getId());
-			myPreparedStatement.executeUpdate();
+			res = myPreparedStatement.executeUpdate();
 			
 		}finally{
 			if(myPreparedStatement!=null) {
 				myPreparedStatement.close();
 			}
 		}
+		return res;
 	}
 	
 	@Override
-	public void insertOrUpdateComputer(Computer computer) throws SQLException{
+	public int insertOrUpdateComputer(Computer computer) throws SQLException{
 		PreparedStatement myPreparedStatement=null;
+		int res = 0;
 		try {
 			if(computer.getId()!=0){
 				myPreparedStatement = JdbcConnexion.getInstance().getConnection().prepareStatement(UPDATE_COMPUTER);
@@ -201,13 +206,14 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 			} else {
 				myPreparedStatement.setInt(4, computer.getCompany().getId());
 			}
-			myPreparedStatement.executeUpdate();
+			res = myPreparedStatement.executeUpdate();
 			
 		} finally{
 			if(myPreparedStatement!=null) {
 				myPreparedStatement.close();
 			}
 		}
+		return res;
 	}
 	
 	@Override
