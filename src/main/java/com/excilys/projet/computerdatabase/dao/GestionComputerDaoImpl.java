@@ -23,7 +23,7 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 	private static final String INSERT_COMPUTER = "insert into computer (name, introduced, discontinued, company_id) values (?,?,?,?)";
 	private static final String DELETE_COMPUTER = "delete from computer where id=?";
 	private static final String UPDATE_COMPUTER = "update computer set name = ?, introduced = ?, discontinued = ?, company_id = ? where id =? ";
-	private static final String COUNT_COMPUTER = "select count(cpu.id) as count from computer cpu";
+	private static final String COUNT_COMPUTER = "selec count(cpu.id) as count from computer cpu";
 	private static final String ID_EXISTS_QUERY = "select count(id) as count from computer where id = ?";
 	private static final String SELECT_WHERE = " where cpu.name LIKE ?" ;
 	private static final String SELECT_ORDER_BY = " order by ISNULL (%1$s),%1$s %2$s limit %3$s, %4$s";

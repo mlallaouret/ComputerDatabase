@@ -32,7 +32,7 @@ public class EditionComputerServlet extends HttpServlet {
 		}catch(NumberFormatException e){
 			resp.sendRedirect("affichageComputers");
 		} catch (SQLException e) {
-			req.setAttribute("error", e.getMessage());
+			req.setAttribute("error", "Erreur technique.");
 			getServletContext().getRequestDispatcher("/WEB-INF/errorPage.jsp").forward(req, resp);
 		}
 	}

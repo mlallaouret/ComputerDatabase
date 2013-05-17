@@ -24,7 +24,7 @@ public class AjoutComputerServlet extends HttpServlet{
 			req.setAttribute("companies", GestionComputerServiceImpl.getInstance().getCompanies());
 			getServletContext().getRequestDispatcher("/WEB-INF/ajoutComputer.jsp").forward(req, resp);
 		} catch (SQLException e) {
-			req.setAttribute("error", e.getMessage());
+			req.setAttribute("error", "Erreur technique.");
 			getServletContext().getRequestDispatcher("/WEB-INF/erroPage.jsp").forward(req, resp);
 		}
 	}

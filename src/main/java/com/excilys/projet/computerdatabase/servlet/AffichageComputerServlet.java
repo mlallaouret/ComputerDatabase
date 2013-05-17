@@ -54,7 +54,7 @@ public class AffichageComputerServlet extends HttpServlet {
 
 			getServletContext().getRequestDispatcher("/WEB-INF/affichageComputers.jsp").forward(req, resp);
 		} catch (SQLException e) {
-			req.setAttribute("error", e.getMessage());
+			req.setAttribute("error", "Erreur technique");
 			getServletContext().getRequestDispatcher("/WEB-INF/erroPage.jsp").forward(req, resp);
 		}
 		

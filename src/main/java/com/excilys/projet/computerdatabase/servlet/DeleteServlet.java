@@ -23,7 +23,7 @@ public class DeleteServlet extends HttpServlet {
 			req.getSession().setAttribute("info", "Computer has been deleted");
 			resp.sendRedirect("affichageComputers");
 		} catch (SQLException e) {
-			req.setAttribute("error", e.getMessage());
+			req.setAttribute("error", "Erreur technique.");
 			getServletContext().getRequestDispatcher("/WEB-INF/erroPage.jsp").forward(req, resp);
 		} catch(NumberFormatException e){
 			req.setAttribute("error", e.getMessage());

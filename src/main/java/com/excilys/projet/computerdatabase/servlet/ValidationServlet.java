@@ -93,7 +93,7 @@ public class ValidationServlet extends HttpServlet {
 				
 			}
 		} catch(SQLException e){
-			req.setAttribute("error", e.getMessage());
+			req.setAttribute("error", "Erreur technique");
 			getServletContext().getRequestDispatcher("/WEB-INF/errorPage.jsp").forward(req, resp);
 		} catch(IllegalArgumentException e) {
 			req.setAttribute("error", "L'ordinateur n'existe pas.");
