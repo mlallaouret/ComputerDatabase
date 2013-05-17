@@ -1,6 +1,7 @@
 package com.excilys.projet.computerdatabase.servlet;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -24,17 +25,15 @@ public class EditionComputerServlet extends HttpServlet {
 		try{
 			id = Integer.parseInt(req.getParameter("id"));
 			PageEdition pageEdition = GestionComputerServiceImpl.getInstance().createPageEdition(id);
-			if(pageEdition.getComputer()==null){
-				resp.sendRedirect("affichageComputers");
-			} else {
-				
-				req.setAttribute("computer", pageEdition.getComputer());
-				req.setAttribute("companies", pageEdition.getCompanies());
-				
-				getServletContext().getRequestDispatcher("/WEB-INF/editionComputer.jsp").forward(req, resp);
-			}
+			req.setAttribute("computer", pageEdition.getComputer());
+			req.setAttribute("companies", pageEdition.getCompanies());
+			
+			getServletContext().getRequestDispatcher("/WEB-INF/editionComputer.jsp").forward(req, resp);
 		}catch(NumberFormatException e){
 			resp.sendRedirect("affichageComputers");
+		} catch (SQLException e) {
+			req.setAttribute("error", e.getMessage());
+			getServletContext().getRequestDispatcher("/WEB-INF/errorPage.jsp").forward(req, resp);
 		}
 	}
 

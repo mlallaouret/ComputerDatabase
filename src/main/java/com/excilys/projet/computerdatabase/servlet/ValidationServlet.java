@@ -1,6 +1,7 @@
 package com.excilys.projet.computerdatabase.servlet;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -38,11 +39,6 @@ public class ValidationServlet extends HttpServlet {
 			computer.setName(req.getParameter("name"));
 		}
 		
-		//Check de la compagnie
-		if(!StringUtils.isNullOrEmpty(req.getParameter("company"))){
-			computer.setCompany(GestionComputerServiceImpl.getInstance().getCompany(Integer.parseInt(req.getParameter("company"))));
-		}
-		
 		//Check des dates
 		SimpleDateFormat df = (SimpleDateFormat) DateFormat.getDateInstance();
 		df.applyPattern("yyyy-MM-dd");
@@ -70,27 +66,40 @@ public class ValidationServlet extends HttpServlet {
 			}	
 		}
 		
-		if(!error) {
-			GestionComputerServiceImpl.getInstance().insertOrUpdate(computer);
-			StringBuilder sb = new StringBuilder("Computer ").append(computer.getName()).append(" has been ");
-			if(req.getParameter("id")!=null){
-				sb.append("updated");
-			} else {
-				sb.append("created");
+		try {
+			//Check de la compagnie
+			if(!StringUtils.isNullOrEmpty(req.getParameter("company"))){
+				computer.setCompany(GestionComputerServiceImpl.getInstance().getCompany(Integer.parseInt(req.getParameter("company"))));
 			}
-			req.getSession().setAttribute("info", sb.toString());
-			resp.sendRedirect("affichageComputers");
-		} else { 
-			req.setAttribute("computer", computer);
-			req.setAttribute("companies", GestionComputerServiceImpl.getInstance().getCompanies());
-			if(req.getParameter("id")!=null) {
+			if(!error) {
+				GestionComputerServiceImpl.getInstance().insertOrUpdate(computer);
+				StringBuilder sb = new StringBuilder("Computer ").append(computer.getName()).append(" has been ");
+				if(req.getParameter("id")!=null){
+					sb.append("updated");
+				} else {
+					sb.append("created");
+				}
+				req.getSession().setAttribute("info", sb.toString());
+				resp.sendRedirect("affichageComputers");
+			} else { 
+				req.setAttribute("computer", computer);
+				req.setAttribute("companies", GestionComputerServiceImpl.getInstance().getCompanies());
+				if(req.getParameter("id")!=null) {
+					
+					getServletContext().getRequestDispatcher("/WEB-INF/editionComputer.jsp").forward(req, resp);
+				} else {
+					getServletContext().getRequestDispatcher("/WEB-INF/ajoutComputer.jsp").forward(req, resp);
+				}
 				
-				getServletContext().getRequestDispatcher("/WEB-INF/editionComputer.jsp").forward(req, resp);
-			} else {
-				getServletContext().getRequestDispatcher("/WEB-INF/ajoutComputer.jsp").forward(req, resp);
 			}
-			
+		} catch(SQLException e){
+			req.setAttribute("error", e.getMessage());
+			getServletContext().getRequestDispatcher("/WEB-INF/errorPage.jsp").forward(req, resp);
+		} catch(IllegalArgumentException e) {
+			req.setAttribute("error", "L'ordinateur n'existe pas.");
+			getServletContext().getRequestDispatcher("/WEB-INF/errorPage.jsp").forward(req, resp);
 		}
+		
 		
 	}
 

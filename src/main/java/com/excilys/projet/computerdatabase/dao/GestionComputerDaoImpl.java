@@ -168,7 +168,12 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 			myPreparedStatement.setString(1, computer.getName());
 			myPreparedStatement.setDate(2, new java.sql.Date(computer.getIntroduced().getTime()));
 			myPreparedStatement.setDate(3, new java.sql.Date(computer.getDiscontinued().getTime()));
-			myPreparedStatement.setInt(4, computer.getCompany().getId());
+			if(computer.getCompany()==null){
+				myPreparedStatement.setNull(4, Types.NULL);
+			} else {
+				myPreparedStatement.setInt(4, computer.getCompany().getId());
+			}
+			myPreparedStatement.setInt(5, computer.getId());
 			res = myPreparedStatement.executeUpdate();
 			
 		}finally{
@@ -180,16 +185,11 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 	}
 	
 	@Override
-	public int insertOrUpdateComputer(Computer computer) throws SQLException{
+	public int insertComputer(Computer computer) throws SQLException{
 		PreparedStatement myPreparedStatement=null;
 		int res = 0;
 		try {
-			if(computer.getId()!=0){
-				myPreparedStatement = JdbcConnexion.getInstance().getConnection().prepareStatement(UPDATE_COMPUTER);
-				myPreparedStatement.setInt(5, computer.getId());
-			} else {
-				myPreparedStatement = JdbcConnexion.getInstance().getConnection().prepareStatement(INSERT_COMPUTER);
-			}
+			myPreparedStatement = JdbcConnexion.getInstance().getConnection().prepareStatement(INSERT_COMPUTER);
 			myPreparedStatement.setString(1, computer.getName());
 			if(computer.getIntroduced()!=null) {
 				myPreparedStatement.setDate(2, new java.sql.Date(computer.getIntroduced().getTime()));

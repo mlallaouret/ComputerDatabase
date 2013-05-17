@@ -1,6 +1,7 @@
 package com.excilys.projet.computerdatabase.servlet;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,8 +20,12 @@ public class AjoutComputerServlet extends HttpServlet{
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		
-		req.setAttribute("companies", GestionComputerServiceImpl.getInstance().getCompanies());
-		
-		getServletContext().getRequestDispatcher("/WEB-INF/ajoutComputer.jsp").forward(req, resp);
+		try {
+			req.setAttribute("companies", GestionComputerServiceImpl.getInstance().getCompanies());
+			getServletContext().getRequestDispatcher("/WEB-INF/ajoutComputer.jsp").forward(req, resp);
+		} catch (SQLException e) {
+			req.setAttribute("error", e.getMessage());
+			getServletContext().getRequestDispatcher("/WEB-INF/erroPage.jsp").forward(req, resp);
+		}
 	}
 }

@@ -1,6 +1,7 @@
 package com.excilys.projet.computerdatabase.servlet;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -39,19 +40,25 @@ public class AffichageComputerServlet extends HttpServlet {
 			sort = 2;
 		}
 
-		page = GestionComputerServiceImpl.getInstance().createPage(pageNumber, MAX_AFFICHAGE, new SqlRequestOptions(req.getParameter("f"), sort));
-		
-		String info = (String) req.getSession().getAttribute("info");
+		try {
+			page = GestionComputerServiceImpl.getInstance().createPage(pageNumber, MAX_AFFICHAGE, new SqlRequestOptions(req.getParameter("f"), sort));
+			String info = (String) req.getSession().getAttribute("info");
 
-		if(!StringUtils.isNullOrEmpty(info)) {
-			req.setAttribute("info", info);
-			req.getSession().removeAttribute("info");
+			if(!StringUtils.isNullOrEmpty(info)) {
+				req.setAttribute("info", info);
+				req.getSession().removeAttribute("info");
+			}
+			req.setAttribute("page", page);
+			req.setAttribute("tri", req.getParameter("s"));
+			req.setAttribute("filter", req.getParameter("f"));
+
+			getServletContext().getRequestDispatcher("/WEB-INF/affichageComputers.jsp").forward(req, resp);
+		} catch (SQLException e) {
+			req.setAttribute("error", e.getMessage());
+			getServletContext().getRequestDispatcher("/WEB-INF/erroPage.jsp").forward(req, resp);
 		}
-		req.setAttribute("page", page);
-		req.setAttribute("tri", req.getParameter("s"));
-		req.setAttribute("filter", req.getParameter("f"));
-
-		getServletContext().getRequestDispatcher("/WEB-INF/affichageComputers.jsp").forward(req, resp);
+		
+		
 		
 	}
 }

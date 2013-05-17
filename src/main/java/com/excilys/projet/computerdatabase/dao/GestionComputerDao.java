@@ -19,7 +19,7 @@ public interface GestionComputerDao {
 
 	int updateComputer(Computer computer) throws SQLException;
 
-	int insertOrUpdateComputer(Computer computer) throws SQLException;
+	int insertComputer(Computer computer) throws SQLException;
 
 	boolean isComputerExists(int id) throws SQLException;
 

@@ -1,5 +1,6 @@
 package com.excilys.projet.computerdatabase.service;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import com.excilys.projet.computerdatabase.model.Company;
@@ -10,28 +11,28 @@ import com.excilys.projet.computerdatabase.utils.SqlRequestOptions;
 
 public interface GestionComputerService {
 
-	Company getCompany(int id);
+	Company getCompany(int id) throws SQLException;
 
-	void insertOrUpdate(Computer computer);
+	void insertOrUpdate(Computer computer) throws SQLException;
 
 	List<Computer> getComputers(int debut, int nombre,
-			SqlRequestOptions sqlRequestOptions);
+			SqlRequestOptions sqlRequestOptions) throws SQLException;
 
-	Integer getComputerCount(SqlRequestOptions sqlRequestOptions);
+	Integer getComputerCount(SqlRequestOptions sqlRequestOptions) throws SQLException;
 
-	void updateComputer(Computer c);
+	void updateComputer(Computer c) throws SQLException;
 
-	void deleteComputer(int id);
+	void deleteComputer(int id) throws SQLException;
 
-	Computer getComputer(int id);
+	Computer getComputer(int id) throws SQLException;
 
-	List<Company> getCompanies();
+	List<Company> getCompanies() throws SQLException;
 
-	boolean isComputerExists(int id);
+	boolean isComputerExists(int id) throws SQLException;
 
 	Page createPage(int page, int maxAffichage,
-			SqlRequestOptions sqlRequestOptions);
+			SqlRequestOptions sqlRequestOptions) throws SQLException;
 	
-	PageEdition createPageEdition(int idComputer);
+	PageEdition createPageEdition(int idComputer) throws SQLException;
 
 }
