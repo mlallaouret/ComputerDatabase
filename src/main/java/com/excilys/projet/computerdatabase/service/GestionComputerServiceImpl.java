@@ -64,11 +64,15 @@ public class GestionComputerServiceImpl implements GestionComputerService {
 	
 	@Override
 	public void insertOrUpdate(Computer computer) throws SQLException{
+		int result = 0;
 		try {
 			if(computer.getId()!=0){
-				computerDao.updateComputer(computer);
+				result = computerDao.updateComputer(computer);
 			} else {
-				computerDao.insertComputer(computer);
+				result = computerDao.insertComputer(computer);
+			}
+			if (result == 0) {
+				throw new IllegalArgumentException("Erreur lors de l'insert/update de l'ordinateur");
 			}
 			JdbcConnexion.getInstance().getConnection().commit();
 		} catch(SQLException e) {

@@ -9,6 +9,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.excilys.projet.computerdatabase.model.PageEdition;
 import com.excilys.projet.computerdatabase.service.GestionComputerServiceImpl;
 
@@ -16,6 +19,8 @@ import com.excilys.projet.computerdatabase.service.GestionComputerServiceImpl;
 @WebServlet("/editionComputer")
 public class EditionComputerServlet extends HttpServlet {
 
+	private static final Logger logger = LoggerFactory.getLogger(EditionComputerServlet.class);
+	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -33,6 +38,10 @@ public class EditionComputerServlet extends HttpServlet {
 			resp.sendRedirect("affichageComputers");
 		} catch (SQLException e) {
 			req.setAttribute("error", "Erreur technique.");
+			getServletContext().getRequestDispatcher("/WEB-INF/errorPage.jsp").forward(req, resp);
+		} catch (IllegalArgumentException e) {
+			logger.warn(e.getMessage());
+			req.setAttribute("error", e.getMessage());
 			getServletContext().getRequestDispatcher("/WEB-INF/errorPage.jsp").forward(req, resp);
 		}
 	}

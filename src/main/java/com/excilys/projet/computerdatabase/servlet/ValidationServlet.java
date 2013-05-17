@@ -12,6 +12,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.excilys.projet.computerdatabase.model.Computer;
 import com.excilys.projet.computerdatabase.service.GestionComputerServiceImpl;
 import com.mysql.jdbc.StringUtils;
@@ -20,6 +23,8 @@ import com.mysql.jdbc.StringUtils;
 @SuppressWarnings("serial")
 public class ValidationServlet extends HttpServlet {
 
+	private static final Logger logger = LoggerFactory.getLogger(ValidationServlet.class);
+	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -96,6 +101,7 @@ public class ValidationServlet extends HttpServlet {
 			req.setAttribute("error", "Erreur technique");
 			getServletContext().getRequestDispatcher("/WEB-INF/errorPage.jsp").forward(req, resp);
 		} catch(IllegalArgumentException e) {
+			logger.warn(e.getMessage());
 			req.setAttribute("error", "L'ordinateur n'existe pas.");
 			getServletContext().getRequestDispatcher("/WEB-INF/errorPage.jsp").forward(req, resp);
 		}
