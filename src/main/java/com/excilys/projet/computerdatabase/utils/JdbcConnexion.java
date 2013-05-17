@@ -45,7 +45,7 @@ public class JdbcConnexion {
 		return jdbcConnexion;
 	}
 	
-	public Connection getConnection(){
+	public Connection getConnection() throws SQLException{
 		
 		if(threadConnection.get()==null ){
 			try {
@@ -54,7 +54,7 @@ public class JdbcConnexion {
 				threadConnection.set(conn);
 			} catch (SQLException e) {
 				logger.error("Erreur de recuperation de la connexion" + e.getMessage());
-				return null;
+				throw e;
 			}
 		}
 		return threadConnection.get();
