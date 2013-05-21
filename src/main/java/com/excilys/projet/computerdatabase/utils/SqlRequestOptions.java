@@ -6,6 +6,8 @@ public class SqlRequestOptions {
 	
 	private String order;
 	private String tri;
+	private final String[] CRITERIA = {Column.NAME.toString(), Column.INTRODUCED.toString(), Column.DISCONTINUED.toString(),
+			Column.COMPANY_NAME.toString(), Column.NAME.toString()};
 	
 	private enum Order{
 		ASC,DESC;
@@ -45,7 +47,12 @@ public class SqlRequestOptions {
 			order = Order.ASC.toString();
 		}
 		
-		switch(Math.abs(tri)) {
+		if((tri>5 || tri<-5) || (tri<2 && tri>-2)) {
+			this.tri = CRITERIA[0];
+		} else {
+			this.tri = CRITERIA[tri-2];
+		}
+		/*switch(Math.abs(tri)) {
 		
 		case 2:
 			this.tri = Column.NAME.toString();
@@ -66,7 +73,7 @@ public class SqlRequestOptions {
 		default:
 			this.tri = Column.NAME.toString();
 			break;
-	}
+		}*/
 	}
 	
 	public String getSqlOrder(){

@@ -24,21 +24,34 @@ public class JdbcConnexion {
 	
 	private static JdbcConnexion jdbcConnexion;
 	
-	public ThreadLocal<Connection> threadConnection;
+	public ThreadLocal<Connection> threadConnection; 
 	
 	static {
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
+		//try {
+			//Class.forName("com.mysql.jdbc.Driver");
 			jdbcConnexion = new JdbcConnexion();
-		} catch (ClassNotFoundException e) {
-			logger.error("Impossible de charger le driver MySql" + e.getMessage());
-			System.exit(1);
+		//} catch (ClassNotFoundException e) {
+			//logger.error("Impossible de charger le driver MySql" + e.getMessage());
+			//System.exit(1);
 			
-		}
+		//}
 	}
 
 	private JdbcConnexion() {
-		this.threadConnection = new ThreadLocal<Connection>();
+		this.threadConnection = new ThreadLocal<Connection>(){
+			@Override
+			protected Connection initialValue() {
+				Connection conn = null;
+				try {
+					conn = DriverManager.getConnection(URL, USER, PASSWORD);
+					conn.setAutoCommit(false);
+					
+				} catch (SQLException e) {
+					logger.error("Erreur de recuperation de la connexion" + e.getMessage());
+				}
+				return conn;
+			}
+		};
 	}
 	
 	public static JdbcConnexion getInstance() {
@@ -46,18 +59,11 @@ public class JdbcConnexion {
 	}
 	
 	public Connection getConnection() throws SQLException{
-		
-		if(threadConnection.get()==null ){
-			try {
-				Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-				conn.setAutoCommit(false);
-				threadConnection.set(conn);
-			} catch (SQLException e) {
-				logger.error("Erreur de recuperation de la connexion" + e.getMessage());
-				throw e;
-			}
+		if(threadConnection.get()==null) {
+			throw new SQLException("Erreur de recuperation de la connexion");
+		} else {
+			return threadConnection.get();
 		}
-		return threadConnection.get();
 		
 	}
 	
@@ -68,8 +74,9 @@ public class JdbcConnexion {
 			}
 		} catch (SQLException e) {
 			logger.error("Erreur lors de la fermeture de la connexion" + e.getMessage());
+		} finally {
+			threadConnection.remove();
 		}
-		threadConnection.remove();
 	}
 		
 }
