@@ -50,30 +50,8 @@ public class SqlRequestOptions {
 		if((tri>5 || tri<-5) || (tri<2 && tri>-2)) {
 			this.tri = CRITERIA[0];
 		} else {
-			this.tri = CRITERIA[tri-2];
+			this.tri = CRITERIA[Math.abs(tri)-2];
 		}
-		/*switch(Math.abs(tri)) {
-		
-		case 2:
-			this.tri = Column.NAME.toString();
-			break;
-			
-		case 3:
-			this.tri = Column.INTRODUCED.toString();
-			break;
-			
-		case 4:
-			this.tri = Column.DISCONTINUED.toString();
-			break;
-			
-		case 5:
-			this.tri = Column.COMPANY_NAME.toString();
-			break;
-			
-		default:
-			this.tri = Column.NAME.toString();
-			break;
-		}*/
 	}
 	
 	public String getSqlOrder(){
