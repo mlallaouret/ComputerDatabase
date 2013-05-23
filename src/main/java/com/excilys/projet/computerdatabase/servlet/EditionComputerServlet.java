@@ -11,8 +11,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.excilys.projet.computerdatabase.model.PageEdition;
+import com.excilys.projet.computerdatabase.service.GestionComputerService;
 import com.excilys.projet.computerdatabase.service.GestionComputerServiceImpl;
 
 @SuppressWarnings("serial")
@@ -25,11 +28,15 @@ public class EditionComputerServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		
+		@SuppressWarnings("resource")
+		ApplicationContext context = new ClassPathXmlApplicationContext("springConfig.xml");
+		GestionComputerService gestionComputerService = context.getBean("gestionComputerServiceImpl", GestionComputerServiceImpl.class);
+		
 		int id=0;
 		
 		try{
 			id = Integer.parseInt(req.getParameter("id"));
-			PageEdition pageEdition = GestionComputerServiceImpl.getInstance().createPageEdition(id);
+			PageEdition pageEdition = gestionComputerService.createPageEdition(id);
 			req.setAttribute("computer", pageEdition.getComputer());
 			req.setAttribute("companies", pageEdition.getCompanies());
 			

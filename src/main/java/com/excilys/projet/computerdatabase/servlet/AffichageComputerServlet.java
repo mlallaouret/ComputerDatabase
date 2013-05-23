@@ -9,7 +9,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 import com.excilys.projet.computerdatabase.model.Page;
+import com.excilys.projet.computerdatabase.service.GestionComputerService;
 import com.excilys.projet.computerdatabase.service.GestionComputerServiceImpl;
 import com.excilys.projet.computerdatabase.utils.SqlRequestOptions;
 import com.mysql.jdbc.StringUtils;
@@ -24,6 +28,10 @@ public class AffichageComputerServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
+		@SuppressWarnings("resource")
+		ApplicationContext context = new ClassPathXmlApplicationContext("classpath:springConfig.xml");
+		GestionComputerService gestionComputerService = context.getBean("gestionComputerServiceImpl", GestionComputerServiceImpl.class);
+		
 		Integer pageNumber=0;
 		Page page = null;
 		if(req.getParameter("page")!=null) {
@@ -41,7 +49,7 @@ public class AffichageComputerServlet extends HttpServlet {
 		}
 
 		try {
-			page = GestionComputerServiceImpl.getInstance().createPage(pageNumber, MAX_AFFICHAGE, new SqlRequestOptions(req.getParameter("f"), sort));
+			page = gestionComputerService.createPage(pageNumber, MAX_AFFICHAGE, new SqlRequestOptions(req.getParameter("f"), sort));
 			String info = (String) req.getSession().getAttribute("info");
 
 			if(!StringUtils.isNullOrEmpty(info)) {

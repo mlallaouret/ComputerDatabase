@@ -6,18 +6,18 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.excilys.projet.computerdatabase.dao.GestionCompanyDao;
-import com.excilys.projet.computerdatabase.dao.GestionCompanyDaoImpl;
 import com.excilys.projet.computerdatabase.dao.GestionComputerDao;
-import com.excilys.projet.computerdatabase.dao.GestionComputerDaoImpl;
 import com.excilys.projet.computerdatabase.model.Company;
 import com.excilys.projet.computerdatabase.model.Computer;
 import com.excilys.projet.computerdatabase.model.Page;
 import com.excilys.projet.computerdatabase.model.PageEdition;
-import com.excilys.projet.computerdatabase.utils.JdbcConnexion;
 import com.excilys.projet.computerdatabase.utils.SqlRequestOptions;
 
+@Service
 public class GestionComputerServiceImpl implements GestionComputerService {
 
 	/**
@@ -25,24 +25,15 @@ public class GestionComputerServiceImpl implements GestionComputerService {
 	 */
 	private static final Logger logger = LoggerFactory.getLogger(GestionComputerServiceImpl.class);
 	
+	@Autowired
 	private GestionComputerDao computerDao;
+	@Autowired
 	private GestionCompanyDao companyDao;
-	private static GestionComputerService gestionComputerService = null;
 	
-	private GestionComputerServiceImpl() {
-		computerDao = GestionComputerDaoImpl.getInstance(); 
-		companyDao = GestionCompanyDaoImpl.getInstance(); 
+	public GestionComputerServiceImpl() {
+
 	}
 	
-	public static GestionComputerService getInstance() {
-		
-		if(gestionComputerService==null) {
-			return new GestionComputerServiceImpl();
-		} else {
-			return gestionComputerService;
-		}
-		
-	}
 	
 	@Override
 	public Company getCompany(int id) throws SQLException{
@@ -57,7 +48,6 @@ public class GestionComputerServiceImpl implements GestionComputerService {
 			logger.warn("Erreur lors de la récupération d'une compagnie" + e.getMessage());
 			throw e;
 		}finally {
-			JdbcConnexion.getInstance().closeConnection();
 		}
 		return c;
 	}
@@ -74,16 +64,10 @@ public class GestionComputerServiceImpl implements GestionComputerService {
 			if (result == 0) {
 				throw new IllegalArgumentException("Erreur lors de l'insert/update de l'ordinateur");
 			}
-			JdbcConnexion.getInstance().getConnection().commit();
 		} catch(SQLException e) {
 			logger.warn("Erreur lors de l'insert/update d'un ordinateur" + e.getMessage());
-			try {
-				JdbcConnexion.getInstance().getConnection().rollback();
-			} catch (SQLException e1) {
-			}
 			throw e;
 		} finally {
-			JdbcConnexion.getInstance().closeConnection();
 		}
 	}
 	
@@ -96,7 +80,6 @@ public class GestionComputerServiceImpl implements GestionComputerService {
 			logger.warn("Erreur lors de la récupération de la liste des ordinateurs" + e.getMessage());
 			throw e;
 		}finally {
-			JdbcConnexion.getInstance().closeConnection();
 		}
 		return computers;
 	}
@@ -110,7 +93,6 @@ public class GestionComputerServiceImpl implements GestionComputerService {
 			logger.warn("Erreur lors de la récupération du compte des ordinateurs" + e.getMessage());
 			throw e;
 		}finally {
-			JdbcConnexion.getInstance().closeConnection();
 		}
 		
 		return i;
@@ -120,16 +102,10 @@ public class GestionComputerServiceImpl implements GestionComputerService {
 	public void updateComputer(Computer c) throws SQLException{
 		try {
 			computerDao.updateComputer(c);
-			JdbcConnexion.getInstance().getConnection().commit();
 		} catch(SQLException e) {
 			logger.warn("Erreur lors de l'update d'un ordinateur" + e.getMessage());
-			try {
-				JdbcConnexion.getInstance().getConnection().rollback();
-			} catch (SQLException e1) {
-			}
 			throw e;
 		}finally {
-			JdbcConnexion.getInstance().closeConnection();
 		}
 	}
 	
@@ -141,16 +117,10 @@ public class GestionComputerServiceImpl implements GestionComputerService {
 			} else {
 				throw new IllegalArgumentException("L'id de l'ordinateur n'existe pas.");
 			}
-			JdbcConnexion.getInstance().getConnection().commit();
 		} catch(SQLException e){
 			logger.warn("Erreur lors de la suppression d'un ordinateur" + e.getMessage());
-			try {
-				JdbcConnexion.getInstance().getConnection().rollback();
-			} catch (SQLException e1) {
-			}
 			throw e;
 		}finally {
-			JdbcConnexion.getInstance().closeConnection();
 		}
 	}
 	
@@ -163,7 +133,6 @@ public class GestionComputerServiceImpl implements GestionComputerService {
 			logger.warn("Erreur lors de la récupération d'un ordinateur" + e.getMessage());
 			throw e;
 		} finally{
-			JdbcConnexion.getInstance().closeConnection();
 		}
 		
 		return c;
@@ -178,7 +147,6 @@ public class GestionComputerServiceImpl implements GestionComputerService {
 			logger.warn("Erreur lors de la récupération de la liste des sociétés" + e.getMessage());
 			throw e;
 		}finally {
-			JdbcConnexion.getInstance().closeConnection();
 		}
 		return companies;
 	}
@@ -192,7 +160,6 @@ public class GestionComputerServiceImpl implements GestionComputerService {
 			logger.warn("Erreur lors de la récupération d'une société" + e.getMessage());
 			throw e;
 		}finally {
-			JdbcConnexion.getInstance().closeConnection();
 		}
 		return b;
 	}
@@ -209,7 +176,6 @@ public class GestionComputerServiceImpl implements GestionComputerService {
 			logger.warn("Erreur lors de la création d'une page" + e.getMessage());
 			throw e;
 		}finally {
-			JdbcConnexion.getInstance().closeConnection();
 		}
 		if(page<0 || (page>0 && (total - page*maxAffichage<0))){
 			page=0;
@@ -235,9 +201,24 @@ public class GestionComputerServiceImpl implements GestionComputerService {
 			logger.warn("Erreur lors de la création de la page d'édition " + e.getMessage());
 			throw e;
 		}finally {
-			JdbcConnexion.getInstance().closeConnection();
 		}
 		return new PageEdition(computer, companies);
+	}
+
+	public GestionComputerDao getComputerDao() {
+		return computerDao;
+	}
+
+	public void setComputerDao(GestionComputerDao computerDao) {
+		this.computerDao = computerDao;
+	}
+
+	public GestionCompanyDao getCompanyDao() {
+		return companyDao;
+	}
+
+	public void setCompanyDao(GestionCompanyDao companyDao) {
+		this.companyDao = companyDao;
 	}
 	
 }
