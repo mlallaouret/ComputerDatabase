@@ -18,8 +18,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.excilys.projet.computerdatabase.model.Computer;
-import com.excilys.projet.computerdatabase.service.GestionComputerService;
-import com.excilys.projet.computerdatabase.service.GestionComputerServiceImpl;
+import com.excilys.projet.computerdatabase.service.GestionComputerService; 
 import com.mysql.jdbc.StringUtils;
 
 @WebServlet("/validation")
@@ -34,7 +33,7 @@ public class ValidationServlet extends HttpServlet {
 		
 		@SuppressWarnings("resource")
 		ApplicationContext context = new ClassPathXmlApplicationContext("springConfig.xml");
-		GestionComputerService gestionComputerService = context.getBean("gestionComputerServiceImpl", GestionComputerServiceImpl.class);
+		GestionComputerService gestionComputerService = context.getBean(GestionComputerService.class);
 		
 		boolean error = false;
 		Computer computer = new Computer();

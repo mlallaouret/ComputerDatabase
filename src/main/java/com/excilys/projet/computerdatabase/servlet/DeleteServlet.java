@@ -15,7 +15,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.excilys.projet.computerdatabase.service.GestionComputerService;
-import com.excilys.projet.computerdatabase.service.GestionComputerServiceImpl;
 
 @WebServlet("/delete")
 @SuppressWarnings("serial")
@@ -29,7 +28,7 @@ public class DeleteServlet extends HttpServlet {
 		
 		@SuppressWarnings("resource")
 		ApplicationContext context = new ClassPathXmlApplicationContext("springConfig.xml");
-		GestionComputerService gestionComputerService = context.getBean("gestionComputerServiceImpl", GestionComputerServiceImpl.class);
+		GestionComputerService gestionComputerService = context.getBean(GestionComputerService.class);
 		try {
 			gestionComputerService.deleteComputer(Integer.parseInt(req.getParameter("id")));
 			req.getSession().setAttribute("info", "Computer has been deleted");

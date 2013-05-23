@@ -16,7 +16,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.excilys.projet.computerdatabase.model.PageEdition;
 import com.excilys.projet.computerdatabase.service.GestionComputerService;
-import com.excilys.projet.computerdatabase.service.GestionComputerServiceImpl;
 
 @SuppressWarnings("serial")
 @WebServlet("/editionComputer")
@@ -30,7 +29,7 @@ public class EditionComputerServlet extends HttpServlet {
 		
 		@SuppressWarnings("resource")
 		ApplicationContext context = new ClassPathXmlApplicationContext("springConfig.xml");
-		GestionComputerService gestionComputerService = context.getBean("gestionComputerServiceImpl", GestionComputerServiceImpl.class);
+		GestionComputerService gestionComputerService = context.getBean(GestionComputerService.class);
 		
 		int id=0;
 		

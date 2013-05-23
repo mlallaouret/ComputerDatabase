@@ -14,7 +14,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.excilys.projet.computerdatabase.model.Page;
 import com.excilys.projet.computerdatabase.service.GestionComputerService;
-import com.excilys.projet.computerdatabase.service.GestionComputerServiceImpl;
 import com.excilys.projet.computerdatabase.utils.SqlRequestOptions;
 import com.mysql.jdbc.StringUtils;
 
@@ -30,7 +29,7 @@ public class AffichageComputerServlet extends HttpServlet {
 
 		@SuppressWarnings("resource")
 		ApplicationContext context = new ClassPathXmlApplicationContext("classpath:springConfig.xml");
-		GestionComputerService gestionComputerService = context.getBean("gestionComputerServiceImpl", GestionComputerServiceImpl.class);
+		GestionComputerService gestionComputerService = (GestionComputerService)context.getBean(GestionComputerService.class);
 		
 		Integer pageNumber=0;
 		Page page = null;

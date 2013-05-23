@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.excilys.projet.computerdatabase.dao.GestionCompanyDao;
 import com.excilys.projet.computerdatabase.dao.GestionComputerDao;
@@ -18,6 +19,7 @@ import com.excilys.projet.computerdatabase.model.PageEdition;
 import com.excilys.projet.computerdatabase.utils.SqlRequestOptions;
 
 @Service
+@Transactional(readOnly = true)
 public class GestionComputerServiceImpl implements GestionComputerService {
 
 	/**
@@ -53,6 +55,7 @@ public class GestionComputerServiceImpl implements GestionComputerService {
 	}
 	
 	@Override
+	@Transactional(readOnly = false)
 	public void insertOrUpdate(Computer computer) throws SQLException{
 		int result = 0;
 		try {
@@ -99,6 +102,7 @@ public class GestionComputerServiceImpl implements GestionComputerService {
 	}
 	
 	@Override
+	@Transactional(readOnly = false)
 	public void updateComputer(Computer c) throws SQLException{
 		try {
 			computerDao.updateComputer(c);
@@ -110,6 +114,7 @@ public class GestionComputerServiceImpl implements GestionComputerService {
 	}
 	
 	@Override
+	@Transactional(readOnly = false)
 	public void deleteComputer(int id) throws SQLException{
 		try{
 			if(computerDao.isComputerExists(id)) {

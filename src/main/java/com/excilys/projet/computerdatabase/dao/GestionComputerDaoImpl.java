@@ -163,8 +163,16 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 				PreparedStatement myPreparedStatement=null;
 				myPreparedStatement = con.prepareStatement(UPDATE_COMPUTER);
 				myPreparedStatement.setString(1, computer.getName());
-				myPreparedStatement.setDate(2, new java.sql.Date(computer.getIntroduced().getTime()));
-				myPreparedStatement.setDate(3, new java.sql.Date(computer.getDiscontinued().getTime()));
+				if(computer.getIntroduced()!=null) {
+					myPreparedStatement.setDate(2, new java.sql.Date(computer.getIntroduced().getTime()));
+				} else {
+					myPreparedStatement.setDate(2, null);
+				}
+				if(computer.getDiscontinued()!=null) {
+					myPreparedStatement.setDate(3, new java.sql.Date(computer.getDiscontinued().getTime()));
+				} else {
+					myPreparedStatement.setDate(3, null);
+				}
 				if(computer.getCompany()==null){
 					myPreparedStatement.setNull(4, Types.NULL);
 				} else {

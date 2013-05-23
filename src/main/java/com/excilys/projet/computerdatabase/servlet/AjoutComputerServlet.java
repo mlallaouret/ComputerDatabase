@@ -13,7 +13,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.excilys.projet.computerdatabase.service.GestionComputerService;
-import com.excilys.projet.computerdatabase.service.GestionComputerServiceImpl;
 
 
 @SuppressWarnings("serial")
@@ -26,7 +25,7 @@ public class AjoutComputerServlet extends HttpServlet{
 			throws ServletException, IOException {
 		@SuppressWarnings("resource")
 		ApplicationContext context = new ClassPathXmlApplicationContext("springConfig.xml");
-		GestionComputerService gestionComputerService = context.getBean("gestionComputerServiceImpl", GestionComputerServiceImpl.class);
+		GestionComputerService gestionComputerService = context.getBean(GestionComputerService.class);
 		
 		try {
 			req.setAttribute("companies", gestionComputerService.getCompanies());
