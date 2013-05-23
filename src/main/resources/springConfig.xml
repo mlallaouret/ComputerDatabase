@@ -18,5 +18,7 @@
 	<context:annotation-config />
 	<context:component-scan base-package="com.excilys.projet.computerdatabase" />
 	<tx:annotation-driven transaction-manager="txManager" />
+	
+	
 
 </beans>

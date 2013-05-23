@@ -1,7 +1,6 @@
 package com.excilys.projet.computerdatabase.servlet;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,8 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.dao.DataAccessException;
 
 import com.excilys.projet.computerdatabase.model.Page;
 import com.excilys.projet.computerdatabase.service.GestionComputerService;
@@ -27,10 +26,9 @@ public class AffichageComputerServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
-		@SuppressWarnings("resource")
-		ApplicationContext context = new ClassPathXmlApplicationContext("classpath:springConfig.xml");
+		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("classpath:springConfig.xml");
 		GestionComputerService gestionComputerService = (GestionComputerService)context.getBean(GestionComputerService.class);
-		
+		context.close();
 		Integer pageNumber=0;
 		Page page = null;
 		if(req.getParameter("page")!=null) {
@@ -60,7 +58,7 @@ public class AffichageComputerServlet extends HttpServlet {
 			req.setAttribute("filter", req.getParameter("f"));
 
 			getServletContext().getRequestDispatcher("/WEB-INF/affichageComputers.jsp").forward(req, resp);
-		} catch (SQLException e) {
+		} catch (DataAccessException e) {
 			req.setAttribute("error", "Erreur technique");
 			getServletContext().getRequestDispatcher("/WEB-INF/errorPage.jsp").forward(req, resp);
 		}

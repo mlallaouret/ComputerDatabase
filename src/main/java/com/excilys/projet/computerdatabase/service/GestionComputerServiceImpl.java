@@ -1,14 +1,16 @@
 package com.excilys.projet.computerdatabase.service;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import com.excilys.projet.computerdatabase.dao.GestionCompanyDao;
 import com.excilys.projet.computerdatabase.dao.GestionComputerDao;
@@ -38,7 +40,7 @@ public class GestionComputerServiceImpl implements GestionComputerService {
 	
 	
 	@Override
-	public Company getCompany(int id) throws SQLException{
+	public Company getCompany(int id){
 		Company c = null;
 		try {	
 			if(computerDao.isComputerExists(id)){
@@ -46,18 +48,18 @@ public class GestionComputerServiceImpl implements GestionComputerService {
 			} else {
 				throw new IllegalArgumentException("l'id de l'ordinateur n'existe pas.");
 			}
-		} catch(SQLException e) {
+		} catch(DataAccessException e) {
 			logger.warn("Erreur lors de la récupération d'une compagnie" + e.getMessage());
 			throw e;
-		}finally {
 		}
 		return c;
 	}
 	
 	@Override
-	@Transactional(readOnly = false)
-	public void insertOrUpdate(Computer computer) throws SQLException{
+	@Transactional(readOnly = true)
+	public void insertOrUpdate(Computer computer){
 		int result = 0;
+		logger.warn("Coucou :" + TransactionSynchronizationManager.isActualTransactionActive());
 		try {
 			if(computer.getId()!=0){
 				result = computerDao.updateComputer(computer);
@@ -67,35 +69,32 @@ public class GestionComputerServiceImpl implements GestionComputerService {
 			if (result == 0) {
 				throw new IllegalArgumentException("Erreur lors de l'insert/update de l'ordinateur");
 			}
-		} catch(SQLException e) {
+		} catch(DataAccessException e) {
 			logger.warn("Erreur lors de l'insert/update d'un ordinateur" + e.getMessage());
 			throw e;
-		} finally {
 		}
 	}
 	
 	@Override
-	public List<Computer> getComputers(int debut, int nombre, SqlRequestOptions sqlRequestOptions) throws SQLException{
+	public List<Computer> getComputers(int debut, int nombre, SqlRequestOptions sqlRequestOptions){
 		List<Computer> computers = null;
 		try{
 			computers = computerDao.getComputers(debut, nombre, sqlRequestOptions);
-		} catch (SQLException e){
+		} catch (DataAccessException e){
 			logger.warn("Erreur lors de la récupération de la liste des ordinateurs" + e.getMessage());
 			throw e;
-		}finally {
 		}
 		return computers;
 	}
 
 	@Override
-	public Integer getComputerCount(SqlRequestOptions sqlRequestOptions) throws SQLException{
+	public Integer getComputerCount(SqlRequestOptions sqlRequestOptions){
 		Integer i = null;
 		try {
 			i = computerDao.getComputerCount(sqlRequestOptions);
-		} catch(SQLException e){
+		} catch(DataAccessException e){
 			logger.warn("Erreur lors de la récupération du compte des ordinateurs" + e.getMessage());
 			throw e;
-		}finally {
 		}
 		
 		return i;
@@ -103,94 +102,88 @@ public class GestionComputerServiceImpl implements GestionComputerService {
 	
 	@Override
 	@Transactional(readOnly = false)
-	public void updateComputer(Computer c) throws SQLException{
+	public void updateComputer(Computer c){
 		try {
 			computerDao.updateComputer(c);
-		} catch(SQLException e) {
+		} catch(DataAccessException e) {
 			logger.warn("Erreur lors de l'update d'un ordinateur" + e.getMessage());
 			throw e;
-		}finally {
 		}
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
-	public void deleteComputer(int id) throws SQLException{
+	public void deleteComputer(int id){
 		try{
 			if(computerDao.isComputerExists(id)) {
 				computerDao.deleteComputer(id);
 			} else {
 				throw new IllegalArgumentException("L'id de l'ordinateur n'existe pas.");
 			}
-		} catch(SQLException e){
+		} catch(DataAccessException e){
 			logger.warn("Erreur lors de la suppression d'un ordinateur" + e.getMessage());
 			throw e;
-		}finally {
 		}
 	}
 	
 	@Override
-	public Computer getComputer(int id) throws SQLException{
+	public Computer getComputer(int id){
 		Computer c = null;
 		try {
 			c = computerDao.getComputer(id);
-		} catch (SQLException e) {
+		} catch (DataAccessException e) {
 			logger.warn("Erreur lors de la récupération d'un ordinateur" + e.getMessage());
 			throw e;
-		} finally{
 		}
 		
 		return c;
 	}
 	
 	@Override
-	public List<Company> getCompanies() throws SQLException{
+	public List<Company> getCompanies(){
 		List<Company> companies = null;
 		try {
 			companies = companyDao.getCompanies();
-		} catch (SQLException e){
+		} catch (DataAccessException e){
 			logger.warn("Erreur lors de la récupération de la liste des sociétés" + e.getMessage());
 			throw e;
-		}finally {
 		}
 		return companies;
 	}
 	
 	@Override
-	public boolean isComputerExists(int id) throws SQLException {		
+	public boolean isComputerExists(int id){		
 		boolean b = false;
 		try {
 			b = computerDao.isComputerExists(id);
-		} catch(SQLException e){
+		} catch(DataAccessException e){
 			logger.warn("Erreur lors de la récupération d'une société" + e.getMessage());
 			throw e;
-		}finally {
 		}
 		return b;
 	}
 
 	@Override
-	public Page createPage(int page, int maxAffichage, SqlRequestOptions sqlRequestOptions) throws SQLException{
+	public Page createPage(int page, int maxAffichage, SqlRequestOptions sqlRequestOptions){
 		int total = 0;
 		List<Computer> computers = new ArrayList<Computer>();
-		
-		try {
-			computers = computerDao.getComputers(page*maxAffichage, maxAffichage, sqlRequestOptions);
-			total = computerDao.getComputerCount(sqlRequestOptions);
-		} catch(SQLException e){
-			logger.warn("Erreur lors de la création d'une page" + e.getMessage());
-			throw e;
-		}finally {
-		}
 		if(page<0 || (page>0 && (total - page*maxAffichage<0))){
 			page=0;
 		}
+		try {
+			computers = computerDao.getComputers(page*maxAffichage, maxAffichage, sqlRequestOptions);
+			total = computerDao.getComputerCount(sqlRequestOptions);
+		} catch(DataAccessException e){
+			logger.warn("Erreur lors de la création d'une page" + e.getMessage());
+			throw e;
+		}
+		
 		return new Page(page, maxAffichage, total,
 				computers);
 	}
 
 	@Override
-	public PageEdition createPageEdition(int idComputer) throws SQLException {
+	public PageEdition createPageEdition(int idComputer){
 		Computer computer = null;
 		List<Company> companies = new ArrayList<Company>();
 		
@@ -202,10 +195,9 @@ public class GestionComputerServiceImpl implements GestionComputerService {
 				throw new IllegalArgumentException("l'id de l'ordinateur n'existe pas.");
 			}
 			
-		} catch(SQLException e){
+		} catch(DataAccessException e){
 			logger.warn("Erreur lors de la création de la page d'édition " + e.getMessage());
 			throw e;
-		}finally {
 		}
 		return new PageEdition(computer, companies);
 	}

@@ -42,12 +42,11 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 	
 	
 	public GestionComputerDaoImpl(){
-
 	}
 	
 	
 	@Override
-	public List<Computer> getComputers(final int debut, final int nombre, final SqlRequestOptions sqlRequestOptions) throws SQLException{
+	public List<Computer> getComputers(final int debut, final int nombre, final SqlRequestOptions sqlRequestOptions){
 		
 		List<Computer> liste = new ArrayList<Computer>();
 		
@@ -81,7 +80,7 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 	}
 	
 	@Override
-	public Computer getComputer(final int id) throws SQLException{
+	public Computer getComputer(final int id){
 		
 		
 		List<Computer> liste = new ArrayList<Computer>();
@@ -103,7 +102,7 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 	}
 	
 	@Override
-	public Integer getComputerCount(final SqlRequestOptions sqlRequestOptions) throws SQLException{
+	public Integer getComputerCount(final SqlRequestOptions sqlRequestOptions){
 		
 		Integer count = null;
 		
@@ -135,7 +134,7 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 	}
 	
 	@Override
-	public int deleteComputer(final int id) throws SQLException{
+	public int deleteComputer(final int id){
 		int res=0;
 		
 		res = jdbcTemplate.update(new PreparedStatementCreator() {
@@ -153,7 +152,7 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 	}
 	
 	@Override
-	public int updateComputer(final Computer computer) throws SQLException{
+	public int updateComputer(final Computer computer){
 		int res=0;
 		
 		res = jdbcTemplate.update(new PreparedStatementCreator() {
@@ -187,7 +186,7 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 	}
 	
 	@Override
-	public int insertComputer(final Computer computer) throws SQLException{
+	public int insertComputer(final Computer computer){
 		int res = 0;
 		
 		res = jdbcTemplate.update(new PreparedStatementCreator() {
@@ -219,7 +218,7 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 	}
 	
 	@Override
-	public boolean isComputerExists(final int id) throws SQLException{
+	public boolean isComputerExists(final int id) {
 		
 		int count = jdbcTemplate.query(new PreparedStatementCreator() {
 			
