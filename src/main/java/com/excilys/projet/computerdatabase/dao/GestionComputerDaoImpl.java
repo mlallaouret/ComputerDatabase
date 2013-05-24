@@ -40,10 +40,10 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 	
-	
+		
 	public GestionComputerDaoImpl(){
-	}
-	
+	}	
+			
 	
 	@Override
 	public List<Computer> getComputers(final int debut, final int nombre, final SqlRequestOptions sqlRequestOptions){

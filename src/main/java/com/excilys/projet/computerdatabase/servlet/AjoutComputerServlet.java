@@ -8,8 +8,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.ApplicationContext;
 import org.springframework.dao.DataAccessException;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.excilys.projet.computerdatabase.service.GestionComputerService;
 
@@ -18,14 +19,15 @@ import com.excilys.projet.computerdatabase.service.GestionComputerService;
 @WebServlet("/ajoutComputer")
 public class AjoutComputerServlet extends HttpServlet{
 
-	
+	private ApplicationContext context;
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		
-		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("springConfig.xml");
+		if (context == null){
+            context = WebApplicationContextUtils.getWebApplicationContext(this.getServletContext());
+        }
 		GestionComputerService gestionComputerService = context.getBean(GestionComputerService.class);
-		context.close();
 		
 		try {
 			req.setAttribute("companies", gestionComputerService.getCompanies());

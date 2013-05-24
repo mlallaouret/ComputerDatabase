@@ -56,7 +56,7 @@ public class GestionComputerServiceImpl implements GestionComputerService {
 	}
 	
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = false)
 	public void insertOrUpdate(Computer computer){
 		int result = 0;
 		logger.warn("Coucou :" + TransactionSynchronizationManager.isActualTransactionActive());
@@ -167,12 +167,13 @@ public class GestionComputerServiceImpl implements GestionComputerService {
 	public Page createPage(int page, int maxAffichage, SqlRequestOptions sqlRequestOptions){
 		int total = 0;
 		List<Computer> computers = new ArrayList<Computer>();
-		if(page<0 || (page>0 && (total - page*maxAffichage<0))){
-			page=0;
-		}
+		
 		try {
-			computers = computerDao.getComputers(page*maxAffichage, maxAffichage, sqlRequestOptions);
 			total = computerDao.getComputerCount(sqlRequestOptions);
+			if(page<0 || (page>0 && (total - page*maxAffichage<0))){
+				page=0;
+			}
+			computers = computerDao.getComputers(page*maxAffichage, maxAffichage, sqlRequestOptions);
 		} catch(DataAccessException e){
 			logger.warn("Erreur lors de la création d'une page" + e.getMessage());
 			throw e;

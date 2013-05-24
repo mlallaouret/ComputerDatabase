@@ -8,8 +8,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.ApplicationContext;
 import org.springframework.dao.DataAccessException;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.excilys.projet.computerdatabase.model.Page;
 import com.excilys.projet.computerdatabase.service.GestionComputerService;
@@ -21,14 +22,15 @@ import com.mysql.jdbc.StringUtils;
 public class AffichageComputerServlet extends HttpServlet {
 
 	private final static int MAX_AFFICHAGE = 10;
-	
+	private ApplicationContext context;
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-
-		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("classpath:springConfig.xml");
-		GestionComputerService gestionComputerService = (GestionComputerService)context.getBean(GestionComputerService.class);
-		context.close();
+		if (context == null){
+            context = WebApplicationContextUtils.getWebApplicationContext(this.getServletContext());
+        }
+		
+		GestionComputerService gestionComputerService = context.getBean(GestionComputerService.class);
 		Integer pageNumber=0;
 		Page page = null;
 		if(req.getParameter("page")!=null) {
@@ -54,7 +56,7 @@ public class AffichageComputerServlet extends HttpServlet {
 				req.getSession().removeAttribute("info");
 			}
 			req.setAttribute("page", page);
-			req.setAttribute("tri", req.getParameter("s"));
+			req.setAttribute("tri", sort);
 			req.setAttribute("filter", req.getParameter("f"));
 
 			getServletContext().getRequestDispatcher("/WEB-INF/affichageComputers.jsp").forward(req, resp);

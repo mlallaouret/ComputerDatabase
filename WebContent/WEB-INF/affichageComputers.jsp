@@ -62,7 +62,7 @@
 						<tr>
 
 							<th
-								class="col2 header ${tri eq '2' ? 'headerSortUp': tri eq '-2' ? 'headerSortDown': empty tri ? 'headerSortUp': ''}">
+								class="col2 header ${tri eq '2' ? 'headerSortUp': tri eq '-2' ? 'headerSortDown': tri gt 5 ? 'headerSortUp': tri lt 5 ? 'headerSortUp' : empty tri ? 'headerSortUp': ''}">
 								<a
 								href="affichageComputers?f=${filter}&s=${tri eq '2' ? '-2': '2'} ">Computer
 									name</a>
