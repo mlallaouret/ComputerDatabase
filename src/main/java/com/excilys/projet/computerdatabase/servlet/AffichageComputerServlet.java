@@ -1,68 +1,53 @@
 package com.excilys.projet.computerdatabase.servlet;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.context.ApplicationContext;
-import org.springframework.dao.DataAccessException;
-import org.springframework.web.context.support.WebApplicationContextUtils;
-
 import com.excilys.projet.computerdatabase.model.Page;
 import com.excilys.projet.computerdatabase.service.GestionComputerService;
 import com.excilys.projet.computerdatabase.utils.SqlRequestOptions;
-import com.mysql.jdbc.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
-@SuppressWarnings("serial")
-@WebServlet("/affichageComputers")
-public class AffichageComputerServlet extends HttpServlet {
+@Controller
+public class AffichageComputerServlet {
 
 	private final static int MAX_AFFICHAGE = 10;
-	private ApplicationContext context;
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		if (context == null){
-            context = WebApplicationContextUtils.getWebApplicationContext(this.getServletContext());
-        }
-		
-		GestionComputerService gestionComputerService = context.getBean(GestionComputerService.class);
-		Integer pageNumber=0;
+
+    public void setGestionComputerService(GestionComputerService gestionComputerService) {
+        this.gestionComputerService = gestionComputerService;
+    }
+
+    @Autowired
+    private GestionComputerService gestionComputerService;
+
+	@RequestMapping(value="/affichageComputers",  method= RequestMethod.GET)
+    public String doGet(Model model, @RequestParam(value="page", defaultValue = "0") Integer pageParam, @RequestParam(value="s", defaultValue = "2") Integer s,
+                        @RequestParam(value="f", defaultValue = "") String f){
+
+		Integer pageNumber=pageParam;
 		Page page = null;
-		if(req.getParameter("page")!=null) {
-			try{
-				pageNumber=Integer.parseInt(req.getParameter("page"));
-			}catch(NumberFormatException e){
-				pageNumber=0;
-			}
-		}
-		int sort=1;
-		try{
-			sort = Integer.parseInt(req.getParameter("s"));
-		} catch (NumberFormatException e){
-			sort = 2;
-		}
+
+		int sort=s;
 
 		try {
-			page = gestionComputerService.createPage(pageNumber, MAX_AFFICHAGE, new SqlRequestOptions(req.getParameter("f"), sort));
-			String info = (String) req.getSession().getAttribute("info");
+			page = gestionComputerService.createPage(pageNumber, MAX_AFFICHAGE, new SqlRequestOptions(f, sort));
+			//String info = (String) req.getSession().getAttribute("info");
 
-			if(!StringUtils.isNullOrEmpty(info)) {
-				req.setAttribute("info", info);
+			/*if(!StringUtils.isNullOrEmpty(info)) {
+				model.addAttribute("info", info);
 				req.getSession().removeAttribute("info");
-			}
-			req.setAttribute("page", page);
-			req.setAttribute("tri", sort);
-			req.setAttribute("filter", req.getParameter("f"));
+			}*/
+			model.addAttribute("page", page);
+			model.addAttribute("tri", sort);
+			model.addAttribute("filter", f);
 
-			getServletContext().getRequestDispatcher("/WEB-INF/affichageComputers.jsp").forward(req, resp);
+			return "affichageComputers";
 		} catch (DataAccessException e) {
-			req.setAttribute("error", "Erreur technique");
-			getServletContext().getRequestDispatcher("/WEB-INF/errorPage.jsp").forward(req, resp);
+			model.addAttribute("error", "Erreur technique");
+			return "errorPage";
 		}
 		
 		

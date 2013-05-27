@@ -59,7 +59,6 @@ public class GestionComputerServiceImpl implements GestionComputerService {
 	@Transactional(readOnly = false)
 	public void insertOrUpdate(Computer computer){
 		int result = 0;
-		logger.warn("Coucou :" + TransactionSynchronizationManager.isActualTransactionActive());
 		try {
 			if(computer.getId()!=0){
 				result = computerDao.updateComputer(computer);

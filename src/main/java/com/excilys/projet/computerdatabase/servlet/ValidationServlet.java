@@ -1,56 +1,52 @@
 package com.excilys.projet.computerdatabase.servlet;
 
-import java.io.IOException;
+import com.excilys.projet.computerdatabase.model.Computer;
+import com.excilys.projet.computerdatabase.service.GestionComputerService;
+import com.mysql.jdbc.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.dao.DataAccessException;
-import org.springframework.web.context.support.WebApplicationContextUtils;
-
-import com.excilys.projet.computerdatabase.model.Computer;
-import com.excilys.projet.computerdatabase.service.GestionComputerService; 
-import com.mysql.jdbc.StringUtils;
-
-@WebServlet("/validation")
-@SuppressWarnings("serial")
-public class ValidationServlet extends HttpServlet {
+@Controller
+public class ValidationServlet{
 
 	private static final Logger logger = LoggerFactory.getLogger(ValidationServlet.class);
-	private ApplicationContext context;
-	
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		
-		if (context == null){
-            context = WebApplicationContextUtils.getWebApplicationContext(this.getServletContext());
-        }
-		GestionComputerService gestionComputerService = context.getBean(GestionComputerService.class);
+    @Autowired
+    private GestionComputerService gestionComputerService;
+
+    public void setGestionComputerService(GestionComputerService gestionComputerService) {
+        this.gestionComputerService = gestionComputerService;
+    }
+
+    @RequestMapping(value="/validation",  method= RequestMethod.POST)
+    public String doPost(Model model, @RequestParam(value = "id", required=false) String id, @RequestParam("name") String name, @RequestParam("introduced") String introduced,
+                         @RequestParam("discontinued") String discontinued, @RequestParam("company") String company){
+
 		
 		boolean error = false;
 		Computer computer = new Computer();
 		
 		//Check de l'id
-		if(req.getParameter("id")!=null){
-			computer.setId(Integer.parseInt(req.getParameter("id")));
+		if(id!=null){
+			computer.setId(Integer.parseInt(id));
 		}
 		
 		//Check du nom de l'ordinateur
-		if(req.getParameter("name")==null || req.getParameter("name").trim().length()==0){
+		if(name==null || name.trim().length()==0){
 			error = true;
-			req.setAttribute("nameError", "error");	
+			model.addAttribute("nameError", "error");
 		} else {
-			computer.setName(req.getParameter("name"));
+			computer.setName(name);
 		}
 		
 		//Check des dates
@@ -58,61 +54,61 @@ public class ValidationServlet extends HttpServlet {
 		df.applyPattern("yyyy-MM-dd");
 		df.setLenient(false);
 		
-		if(req.getParameter("introduced").isEmpty()) {
+		if(introduced.isEmpty()) {
 			computer.setIntroduced(null);
 		} else {
 			try {
-				computer.setIntroduced(df.parse(req.getParameter("introduced")));
+				computer.setIntroduced(df.parse(introduced));
 			} catch (ParseException e) {
 				error = true;
-				req.setAttribute("introducedError", "error");
+				model.addAttribute("introducedError", "error");
 			}
 		}
 		
-		if(req.getParameter("discontinued").isEmpty()) {
+		if(discontinued.isEmpty()) {
 			computer.setDiscontinued(null);
 		} else {	
 			try {
-				computer.setDiscontinued(df.parse(req.getParameter("discontinued")));
+				computer.setDiscontinued(df.parse(discontinued));
 			} catch (ParseException e) {
 				error = true;
-				req.setAttribute("discontinuedError", "error");
+				model.addAttribute("discontinuedError", "error");
 			}	
 		}
 		
 		try {
 			//Check de la compagnie
-			if(!StringUtils.isNullOrEmpty(req.getParameter("company"))){
-				computer.setCompany(gestionComputerService.getCompany(Integer.parseInt(req.getParameter("company"))));
+			if(!StringUtils.isNullOrEmpty(company)){
+				computer.setCompany(gestionComputerService.getCompany(Integer.parseInt(company)));
 			}
 			if(!error) {
 				gestionComputerService.insertOrUpdate(computer);
 				StringBuilder sb = new StringBuilder("Computer ").append(computer.getName()).append(" has been ");
-				if(req.getParameter("id")!=null){
+				if(id!=null){
 					sb.append("updated");
 				} else {
 					sb.append("created");
 				}
-				req.getSession().setAttribute("info", sb.toString());
-				resp.sendRedirect("affichageComputers");
+				//req.getSession().setAttribute("info", sb.toString());
+				return "redirect:affichageComputers.html";
 			} else { 
-				req.setAttribute("computer", computer);
-				req.setAttribute("companies", gestionComputerService.getCompanies());
-				if(req.getParameter("id")!=null) {
+				model.addAttribute("computer", computer);
+				model.addAttribute("companies", gestionComputerService.getCompanies());
+				if(id!=null) {
 					
-					getServletContext().getRequestDispatcher("/WEB-INF/editionComputer.jsp").forward(req, resp);
+					return "editionComputer";
 				} else {
-					getServletContext().getRequestDispatcher("/WEB-INF/ajoutComputer.jsp").forward(req, resp);
+					return "ajoutComputer";
 				}
 				
 			}
 		} catch(DataAccessException e){
-			req.setAttribute("error", "Erreur technique");
-			getServletContext().getRequestDispatcher("/WEB-INF/errorPage.jsp").forward(req, resp);
+			model.addAttribute("error", "Erreur technique");
+			return "errorPage";
 		} catch(IllegalArgumentException e) {
 			logger.warn(e.getMessage());
-			req.setAttribute("error", "L'ordinateur n'existe pas.");
-			getServletContext().getRequestDispatcher("/WEB-INF/errorPage.jsp").forward(req, resp);
+			model.addAttribute("error", "L'ordinateur n'existe pas.");
+			return "errorPage";
 		}
 		
 		

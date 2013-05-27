@@ -1,40 +1,34 @@
 package com.excilys.projet.computerdatabase.servlet;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.context.ApplicationContext;
-import org.springframework.dao.DataAccessException;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.excilys.projet.computerdatabase.service.GestionComputerService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 
-@SuppressWarnings("serial")
-@WebServlet("/ajoutComputer")
-public class AjoutComputerServlet extends HttpServlet{
+@Controller
+public class AjoutComputerServlet{
 
-	private ApplicationContext context;
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		
-		if (context == null){
-            context = WebApplicationContextUtils.getWebApplicationContext(this.getServletContext());
-        }
-		GestionComputerService gestionComputerService = context.getBean(GestionComputerService.class);
+    public void setGestionComputerService(GestionComputerService gestionComputerService) {
+        this.gestionComputerService = gestionComputerService;
+    }
+
+    @Autowired
+    private GestionComputerService gestionComputerService;
+
+    @RequestMapping(value="/ajoutComputer",  method= RequestMethod.GET)
+	public String doGet(Model model) {
 		
 		try {
-			req.setAttribute("companies", gestionComputerService.getCompanies());
-			getServletContext().getRequestDispatcher("/WEB-INF/ajoutComputer.jsp").forward(req, resp);
+			model.addAttribute("companies", gestionComputerService.getCompanies());
+			return "ajoutComputer";
 		} catch (DataAccessException e) {
-			req.setAttribute("error", "Erreur technique.");
-			getServletContext().getRequestDispatcher("/WEB-INF/errorPage.jsp").forward(req, resp);
+			model.addAttribute("error", "Erreur technique.");
+			return "errorPage";
 		}
 	}
 }

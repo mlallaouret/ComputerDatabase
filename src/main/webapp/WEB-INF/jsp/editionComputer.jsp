@@ -15,24 +15,24 @@
 
 	<header class="topbar">
 		<h1 class="fill">
-			<a href="affichageComputers"> My super Computer database </a>
+			<a href="affichageComputers.html"> My super Computer database </a>
 		</h1>
 	</header>
 
 	<section id="main">
 
 
-		<h1>Add computer</h1>
+		<h1>Edit computer</h1>
 
 
 
-		<form action="validation" method="POST">
+		<form action="validation.html" method="POST">
 
-
+			<input type="hidden" name="id" value="${param.id }"/>
 			<fieldset>
 
-
-				<div class="clearfix ${nameError}">
+				
+				<div class="clearfix ${nameError }">
 					<label for="name">Computer name</label>
 					<div class="input">
 
@@ -87,11 +87,22 @@
 
 			<div class="actions">
 				<input type="submit" value="Save this computer" class="btn primary">
-				or <a href="affichageComputers" class="btn">Cancel</a>
+				or <a href="affichageComputers.html" class="btn">Cancel</a>
 			</div>
 
 
 		</form>
+
+
+
+
+		<form action="delete.html" method="POST" class="topRight">
+			<input type="hidden" value="${computer.id}" name="id" />
+			<input type="submit" value="Delete this computer" class="btn danger"/>
+
+		</form>
+
+
 
 	</section>
 

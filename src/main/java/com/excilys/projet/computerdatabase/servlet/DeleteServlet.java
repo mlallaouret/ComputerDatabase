@@ -1,50 +1,47 @@
 package com.excilys.projet.computerdatabase.servlet;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.excilys.projet.computerdatabase.service.GestionComputerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.web.context.support.WebApplicationContextUtils;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import com.excilys.projet.computerdatabase.service.GestionComputerService;
+import javax.servlet.http.HttpServlet;
 
-@WebServlet("/delete")
-@SuppressWarnings("serial")
+
+@Controller
 public class DeleteServlet extends HttpServlet {
 
 	private static final Logger logger = LoggerFactory.getLogger(DeleteServlet.class);
-	private ApplicationContext context;
-	
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		
-		if (context == null){
-            context = WebApplicationContextUtils.getWebApplicationContext(this.getServletContext());
-        }
-		GestionComputerService gestionComputerService = context.getBean(GestionComputerService.class);
+    @Autowired
+    private GestionComputerService gestionComputerService;
+
+    public void setGestionComputerService(GestionComputerService gestionComputerService) {
+        this.gestionComputerService = gestionComputerService;
+    }
+
+    @RequestMapping(value="/delete",  method= RequestMethod.POST)
+    public String doPost(Model model, @RequestParam("id") String id){
+
 		try {
-			gestionComputerService.deleteComputer(Integer.parseInt(req.getParameter("id")));
-			req.getSession().setAttribute("info", "Computer has been deleted");
-			resp.sendRedirect("affichageComputers");
+			gestionComputerService.deleteComputer(Integer.parseInt(id));
+			//req.getSession().setAttribute("info", "Computer has been deleted");
+			return "redirect:affichageComputers.html";
 		} catch (DataAccessException e) {
-			req.setAttribute("error", "Erreur technique.");
-			getServletContext().getRequestDispatcher("/WEB-INF/errorPage.jsp").forward(req, resp);
+			model.addAttribute("error", "Erreur technique.");
+			return "errorPage";
 		} catch(NumberFormatException e){
-			req.setAttribute("error", e.getMessage());
-			getServletContext().getRequestDispatcher("/WEB-INF/errorPage.jsp").forward(req, resp);
+			model.addAttribute("error", e.getMessage());
+			return "errorPage.jsp";
 		}catch (IllegalArgumentException e){
 			logger.warn(e.getMessage());
-			req.setAttribute("error", e.getMessage());
-			getServletContext().getRequestDispatcher("/WEB-INF/errorPage.jsp").forward(req, resp);
+			model.addAttribute("error", e.getMessage());
+			return "errorPage";
 		}
 		
 	}

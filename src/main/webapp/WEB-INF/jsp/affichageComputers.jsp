@@ -15,7 +15,7 @@
 
 	<header class="topbar">
 		<h1 class="fill">
-			<a href="affichageComputers"> My super Computer database </a>
+			<a href="affichageComputers.html"> My super Computer database </a>
 		</h1>
 	</header>
 
@@ -30,7 +30,7 @@
         </c:if>
 				<div id="actions">
 
-					<form action="affichageComputers" method="GET">
+					<form action="affichageComputers.html" method="GET">
 
 						<input type="search" id="searchbox" name="f"
 							value="${filter }"
@@ -41,7 +41,7 @@
 					</form>
 
 
-					<a class="btn success" id="add" href="ajoutComputer">Add a new
+					<a class="btn success" id="add" href="ajoutComputer.html">Add a new
 						computer</a>
 
 				</div>
@@ -64,7 +64,7 @@
 							<th
 								class="col2 header ${tri eq '2' ? 'headerSortUp': tri eq '-2' ? 'headerSortDown': tri gt 5 ? 'headerSortUp': tri lt 5 ? 'headerSortUp' : empty tri ? 'headerSortUp': ''}">
 								<a
-								href="affichageComputers?f=${filter}&s=${tri eq '2' ? '-2': '2'} ">Computer
+								href="affichageComputers.html?f=${filter}&s=${tri eq '2' ? '-2': '2'} ">Computer
 									name</a>
 							</th>
 
@@ -72,21 +72,21 @@
 							<th
 								class="col3 header ${tri eq '3' ? 'headerSortUp': tri eq '-3' ? 'headerSortDown': ''} ">
 								<a
-								href="affichageComputers?f=${filter}&s=${tri eq '3' ? '-3': '3'}">Introduced</a>
+								href="affichageComputers.html?f=${filter}&s=${tri eq '3' ? '-3': '3'}">Introduced</a>
 							</th>
 
 
 							<th
 								class="col4 header ${tri eq '4' ? 'headerSortUp':tri eq '-4' ? 'headerSortDown': ''}">
 								<a
-								href="affichageComputers?f=${filter}&s=${tri eq '4' ? '-4': '4'}">Discontinued</a>
+								href="affichageComputers.html?f=${filter}&s=${tri eq '4' ? '-4': '4'}">Discontinued</a>
 							</th>
 
 
 							<th
 								class="col5 header ${tri eq '5' ? 'headerSortUp':tri eq '-5' ? 'headerSortDown': ''}">
 								<a
-								href="affichageComputers?f=${filter}&s=${tri eq '5' ? '-5': '5'}">Company</a>
+								href="affichageComputers.html?f=${filter}&s=${tri eq '5' ? '-5': '5'}">Company</a>
 							</th>
 
 						</tr>
@@ -96,7 +96,7 @@
 
 						<c:forEach items="${page.computers}" var="computer">
 							<tr>
-								<td><a href="editionComputer?id=${computer.id}">${computer.name}</a></td>
+								<td><a href="editionComputer.html?id=${computer.id}">${computer.name}</a></td>
 								<td><c:if test="${empty computer.introduced}">
 										<em>-</em>
 									</c:if> <c:if test="${not empty computer.introduced}">${computer.introduced }</c:if></td>
@@ -123,7 +123,7 @@
 						</c:if>
 						<c:if test="${!page.first}">
 							<li class="prev"><a
-								href="affichageComputers?s=${tri}&f=${filter}&page=${page.pageNumber -1}">&larr;
+								href="affichageComputers.html?s=${tri}&f=${filter}&page=${page.pageNumber -1}">&larr;
 									Previous</a></li>
 						</c:if>
 
@@ -132,7 +132,7 @@
 
 						<c:if test="${!page.last}">
 							<li class="next"><a
-								href="affichageComputers?s=${tri}&f=${filter}&page=${page.pageNumber +1}">Next
+								href="affichageComputers.html?s=${tri}&f=${filter}&page=${page.pageNumber +1}">Next
 									&rarr;</a></li>
 						</c:if>
 						<c:if test="${page.last}">
