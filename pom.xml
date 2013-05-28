@@ -29,6 +29,36 @@
 	<dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>ComputerDatabase</groupId>
+                <artifactId>model</artifactId>
+                <version>${computerdatabase-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ComputerDatabase</groupId>
+                <artifactId>service</artifactId>
+                <version>${computerdatabase-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ComputerDatabase</groupId>
+                <artifactId>serviceapi</artifactId>
+                <version>${computerdatabase-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ComputerDatabase</groupId>
+                <artifactId>dao</artifactId>
+                <version>${computerdatabase-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ComputerDatabase</groupId>
+                <artifactId>daoapi</artifactId>
+                <version>${computerdatabase-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ComputerDatabase</groupId>
+                <artifactId>frontend</artifactId>
+                <version>${computerdatabase-version}</version>
+            </dependency>
+            <dependency>
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${mysql-version}</version>

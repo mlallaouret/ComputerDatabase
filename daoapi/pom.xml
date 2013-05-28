@@ -16,7 +16,6 @@
         <dependency>
             <groupId>ComputerDatabase</groupId>
             <artifactId>model</artifactId>
-            <version>${computerdatabase-version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

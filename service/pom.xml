@@ -15,19 +15,16 @@
         <dependency>
             <groupId>ComputerDatabase</groupId>
             <artifactId>serviceapi</artifactId>
-            <version>${computerdatabase-version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>ComputerDatabase</groupId>
             <artifactId>daoapi</artifactId>
-            <version>${computerdatabase-version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>ComputerDatabase</groupId>
             <artifactId>dao</artifactId>
-            <version>${computerdatabase-version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>

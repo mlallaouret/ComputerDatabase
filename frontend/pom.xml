@@ -16,13 +16,11 @@
         <dependency>
             <groupId>ComputerDatabase</groupId>
             <artifactId>serviceapi</artifactId>
-            <version>${computerdatabase-version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>ComputerDatabase</groupId>
             <artifactId>service</artifactId>
-            <version>${computerdatabase-version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
