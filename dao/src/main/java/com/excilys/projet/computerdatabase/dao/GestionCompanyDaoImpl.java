@@ -43,8 +43,7 @@ public class GestionCompanyDaoImpl implements GestionCompanyDao {
 			
 			@Override
 			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-				PreparedStatement myPreparedStatement = con.prepareStatement(SELECT_ALL_COMPANIES_QUERY);
-				return myPreparedStatement;
+				return con.prepareStatement(SELECT_ALL_COMPANIES_QUERY);
 			}
 		}, new RowCompany());
 

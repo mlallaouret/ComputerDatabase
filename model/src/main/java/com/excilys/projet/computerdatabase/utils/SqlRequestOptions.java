@@ -10,13 +10,13 @@ public class SqlRequestOptions {
 			Column.COMPANY_NAME.toString(), Column.NAME.toString()};
 	
 	private enum Order{
-		ASC,DESC;
+		ASC,DESC
 	}
 	
 	private enum Column{
 		NAME("cpu.name"), INTRODUCED("cpu.introduced"), DISCONTINUED("cpu.discontinued"), COMPANY_NAME("cpy.name");
 		
-		private String field;
+		private final String field;
 		
 		private Column(String field){
 			this.field = field;

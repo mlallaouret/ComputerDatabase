@@ -29,7 +29,7 @@ public interface GestionComputerService {
 
 	boolean isComputerExists(int id);
 
-	Page createPage(int page, int maxAffichage,
+	Page createPage(int page, final int maxAffichage,
 			SqlRequestOptions sqlRequestOptions);
 	
 	PageEdition createPageEdition(int idComputer);

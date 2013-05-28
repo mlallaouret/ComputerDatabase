@@ -7,10 +7,10 @@ public class Page {
 	private boolean first;
 	private boolean last;
 	private int pageNumber;
-	private int total;
+	private final int total;
 	private int displayFrom;
 	private int displayTo;
-	private List<Computer> computers;
+	private final List<Computer> computers;
 	private final int maxAffichage;
 	
 	public Page(int page, int maxAffichage, int totalComputers, List<Computer> listeComputers) {

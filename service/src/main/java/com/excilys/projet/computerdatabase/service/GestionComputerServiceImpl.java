@@ -33,7 +33,7 @@ public class GestionComputerServiceImpl implements GestionComputerService {
 	@Autowired
 	private GestionCompanyDao companyDao;
 	
-	public GestionComputerServiceImpl() {
+	private GestionComputerServiceImpl() {
 
 	}
 	

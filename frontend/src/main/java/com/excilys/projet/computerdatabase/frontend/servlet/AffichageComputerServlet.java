@@ -27,14 +27,13 @@ public class AffichageComputerServlet {
     public String doGet(Model model, @RequestParam(value="page", defaultValue = "0") Integer pageParam, @RequestParam(value="s", defaultValue = "2") Integer s,
                         @RequestParam(value="f", defaultValue = "") String f){
 
-		Integer pageNumber=pageParam;
 		Page page = null;
 
 		int sort=s;
 
 		try {
-			page = gestionComputerService.createPage(pageNumber, MAX_AFFICHAGE, new SqlRequestOptions(f, sort));
-			//String info = (String) req.getSession().getAttribute("info");
+			page = gestionComputerService.createPage(pageParam, MAX_AFFICHAGE, new SqlRequestOptions(f, sort));
+			//gString info = (String) model.getAttribute("info");
 
 			/*if(!StringUtils.isNullOrEmpty(info)) {
 				model.addAttribute("info", info);

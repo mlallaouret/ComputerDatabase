@@ -28,7 +28,7 @@ public class DeleteServlet {
 
 		try {
 			gestionComputerService.deleteComputer(id);
-			//req.getSession().setAttribute("info", "Computer has been deleted");
+			model.addAttribute("info", "Computer has been deleted");
 			return "redirect:affichageComputers.html";
 		} catch (DataAccessException e) {
 			model.addAttribute("error", "Erreur technique.");
