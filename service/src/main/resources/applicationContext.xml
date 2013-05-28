@@ -9,15 +9,16 @@
         http://www.springframework.org/schema/context/spring-context-3.2.xsd
         http://www.springframework.org/schema/tx
 		http://www.springframework.org/schema/tx/spring-tx-3.2.xsd">
-
-    <!-- Import config datasource et gestion des transactions -->
-    <import resource="datasource-config.xml" />
     
     <!-- Activation des annotations -->
 	<context:annotation-config />
-	<context:component-scan base-package="com.excilys.projet.computerdatabase" />
+    <context:component-scan base-package="com.excilys.projet.computerdatabase.service" />
 	<tx:annotation-driven transaction-manager="txManager" />
-	
+    <!-- Gestionnaire de transations -->
+    <bean id="txManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
 	
 
 </beans>
