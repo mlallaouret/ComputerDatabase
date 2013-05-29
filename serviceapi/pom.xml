@@ -11,12 +11,10 @@
         <dependency>
             <groupId>ComputerDatabase</groupId>
             <artifactId>model</artifactId>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
