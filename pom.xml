@@ -22,7 +22,7 @@
 		<jdk-version>1.7</jdk-version>
 		<bonecp-version>0.8.0-rc1</bonecp-version>
         <logback-version>1.0.13</logback-version>
-        <computerdatabase-version>0.0.1-SNAPSHOT</computerdatabase-version>
+        <computerdatabase-version>0.0.1</computerdatabase-version>
 	</properties>
 	
 	<dependencyManagement>
