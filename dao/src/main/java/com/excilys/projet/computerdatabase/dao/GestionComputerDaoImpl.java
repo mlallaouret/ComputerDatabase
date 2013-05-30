@@ -10,6 +10,8 @@ import java.util.Formatter;
 import java.util.List;
 
 import com.excilys.projet.computerdatabase.daoapi.GestionComputerDao;
+
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -164,12 +166,12 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 				myPreparedStatement = con.prepareStatement(UPDATE_COMPUTER);
 				myPreparedStatement.setString(1, computer.getName());
 				if(computer.getIntroduced()!=null) {
-					myPreparedStatement.setDate(2, new java.sql.Date(computer.getIntroduced().getTime()));
+					myPreparedStatement.setDate(2, new java.sql.Date(computer.getIntroduced().toDate().getTime()));
 				} else {
 					myPreparedStatement.setDate(2, null);
 				}
 				if(computer.getDiscontinued()!=null) {
-					myPreparedStatement.setDate(3, new java.sql.Date(computer.getDiscontinued().getTime()));
+					myPreparedStatement.setDate(3, new java.sql.Date(computer.getDiscontinued().toDate().getTime()));
 				} else {
 					myPreparedStatement.setDate(3, null);
 				}
@@ -197,12 +199,12 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 				myPreparedStatement = con.prepareStatement(INSERT_COMPUTER);
 				myPreparedStatement.setString(1, computer.getName());
 				if(computer.getIntroduced()!=null) {
-					myPreparedStatement.setDate(2, new java.sql.Date(computer.getIntroduced().getTime()));
+					myPreparedStatement.setDate(2, new java.sql.Date(computer.getIntroduced().toDate().getTime()));
 				} else {
 					myPreparedStatement.setDate(2, null);
 				}
 				if(computer.getDiscontinued()!=null) {
-					myPreparedStatement.setDate(3, new java.sql.Date(computer.getDiscontinued().getTime()));
+					myPreparedStatement.setDate(3, new java.sql.Date(computer.getDiscontinued().toDate().getTime()));
 				} else {
 					myPreparedStatement.setDate(3, null);
 				}
@@ -251,8 +253,16 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 			Computer c = new Computer();
 			c.setId(rs.getInt("cpu.id"));
 			c.setName(rs.getString("cpu.name"));
-			c.setIntroduced(rs.getDate("cpu.introduced"));
-			c.setDiscontinued(rs.getDate("cpu.discontinued"));
+			if(rs.getDate("cpu.introduced")==null) {
+				c.setIntroduced(null);
+			} else {
+				c.setIntroduced(new LocalDate(rs.getDate("cpu.introduced").getTime()));
+			}
+			if(rs.getDate("cpu.discontinued")==null) {
+				c.setDiscontinued(null);
+			} else {
+				c.setDiscontinued(new LocalDate(rs.getDate("cpu.discontinued").getTime()));
+			}
 			Company cpy = new Company();
 			cpy.setId(rs.getInt("cpy.id"));
 			cpy.setName(rs.getString("cpy.name"));

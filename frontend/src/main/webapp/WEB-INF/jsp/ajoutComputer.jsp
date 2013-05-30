@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -26,38 +27,38 @@
 
 
 
-		<form action="validation.html" method="POST">
+		<form:form action="ajoutComputer.html" commandName= "computer" method="POST">
 
 
 			<fieldset>
 
 
-				<div class="clearfix ${nameError}">
+				<div class="clearfix <c:if test="${!empty result.getFieldError('name')}"> error</c:if>">
 					<label for="name">Computer name</label>
 					<div class="input">
 
-						<input type="text" id="name" name="name" value="${computer.name}"> <span
-							class="help-inline">Required</span>
+						<form:input type="text" id="name" path="name"/> 
+						<span class="help-inline">Required</span>
 					</div>
 				</div>
 
 
 
-				<div class="clearfix ${introducedError }">
+				<div class="clearfix <c:if test="${!empty result.getFieldError('introduced')}"> error</c:if>">
 					<label for="introduced">Introduced date</label>
 					<div class="input">
 
-						<input type="text" id="introduced" name="introduced" value="<fmt:formatDate value="${computer.introduced }" pattern="yyyy-MM-dd" />">
+						<form:input type="text" id="introduced" path="introduced" />
 
 						<span class="help-inline">Date (&#x27;yyyy-MM-dd&#x27;)</span>
 					</div>
 				</div>
 
-				<div class="clearfix ${discontinuedError }">
+				<div class="clearfix <c:if test="${!empty result.getFieldError('discontinued')}"> error</c:if>">
 					<label for="discontinued">Discontinued date</label>
 					<div class="input">
 
-						<input type="text" id="discontinued" name="discontinued" value="<fmt:formatDate value="${computer.discontinued }" pattern="yyyy-MM-dd" />">
+						<form:input type="text" id="discontinued" path="discontinued"/>
 
 						<span class="help-inline">Date (&#x27;yyyy-MM-dd&#x27;)</span>
 					</div>
@@ -68,15 +69,12 @@
 					<label for="company">Company</label>
 					<div class="input">
 
-						<select id="company" name="company">
+						<form:select id="company" path="company">
 
-							<option class="blank" value="">-- Choose a company --</option>
+							<form:option class="blank" value="">-- Choose a company --</form:option>
+							<form:options items="${companies}" itemValue="id" itemLabel="name"/>
 
-							<c:forEach items="${companies}" var="company">		
-								<option value="${company.id }" <c:if test="${company.id==computer.company.id }">selected </c:if> >${company.name }</option>
-							</c:forEach>
-
-						</select> <span class="help-inline"></span>
+						</form:select> <span class="help-inline"></span>
 					</div>
 				</div>
 
@@ -91,7 +89,7 @@
 			</div>
 
 
-		</form>
+		</form:form>
 
 	</section>
 

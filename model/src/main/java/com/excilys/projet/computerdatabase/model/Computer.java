@@ -1,19 +1,22 @@
 package com.excilys.projet.computerdatabase.model;
 
-import java.util.Date;
+import org.joda.time.LocalDate;
+import org.springframework.format.annotation.DateTimeFormat;
 
 public class Computer {
 
 	private int id;
 	private String name;
-	private Date introduced;
-	private Date discontinued;
+	@DateTimeFormat(pattern="yyyy-MM-dd")
+	private LocalDate introduced;
+	@DateTimeFormat(pattern="yyyy-MM-dd")
+	private LocalDate discontinued;
 	private Company company;
 	
 	
 	
-	public Computer(int id, String name, Date introduced,
-			Date discontinued, Company company) {
+	public Computer(int id, String name, LocalDate introduced,
+			LocalDate discontinued, Company company) {
 		
 		this.id = id;
 		this.name = name;
@@ -46,16 +49,16 @@ public class Computer {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public Date getIntroduced() {
+	public LocalDate getIntroduced() {
 		return introduced;
 	}
-	public void setIntroduced(Date introduced) {
+	public void setIntroduced(LocalDate introduced) {
 		this.introduced = introduced;
 	}
-	public Date getDiscontinued() {
+	public LocalDate getDiscontinued() {
 		return discontinued;
 	}
-	public void setDiscontinued(Date discontinued) {
+	public void setDiscontinued(LocalDate discontinued) {
 		this.discontinued = discontinued;
 	}
 	public Company getCompany() {

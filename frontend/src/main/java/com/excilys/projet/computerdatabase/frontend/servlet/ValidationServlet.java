@@ -28,11 +28,11 @@ public class ValidationServlet{
     }
 
     @RequestMapping(value="/validation",  method= RequestMethod.POST)
-    public String doPost(Model model, @RequestParam(value = "id", required=false) Integer id, @RequestParam("name") String name, @RequestParam("introduced") String introduced,
+    public void doPost(Model model, @RequestParam(value = "id", required=false) Integer id, @RequestParam("name") String name, @RequestParam("introduced") String introduced,
                          @RequestParam("discontinued") String discontinued, @RequestParam("company") String company){
 
 		
-		boolean error = false;
+		/*boolean error = false;
 		Computer computer = new Computer();
 		
 		//Check de l'id
@@ -108,7 +108,7 @@ public class ValidationServlet{
 			logger.warn(e.getMessage());
 			model.addAttribute("error", "L'ordinateur n'existe pas.");
 			return "errorPage";
-		}
+		}*/
 		
 		
 	}
