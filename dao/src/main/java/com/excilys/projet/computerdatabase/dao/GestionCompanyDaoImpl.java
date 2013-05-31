@@ -13,12 +13,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.excilys.projet.computerdatabase.model.Company;
 
 @Repository
-@Transactional(readOnly = true)
 public class GestionCompanyDaoImpl implements GestionCompanyDao {
 	
 	/**
@@ -29,11 +27,6 @@ public class GestionCompanyDaoImpl implements GestionCompanyDao {
 	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
-	
-	
-	public GestionCompanyDaoImpl(){
-		
-	}
 	
 	@Override
 	public List<Company> getCompanies(){

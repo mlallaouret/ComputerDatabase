@@ -12,22 +12,22 @@ public interface GestionComputerService {
 
 	Company getCompany(int id);
 
-	void insertOrUpdate(Computer computer);
+	boolean insertOrUpdate(Computer computer);
 
 	List<Computer> getComputers(int debut, int nombre,
 			SqlRequestOptions sqlRequestOptions);
 
 	Integer getComputerCount(SqlRequestOptions sqlRequestOptions);
 
-	void updateComputer(Computer c);
+	boolean updateComputer(Computer c);
 
-	void deleteComputer(int id);
+	boolean deleteComputer(int id);
 
 	Computer getComputer(int id);
 
 	List<Company> getCompanies();
 
-	boolean isComputerExists(int id);
+	boolean ComputerExists(int id);
 
 	Page createPage(int page, final int maxAffichage,
 			SqlRequestOptions sqlRequestOptions);

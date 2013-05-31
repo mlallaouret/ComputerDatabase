@@ -44,11 +44,6 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 	
-		
-	public GestionComputerDaoImpl(){
-	}	
-			
-	
 	@Override
 	public List<Computer> getComputers(final int debut, final int nombre, final SqlRequestOptions sqlRequestOptions){
 		
@@ -138,7 +133,7 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 	}
 	
 	@Override
-	public int deleteComputer(final int id){
+	public boolean deleteComputer(final int id){
 		int res=0;
 		
 		res = jdbcTemplate.update(new PreparedStatementCreator() {
@@ -152,14 +147,12 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 				return myPreparedStatement;
 			}
 		});
-		return res;
+		return res == 0 ? false : true;
 	}
 	
 	@Override
-	public int updateComputer(final Computer computer){
-		int res=0;
-		
-		res = jdbcTemplate.update(new PreparedStatementCreator() {
+	public boolean updateComputer(final Computer computer){	
+		int res = jdbcTemplate.update(new PreparedStatementCreator() {
 			
 			@Override
 			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
@@ -186,11 +179,11 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 				return myPreparedStatement;
 			}
 		});
-		return res;
+		return res ==0 ? false :true;
 	}
 	
 	@Override
-	public int insertComputer(final Computer computer){
+	public boolean insertComputer(final Computer computer){
 		int res = 0;
 		
 		res = jdbcTemplate.update(new PreparedStatementCreator() {
@@ -218,11 +211,11 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 				return myPreparedStatement;
 			}
 		});
-		return res;
+		return res == 0 ? false : true;
 	}
 	
 	@Override
-	public boolean isComputerExists(final int id) {
+	public boolean ComputerExists(final int id) {
 		
 		int count = jdbcTemplate.query(new PreparedStatementCreator() {
 			
@@ -240,11 +233,7 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 				return rs.getInt("count");
 			}});
 		
-		if(count==1) {
-			return true;
-		} else {
-			return false;
-		}
+		return count == 1 ? true : false;
 		
 	}
 	

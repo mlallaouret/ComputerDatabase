@@ -31,11 +31,9 @@ public class Computer {
 		this.name = name;
 	}
 	
-	
 	public Computer() {
 		
 	}
-
 
 	public int getId() {
 		return id;

@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
@@ -35,17 +34,17 @@ public class AjoutComputerController{
     private GestionComputerService gestionComputerService;
 
     @RequestMapping(method= RequestMethod.GET)
-	public ModelAndView doGet() {
-		ModelAndView modelView;
+	public String doGet(Model model) {
+		String view;
 		try {
-			modelView = new ModelAndView("ajoutComputer", "computer", new Computer());
-			modelView.addObject("companies", gestionComputerService.getCompanies());
-			return modelView;
+			model.addAttribute("computer", new Computer());
+			model.addAttribute("companies", gestionComputerService.getCompanies());
+			view = "ajoutComputer";
 		} catch (DataAccessException e) {
-			modelView = new ModelAndView("errorPage");
-			modelView.addObject("error", "Erreur technique.");
-			return modelView;
+			model.addAttribute("error", "Erreur technique.");
+			view = "errorPage";
 		}
+		return view;
 	}
     
     @RequestMapping(method= RequestMethod.POST)
@@ -59,8 +58,12 @@ public class AjoutComputerController{
     		return "ajoutComputer";
     	} else {
     		try {
-				gestionComputerService.insertOrUpdate(computer);
-				StringBuilder sb = new StringBuilder("Computer ").append(computer.getName()).append(" has been ");
+    			StringBuilder sb = new StringBuilder("Computer ").append(computer.getName());
+				if(gestionComputerService.insertOrUpdate(computer)){
+					sb.append(" has been ");
+				} else {
+					sb.append(" has not been ");
+				}
 				sb.append("created");
 				redirectAttributes.addFlashAttribute("info", sb.toString());
 				return "redirect:affichageComputers.html";			

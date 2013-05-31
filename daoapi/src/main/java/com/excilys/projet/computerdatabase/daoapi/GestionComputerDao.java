@@ -14,12 +14,12 @@ public interface GestionComputerDao {
 
 	Integer getComputerCount(SqlRequestOptions sqlRequestOptions);
 
-	int deleteComputer(int id);
+	boolean deleteComputer(int id);
 
-	int updateComputer(Computer computer);
+	boolean updateComputer(Computer computer);
 
-	int insertComputer(Computer computer);
+	boolean insertComputer(Computer computer);
 
-	boolean isComputerExists(int id);
+	boolean ComputerExists(int id);
 
 }

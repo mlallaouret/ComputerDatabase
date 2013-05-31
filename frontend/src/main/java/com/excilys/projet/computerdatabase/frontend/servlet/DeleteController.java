@@ -29,15 +29,16 @@ public class DeleteController {
     public String doPost(Model model, @RequestParam("id") Integer id, RedirectAttributes redirectAttributes){
 
 		try {
-			gestionComputerService.deleteComputer(id);
-			redirectAttributes.addFlashAttribute("info", "Computer has been deleted");
+			if(gestionComputerService.deleteComputer(id)){
+				redirectAttributes.addFlashAttribute("info", "Computer has been deleted");
+			} else {
+				redirectAttributes.addFlashAttribute("info", "Computer has not been deleted");
+			}
 			return "redirect:affichageComputers.html";
 		} catch (DataAccessException e) {
+			logger.warn(e.getMessage());
 			model.addAttribute("error", "Erreur technique.");
 			return "errorPage";
-		} catch(NumberFormatException e){
-			model.addAttribute("error", e.getMessage());
-			return "errorPage.jsp";
 		} catch (IllegalArgumentException e){
 			logger.warn(e.getMessage());
 			model.addAttribute("error", e.getMessage());

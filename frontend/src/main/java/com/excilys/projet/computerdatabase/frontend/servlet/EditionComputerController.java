@@ -20,82 +20,92 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-@RequestMapping(value="/editionComputer")
-public class EditionComputerController{
+@RequestMapping(value = "/editionComputer")
+public class EditionComputerController {
 
-	private static final Logger logger = LoggerFactory.getLogger(EditionComputerController.class);
+	private static final Logger logger = LoggerFactory
+			.getLogger(EditionComputerController.class);
 
-    @Autowired
-    private GestionComputerService gestionComputerService;
+	@Autowired
+	private GestionComputerService gestionComputerService;
 
-    @ExceptionHandler(TypeMismatchException.class)
-    public String handleTypeMismatchException(TypeMismatchException e) {
-    	logger.warn(e.getMessage());
-    	return "redirect:affichageComputers.html";
-    }
+	@ExceptionHandler(TypeMismatchException.class)
+	public String handleTypeMismatchException(TypeMismatchException e) {
+		logger.warn(e.getMessage());
+		return "redirect:affichageComputers.html";
+	}
 
-    @RequestMapping(method= RequestMethod.GET)
-	public ModelAndView doGet(@RequestParam("id") Integer idParam){
-    	ModelAndView modelView;
-		try{
-			PageEdition pageEdition = gestionComputerService.createPageEdition(idParam);
+	@RequestMapping(method = RequestMethod.GET)
+	public String doGet(Model model, @RequestParam("id") Integer idParam) {
+		String view;
+		try {
+			PageEdition pageEdition = gestionComputerService
+					.createPageEdition(idParam);
 			Computer computer = pageEdition.getComputer();
-			modelView = new ModelAndView("editionComputer", "computer", computer);
-			modelView.addObject("companies", pageEdition.getCompanies());
-			
-			return modelView;
-		}catch(NumberFormatException e){
-			return new ModelAndView("affichageComputers");
+			model.addAttribute("computer", computer);
+			model.addAttribute("companies", pageEdition.getCompanies());
+			view = "editionComputer";
+		} catch (NumberFormatException e) {
+			view = "affichageComputers";
 		} catch (DataAccessException e) {
-			modelView = new ModelAndView("errorPage");
-			modelView.addObject("error", "Erreur technique.");
-			return modelView;
+			view = "errorPage";
+			model.addAttribute("error", "Erreur technique.");
 		} catch (IllegalArgumentException e) {
 			logger.warn(e.getMessage());
-			modelView = new ModelAndView("errorPage");
-			modelView.addObject("error", e.getMessage());
-			return modelView;
+			view = "errorPage";
+			model.addAttribute("error", e.getMessage());
 		}
+		return view;
 	}
-    
-    @RequestMapping(method= RequestMethod.POST)
-   	public String doPost(@ModelAttribute("computer")
-       								Computer computer, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
-   		
-       	if(result.hasErrors()){
-       		logger.debug(result.getAllErrors().toString());
-       		model.addAttribute("companies", gestionComputerService.getCompanies());
-       		model.addAttribute("result", result);
-       		return "editionComputer";
-       	} else {
-       		try {
-   				gestionComputerService.insertOrUpdate(computer);
-   				StringBuilder sb = new StringBuilder("Computer ").append(computer.getName()).append(" has been ");
-   				sb.append("updated");
-   				redirectAttributes.addFlashAttribute("info", sb.toString());
-   				return "redirect:affichageComputers.html";			
-       		} catch(DataAccessException e){
-       			model.addAttribute("error", "Erreur technique");
-       			return "errorPage";
-       		} catch(IllegalArgumentException e) {
-       			logger.warn(e.getMessage());
-       			model.addAttribute("error", "L'ordinateur n'existe pas.");
-       			return "errorPage";
-       		}
-       	}
-   	}
 
-    public void setGestionComputerService(GestionComputerService gestionComputerService) {
-        this.gestionComputerService = gestionComputerService;
-    }
-    
-    @InitBinder
+	@RequestMapping(method = RequestMethod.POST)
+	public String doPost(@ModelAttribute("computer") Computer computer,
+			BindingResult result, Model model,
+			RedirectAttributes redirectAttributes) {
+		String view;
+		if (result.hasErrors()) {
+			logger.debug(result.getAllErrors().toString());
+			model.addAttribute("companies",
+					gestionComputerService.getCompanies());
+			model.addAttribute("result", result);
+			view = "editionComputer";
+		} else {
+			try {
+				
+				StringBuilder sb = new StringBuilder("Computer ").append(
+						computer.getName());
+				if(gestionComputerService.insertOrUpdate(computer)){
+					sb.append(" has been ");
+				} else {
+					sb.append(" has not been ");
+				}
+				sb.append("updated");
+				redirectAttributes.addFlashAttribute("info", sb.toString());
+				view = "redirect:affichageComputers.html";
+			} catch (DataAccessException e) {
+				model.addAttribute("error", "Erreur technique");
+				view = "errorPage";
+			} catch (IllegalArgumentException e) {
+				logger.warn(e.getMessage());
+				model.addAttribute("error", "L'ordinateur n'existe pas.");
+				view = "errorPage";
+			}
+		}
+		return view;
+	}
+
+	public void setGestionComputerService(
+			GestionComputerService gestionComputerService) {
+		this.gestionComputerService = gestionComputerService;
+	}
+
+	@InitBinder
 	public void initBinderUser(WebDataBinder binder) {
-		binder.registerCustomEditor(Company.class, new IdToCompanyConverter(gestionComputerService));
+		binder.registerCustomEditor(Company.class, new IdToCompanyConverter(
+				gestionComputerService));
 	}
 
 }

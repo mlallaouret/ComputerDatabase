@@ -4,6 +4,7 @@ import java.beans.PropertyEditorSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.excilys.projet.computerdatabase.model.Company;
 import com.excilys.projet.computerdatabase.serviceapi.GestionComputerService;
 
 public class IdToCompanyConverter extends PropertyEditorSupport {
@@ -11,8 +12,14 @@ public class IdToCompanyConverter extends PropertyEditorSupport {
 	public IdToCompanyConverter(GestionComputerService gestionComputerService) {
 		this.gestionComputerService = gestionComputerService;
 	}
-
-	public IdToCompanyConverter() {
+	
+	@Override
+	public String getAsText() {
+		Company company = (Company) getValue();
+		if(company == null) {
+			return null;
+		}
+		return String.valueOf(company.getId());
 	}
 
 	@Autowired

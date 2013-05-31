@@ -4,10 +4,8 @@ public class Company {
 
 	private int id;
 	private String name;
-	
-	
-	public Company() {
 		
+	public Company() {
 	}
 	
 	public Company(int id, String name) {
