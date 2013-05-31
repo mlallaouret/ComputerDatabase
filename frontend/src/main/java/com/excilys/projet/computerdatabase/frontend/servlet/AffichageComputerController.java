@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-public class AffichageComputerServlet {
+@RequestMapping(value="/affichageComputers")
+public class AffichageComputerController {
 
 	private final static int MAX_AFFICHAGE = 10;
 
@@ -23,7 +24,7 @@ public class AffichageComputerServlet {
     @Autowired
     private GestionComputerService gestionComputerService;
 
-	@RequestMapping(value="/affichageComputers",  method= RequestMethod.GET)
+	@RequestMapping(method= RequestMethod.GET)
     public String doGet(Model model, @RequestParam(value="page", defaultValue = "0") Integer pageParam, @RequestParam(value="s", defaultValue = "2") Integer s,
                         @RequestParam(value="f", defaultValue = "") String f){
 

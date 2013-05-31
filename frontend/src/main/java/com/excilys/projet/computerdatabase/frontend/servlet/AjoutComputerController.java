@@ -22,9 +22,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 @Controller
-public class AjoutComputerServlet{
+@RequestMapping(value="/ajoutComputer")
+public class AjoutComputerController{
 
-	private static final Logger logger = LoggerFactory.getLogger(AjoutComputerServlet.class);
+	private static final Logger logger = LoggerFactory.getLogger(AjoutComputerController.class);
 	
     public void setGestionComputerService(GestionComputerService gestionComputerService) {
         this.gestionComputerService = gestionComputerService;
@@ -33,7 +34,7 @@ public class AjoutComputerServlet{
     @Autowired
     private GestionComputerService gestionComputerService;
 
-    @RequestMapping(value="/ajoutComputer",  method= RequestMethod.GET)
+    @RequestMapping(method= RequestMethod.GET)
 	public ModelAndView doGet() {
 		ModelAndView modelView;
 		try {
@@ -47,7 +48,7 @@ public class AjoutComputerServlet{
 		}
 	}
     
-    @RequestMapping(value="/ajoutComputer",  method= RequestMethod.POST)
+    @RequestMapping(method= RequestMethod.POST)
 	public String doPost(@ModelAttribute("computer")
     								Computer computer, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
 		

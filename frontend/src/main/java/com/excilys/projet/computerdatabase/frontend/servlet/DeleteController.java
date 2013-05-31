@@ -14,9 +14,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 @Controller
-public class DeleteServlet {
+@RequestMapping(value="/delete")
+public class DeleteController {
 
-	private static final Logger logger = LoggerFactory.getLogger(DeleteServlet.class);
+	private static final Logger logger = LoggerFactory.getLogger(DeleteController.class);
     @Autowired
     private GestionComputerService gestionComputerService;
 
@@ -24,7 +25,7 @@ public class DeleteServlet {
         this.gestionComputerService = gestionComputerService;
     }
 
-    @RequestMapping(value="/delete",  method= RequestMethod.POST)
+    @RequestMapping(method= RequestMethod.POST)
     public String doPost(Model model, @RequestParam("id") Integer id, RedirectAttributes redirectAttributes){
 
 		try {

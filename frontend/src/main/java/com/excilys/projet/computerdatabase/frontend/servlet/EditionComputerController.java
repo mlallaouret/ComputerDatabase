@@ -24,9 +24,10 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-public class EditionComputerServlet{
+@RequestMapping(value="/editionComputer")
+public class EditionComputerController{
 
-	private static final Logger logger = LoggerFactory.getLogger(EditionComputerServlet.class);
+	private static final Logger logger = LoggerFactory.getLogger(EditionComputerController.class);
 
     @Autowired
     private GestionComputerService gestionComputerService;
@@ -37,7 +38,7 @@ public class EditionComputerServlet{
     	return "redirect:affichageComputers.html";
     }
 
-    @RequestMapping(value="/editionComputer",  method= RequestMethod.GET)
+    @RequestMapping(method= RequestMethod.GET)
 	public ModelAndView doGet(@RequestParam("id") Integer idParam){
     	ModelAndView modelView;
 		try{
@@ -61,7 +62,7 @@ public class EditionComputerServlet{
 		}
 	}
     
-    @RequestMapping(value="/editionComputer",  method= RequestMethod.POST)
+    @RequestMapping(method= RequestMethod.POST)
    	public String doPost(@ModelAttribute("computer")
        								Computer computer, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
    		
@@ -69,7 +70,7 @@ public class EditionComputerServlet{
        		logger.debug(result.getAllErrors().toString());
        		model.addAttribute("companies", gestionComputerService.getCompanies());
        		model.addAttribute("result", result);
-       		return "ajoutComputer";
+       		return "editionComputer";
        	} else {
        		try {
    				gestionComputerService.insertOrUpdate(computer);
