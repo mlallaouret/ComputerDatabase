@@ -1,6 +1,7 @@
 package com.excilys.projet.computerdatabase.dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -166,12 +167,12 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 				myPreparedStatement = con.prepareStatement(UPDATE_COMPUTER);
 				myPreparedStatement.setString(1, computer.getName());
 				if(computer.getIntroduced()!=null) {
-					myPreparedStatement.setDate(2, new java.sql.Date(computer.getIntroduced().toDate().getTime()));
+					myPreparedStatement.setDate(2, new Date(computer.getIntroduced().toDate().getTime()));
 				} else {
 					myPreparedStatement.setDate(2, null);
 				}
 				if(computer.getDiscontinued()!=null) {
-					myPreparedStatement.setDate(3, new java.sql.Date(computer.getDiscontinued().toDate().getTime()));
+					myPreparedStatement.setDate(3, new Date(computer.getDiscontinued().toDate().getTime()));
 				} else {
 					myPreparedStatement.setDate(3, null);
 				}
@@ -199,12 +200,12 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 				myPreparedStatement = con.prepareStatement(INSERT_COMPUTER);
 				myPreparedStatement.setString(1, computer.getName());
 				if(computer.getIntroduced()!=null) {
-					myPreparedStatement.setDate(2, new java.sql.Date(computer.getIntroduced().toDate().getTime()));
+					myPreparedStatement.setDate(2, new Date(computer.getIntroduced().toDate().getTime()));
 				} else {
 					myPreparedStatement.setDate(2, null);
 				}
 				if(computer.getDiscontinued()!=null) {
-					myPreparedStatement.setDate(3, new java.sql.Date(computer.getDiscontinued().toDate().getTime()));
+					myPreparedStatement.setDate(3, new Date(computer.getDiscontinued().toDate().getTime()));
 				} else {
 					myPreparedStatement.setDate(3, null);
 				}
@@ -256,12 +257,12 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 			if(rs.getDate("cpu.introduced")==null) {
 				c.setIntroduced(null);
 			} else {
-				c.setIntroduced(new LocalDate(rs.getDate("cpu.introduced").getTime()));
+				c.setIntroduced(new LocalDate(rs.getDate("cpu.introduced")));
 			}
 			if(rs.getDate("cpu.discontinued")==null) {
 				c.setDiscontinued(null);
 			} else {
-				c.setDiscontinued(new LocalDate(rs.getDate("cpu.discontinued").getTime()));
+				c.setDiscontinued(new LocalDate(rs.getDate("cpu.discontinued")));
 			}
 			Company cpy = new Company();
 			cpy.setId(rs.getInt("cpy.id"));
