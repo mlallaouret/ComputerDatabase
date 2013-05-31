@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 @Controller
@@ -24,11 +25,11 @@ public class DeleteServlet {
     }
 
     @RequestMapping(value="/delete",  method= RequestMethod.POST)
-    public String doPost(Model model, @RequestParam("id") Integer id){
+    public String doPost(Model model, @RequestParam("id") Integer id, RedirectAttributes redirectAttributes){
 
 		try {
 			gestionComputerService.deleteComputer(id);
-			model.addAttribute("info", "Computer has been deleted");
+			redirectAttributes.addFlashAttribute("info", "Computer has been deleted");
 			return "redirect:affichageComputers.html";
 		} catch (DataAccessException e) {
 			model.addAttribute("error", "Erreur technique.");
@@ -36,7 +37,7 @@ public class DeleteServlet {
 		} catch(NumberFormatException e){
 			model.addAttribute("error", e.getMessage());
 			return "errorPage.jsp";
-		}catch (IllegalArgumentException e){
+		} catch (IllegalArgumentException e){
 			logger.warn(e.getMessage());
 			model.addAttribute("error", e.getMessage());
 			return "errorPage";

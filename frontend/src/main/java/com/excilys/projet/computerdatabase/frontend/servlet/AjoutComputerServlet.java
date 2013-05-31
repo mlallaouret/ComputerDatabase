@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 @Controller
@@ -48,7 +49,7 @@ public class AjoutComputerServlet{
     
     @RequestMapping(value="/ajoutComputer",  method= RequestMethod.POST)
 	public String doPost(@ModelAttribute("computer")
-    								Computer computer, BindingResult result, Model model) {
+    								Computer computer, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
 		
     	if(result.hasErrors()){
     		logger.debug(result.getAllErrors().toString());
@@ -60,7 +61,7 @@ public class AjoutComputerServlet{
 				gestionComputerService.insertOrUpdate(computer);
 				StringBuilder sb = new StringBuilder("Computer ").append(computer.getName()).append(" has been ");
 				sb.append("created");
-				//req.getSession().setAttribute("info", sb.toString());
+				redirectAttributes.addFlashAttribute("info", sb.toString());
 				return "redirect:affichageComputers.html";			
     		} catch(DataAccessException e){
     			model.addAttribute("error", "Erreur technique");

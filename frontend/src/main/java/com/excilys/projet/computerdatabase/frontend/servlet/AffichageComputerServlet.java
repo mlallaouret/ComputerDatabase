@@ -33,12 +33,6 @@ public class AffichageComputerServlet {
 
 		try {
 			page = gestionComputerService.createPage(pageParam, MAX_AFFICHAGE, new SqlRequestOptions(f, sort));
-			//gString info = (String) model.getAttribute("info");
-
-			/*if(!StringUtils.isNullOrEmpty(info)) {
-				model.addAttribute("info", info);
-				req.getSession().removeAttribute("info");
-			}*/
 			model.addAttribute("page", page);
 			model.addAttribute("tri", sort);
 			model.addAttribute("filter", f);
