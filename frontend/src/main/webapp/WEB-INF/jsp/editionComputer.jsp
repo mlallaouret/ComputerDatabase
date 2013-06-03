@@ -78,9 +78,6 @@
 					</div>
 				</div>
 
-
-
-
 			</fieldset>
 
 			<div class="actions">

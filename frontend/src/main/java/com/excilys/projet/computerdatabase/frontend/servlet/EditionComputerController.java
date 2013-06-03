@@ -1,6 +1,6 @@
 package com.excilys.projet.computerdatabase.frontend.servlet;
 
-import com.excilys.projet.computerdatabase.frontend.utils.IdToCompanyConverter;
+import com.excilys.projet.computerdatabase.frontend.utils.CompanyConverter;
 import com.excilys.projet.computerdatabase.model.Company;
 import com.excilys.projet.computerdatabase.model.Computer;
 import com.excilys.projet.computerdatabase.model.PageEdition;
@@ -28,8 +28,7 @@ public class EditionComputerController {
 	public String doGet(Model model, @RequestParam("id") Integer idParam) {
 		PageEdition pageEdition = gestionComputerService
 				.createPageEdition(idParam);
-		Computer computer = pageEdition.getComputer();
-		model.addAttribute("computer", computer);
+		model.addAttribute("computer", pageEdition.getComputer());
 		model.addAttribute("companies", pageEdition.getCompanies());
 		return "editionComputer";
 	}
@@ -66,7 +65,7 @@ public class EditionComputerController {
 
 	@InitBinder
 	public void initBinderUser(WebDataBinder binder) {
-		binder.registerCustomEditor(Company.class, new IdToCompanyConverter(
+		binder.registerCustomEditor(Company.class, new CompanyConverter(
 				gestionComputerService));
 	}
 
