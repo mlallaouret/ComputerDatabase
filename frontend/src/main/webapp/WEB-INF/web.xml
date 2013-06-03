@@ -5,6 +5,24 @@
     <welcome-file>affichageComputers.html</welcome-file>
   </welcome-file-list>
 
+	<!-- Gestion exceptions -->
+	<error-page>
+   	 	<error-code>500</error-code>
+   		<location>/WEB-INF/jsp/error/error500.jsp</location>
+	</error-page>
+	<error-page>
+   	 	<error-code>400</error-code>
+   		<location>/WEB-INF/jsp/error/error400.jsp</location>
+	</error-page>
+	<error-page>
+   	 	<error-code>404</error-code>
+   		<location>/WEB-INF/jsp/error/error404.jsp</location>
+	</error-page>
+	<error-page>
+   	 	<error-code>405</error-code>
+   		<location>/WEB-INF/jsp/error/error405.jsp</location>
+	</error-page>
+	
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>classpath*:applicationContext.xml</param-value>

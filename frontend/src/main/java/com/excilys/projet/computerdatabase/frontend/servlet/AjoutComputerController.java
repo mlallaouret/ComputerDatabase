@@ -8,7 +8,6 @@ import com.excilys.projet.computerdatabase.serviceapi.GestionComputerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,67 +18,58 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-
 @Controller
-@RequestMapping(value="/ajoutComputer")
-public class AjoutComputerController{
+@RequestMapping(value = "/ajoutComputer")
+public class AjoutComputerController {
 
-	private static final Logger logger = LoggerFactory.getLogger(AjoutComputerController.class);
-	
-    public void setGestionComputerService(GestionComputerService gestionComputerService) {
-        this.gestionComputerService = gestionComputerService;
-    }
+	private static final Logger logger = LoggerFactory
+			.getLogger(AjoutComputerController.class);
 
-    @Autowired
-    private GestionComputerService gestionComputerService;
+	public void setGestionComputerService(
+			GestionComputerService gestionComputerService) {
+		this.gestionComputerService = gestionComputerService;
+	}
 
-    @RequestMapping(method= RequestMethod.GET)
+	@Autowired
+	private GestionComputerService gestionComputerService;
+
+	@RequestMapping(method = RequestMethod.GET)
 	public String doGet(Model model) {
+		model.addAttribute("computer", new Computer());
+		model.addAttribute("companies", gestionComputerService.getCompanies());
+		return "ajoutComputer";
+	}
+
+	@RequestMapping(method = RequestMethod.POST)
+	public String doPost(@ModelAttribute("computer") Computer computer,
+			BindingResult result, Model model,
+			RedirectAttributes redirectAttributes) {
+
 		String view;
-		try {
-			model.addAttribute("computer", new Computer());
-			model.addAttribute("companies", gestionComputerService.getCompanies());
+		if (result.hasErrors()) {
+			logger.debug(result.getAllErrors().toString());
+			model.addAttribute("companies",
+					gestionComputerService.getCompanies());
+			model.addAttribute("result", result);
 			view = "ajoutComputer";
-		} catch (DataAccessException e) {
-			model.addAttribute("error", "Erreur technique.");
-			view = "errorPage";
+		} else {
+			StringBuilder sb = new StringBuilder("Computer ").append(computer
+					.getName());
+			if (gestionComputerService.insertOrUpdate(computer)) {
+				sb.append(" has been ");
+			} else {
+				sb.append(" has not been ");
+			}
+			sb.append("created");
+			redirectAttributes.addFlashAttribute("info", sb.toString());
+			view = "redirect:affichageComputers.html";
 		}
 		return view;
 	}
-    
-    @RequestMapping(method= RequestMethod.POST)
-	public String doPost(@ModelAttribute("computer")
-    								Computer computer, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
-		
-    	if(result.hasErrors()){
-    		logger.debug(result.getAllErrors().toString());
-    		model.addAttribute("companies", gestionComputerService.getCompanies());
-    		model.addAttribute("result", result);
-    		return "ajoutComputer";
-    	} else {
-    		try {
-    			StringBuilder sb = new StringBuilder("Computer ").append(computer.getName());
-				if(gestionComputerService.insertOrUpdate(computer)){
-					sb.append(" has been ");
-				} else {
-					sb.append(" has not been ");
-				}
-				sb.append("created");
-				redirectAttributes.addFlashAttribute("info", sb.toString());
-				return "redirect:affichageComputers.html";			
-    		} catch(DataAccessException e){
-    			model.addAttribute("error", "Erreur technique");
-    			return "errorPage";
-    		} catch(IllegalArgumentException e) {
-    			logger.warn(e.getMessage());
-    			model.addAttribute("error", "L'ordinateur n'existe pas.");
-    			return "errorPage";
-    		}
-    	}
-	}
-    
-    @InitBinder
+
+	@InitBinder
 	public void initBinderUser(WebDataBinder binder) {
-		binder.registerCustomEditor(Company.class, new IdToCompanyConverter(gestionComputerService));
+		binder.registerCustomEditor(Company.class, new IdToCompanyConverter(
+				gestionComputerService));
 	}
 }
