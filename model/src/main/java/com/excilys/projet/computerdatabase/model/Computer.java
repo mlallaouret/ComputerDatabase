@@ -5,6 +5,25 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 public class Computer {
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		return prime + id;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Computer other = (Computer) obj;
+		if (id != other.id)
+			return false;
+		return true;
+	}
 	private int id;
 	private String name;
 	@DateTimeFormat(pattern="yyyy-MM-dd")

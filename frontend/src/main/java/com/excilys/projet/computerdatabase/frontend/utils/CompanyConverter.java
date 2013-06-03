@@ -19,6 +19,7 @@ public class CompanyConverter extends PropertyEditorSupport {
 	@Override
 	public String getAsText() {
 		Company company = (Company) getValue();
+		System.out.println(company);
 		if(company == null) {
 			return null;
 		}
