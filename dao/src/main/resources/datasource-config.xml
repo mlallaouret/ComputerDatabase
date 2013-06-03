@@ -16,7 +16,7 @@
 		destroy-method="close">
 		<property name="driverClass" value="${driverClass}" />
 		<property name="jdbcUrl" value="${jdbcUrl}" />
-		<property name="username" value="${username}" />
+		<property name="username" value="${user}" />
 		<property name="password" value="${password}" />
 		<property name="idleConnectionTestPeriodInMinutes" value="${idleConnectionTestPeriodInMinutes}" />
 		<property name="idleMaxAgeInMinutes" value="${idleMaxAgeInMinutes}" />
