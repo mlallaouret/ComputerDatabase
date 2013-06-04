@@ -25,13 +25,11 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 	 * Query
 	 */
 	private static final String SELECT_ALL_COMPUTERS_QUERY = "from Computer cpu";
-	private static final String SELECT_ONE_COMPUTER_BY_ID_QUERY = "from Computer where id = ?";
-	private static final String INSERT_COMPUTER = "insert into Computer (name, introduced, discontinued, company_id) values (?,?,?,?)";
-	private static final String DELETE_COMPUTER = "delete from Computer where id=?";
-	private static final String UPDATE_COMPUTER = "update computer set name = ?, introduced = ?, discontinued = ?, company_id = ? where id =? ";
+	private static final String SELECT_ONE_COMPUTER_BY_ID_QUERY = "from Computer where id = :id";
+	private static final String DELETE_COMPUTER = "delete from Computer where id=:id";
 	private static final String COUNT_COMPUTER = "select count(id) from Computer cpu";
-	private static final String ID_EXISTS_QUERY = "select count(id) from Computer where id = ?";
-	private static final String SELECT_WHERE = " where cpu.name LIKE ?" ;
+	private static final String ID_EXISTS_QUERY = "select count(id) from Computer where id = :id";
+	private static final String SELECT_WHERE = " where cpu.name LIKE :filter" ;
 	private static final String SELECT_ORDER_BY = " order by ISNULL (%1$s),%1$s %2$s";
 	
 	@Autowired
@@ -54,7 +52,7 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 		sb.append(f.toString());
 		Query query = sessionFactory.getCurrentSession().createQuery(sb.toString());
 		if(sqlRequestOptions.getFilter()!=null && !sqlRequestOptions.getFilter().isEmpty()){
-			query.setParameter(0, sqlRequestOptions.getSqlFilter());
+			query.setString("filter", sqlRequestOptions.getSqlFilter());
 		}
 		query.setFirstResult(debut);
 		query.setMaxResults(nombre);
@@ -66,7 +64,7 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 	
 	@Override
 	public Computer getComputer(final int id){
-		return (Computer) sessionFactory.getCurrentSession().createQuery(SELECT_ONE_COMPUTER_BY_ID_QUERY).setParameter(0, id).uniqueResult();
+		return (Computer) sessionFactory.getCurrentSession().createQuery(SELECT_ONE_COMPUTER_BY_ID_QUERY).setParameter("id", id).uniqueResult();
 	}
 	
 	@Override
@@ -78,7 +76,7 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 		}
 		Query query = sessionFactory.getCurrentSession().createQuery(sb.toString());
 		if(sqlRequestOptions.getFilter()!=null && !sqlRequestOptions.getFilter().isEmpty()){
-			query.setParameter(0, sqlRequestOptions.getSqlFilter());
+			query.setString("filter", sqlRequestOptions.getSqlFilter());
 		}
 		return ((Long)query.uniqueResult()).intValue();
 		
@@ -116,7 +114,7 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 	
 	@Override
 	public boolean ComputerExists(final int id) {
-		return ((Long)sessionFactory.getCurrentSession().createQuery(ID_EXISTS_QUERY).setParameter(0, id).uniqueResult()).intValue() == 1 ? true : false;
+		return ((Long)sessionFactory.getCurrentSession().createQuery(ID_EXISTS_QUERY).setInteger("id", id).uniqueResult()).intValue() == 1 ? true : false;
 		
 	}
 

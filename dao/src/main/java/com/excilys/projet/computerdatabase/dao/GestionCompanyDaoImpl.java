@@ -17,7 +17,7 @@ public class GestionCompanyDaoImpl implements GestionCompanyDao {
 	 * Query
 	 */
 	private static final String SELECT_ALL_COMPANIES_QUERY = "from Company order by name";
-	private static final String SELECT_ONE_COMPANY_BY_ID_QUERY = "from Company where id = ?";
+	private static final String SELECT_ONE_COMPANY_BY_ID_QUERY = "from Company where id = :id";
 	
 	@Autowired
 	private SessionFactory sessionFactory;
@@ -30,7 +30,7 @@ public class GestionCompanyDaoImpl implements GestionCompanyDao {
 	
 	@Override
 	public Company getCompany(final int id){
-		return (Company) sessionFactory.getCurrentSession().createQuery(SELECT_ONE_COMPANY_BY_ID_QUERY).setParameter(0, id).uniqueResult();
+		return (Company) sessionFactory.getCurrentSession().createQuery(SELECT_ONE_COMPANY_BY_ID_QUERY).setInteger("id", id).uniqueResult();
 	}
 
 	public void setSessionFactory(SessionFactory sessionFactory) {
