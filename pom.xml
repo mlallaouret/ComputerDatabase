@@ -23,6 +23,9 @@
 		<jdk-version>1.7</jdk-version>
 		<bonecp-version>0.8.0-rc1</bonecp-version>
 		<logback-version>1.0.13</logback-version>
+		<hibernate-version>4.2.2.Final</hibernate-version>
+		<jadira-version>3.1.0.CR6</jadira-version>
+		<javassist-version>3.12.1.GA</javassist-version>
 		<computerdatabase-version>0.0.1</computerdatabase-version>
 	</properties>
 
@@ -94,6 +97,11 @@
 				<version>${spring-version}</version>
 			</dependency>
 			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-orm</artifactId>
+				<version>${spring-version}</version>
+			</dependency>
+			<dependency>
 				<groupId>javax.servlet</groupId>
 				<artifactId>javax.servlet-api</artifactId>
 				<version>${servletapi-version}</version>
@@ -107,6 +115,21 @@
 				<groupId>joda-time</groupId>
 				<artifactId>joda-time</artifactId>
 				<version>2.2</version>
+			</dependency>
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-core</artifactId>
+				<version>${hibernate-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jadira.usertype</groupId>
+				<artifactId>usertype.core</artifactId>
+				<version>${jadira-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>javassist</groupId>
+				<artifactId>javassist</artifactId>
+				<version>${javassist-version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

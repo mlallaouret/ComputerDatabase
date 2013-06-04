@@ -1,27 +1,20 @@
 package com.excilys.projet.computerdatabase.dao;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Types;
-import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
 
 import com.excilys.projet.computerdatabase.daoapi.GestionComputerDao;
 
-import org.joda.time.LocalDate;
+import org.hibernate.Query;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.core.ResultSetExtractor;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import com.excilys.projet.computerdatabase.model.Company;
 import com.excilys.projet.computerdatabase.model.Computer;
 import com.excilys.projet.computerdatabase.utils.SqlRequestOptions;
 
@@ -31,111 +24,69 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 	/**
 	 * Query
 	 */
-	private static final String SELECT_ALL_COMPUTERS_QUERY = "select cpu.id, cpu.name, cpu.introduced, cpu.discontinued, cpy.id, cpy.name  from computer cpu left join company cpy on cpu.company_id=cpy.id";
-	private static final String SELECT_ONE_COMPUTER_BY_ID_QUERY = "select cpu.id, cpu.name, cpu.introduced, cpu.discontinued, cpy.id, cpy.name  from computer cpu left join company cpy on cpu.company_id=cpy.id where cpu.id = ?";
-	private static final String INSERT_COMPUTER = "insert into computer (name, introduced, discontinued, company_id) values (?,?,?,?)";
-	private static final String DELETE_COMPUTER = "delete from computer where id=?";
+	private static final String SELECT_ALL_COMPUTERS_QUERY = "from Computer cpu";
+	private static final String SELECT_ONE_COMPUTER_BY_ID_QUERY = "from Computer where id = ?";
+	private static final String INSERT_COMPUTER = "insert into Computer (name, introduced, discontinued, company_id) values (?,?,?,?)";
+	private static final String DELETE_COMPUTER = "delete from Computer where id=?";
 	private static final String UPDATE_COMPUTER = "update computer set name = ?, introduced = ?, discontinued = ?, company_id = ? where id =? ";
-	private static final String COUNT_COMPUTER = "select count(cpu.id) as count from computer cpu";
-	private static final String ID_EXISTS_QUERY = "select count(id) as count from computer where id = ?";
+	private static final String COUNT_COMPUTER = "select count(id) from Computer cpu";
+	private static final String ID_EXISTS_QUERY = "select count(id) from Computer where id = ?";
 	private static final String SELECT_WHERE = " where cpu.name LIKE ?" ;
-	private static final String SELECT_ORDER_BY = " order by ISNULL (%1$s),%1$s %2$s limit %3$s, %4$s";
+	private static final String SELECT_ORDER_BY = " order by ISNULL (%1$s),%1$s %2$s";
+	
+	@Autowired
+	private SessionFactory sessionFactory;
 	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Computer> getComputers(final int debut, final int nombre, final SqlRequestOptions sqlRequestOptions){
 		
-		List<Computer> liste = new ArrayList<Computer>();
+		Formatter f = new Formatter();
 		
-		liste = jdbcTemplate.query(new PreparedStatementCreator() {
-			
-			@Override
-			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-				PreparedStatement myPreparedStatement;
-				
-				Formatter f = new Formatter();
-					
-				StringBuilder sb = new StringBuilder(SELECT_ALL_COMPUTERS_QUERY);
-				if(sqlRequestOptions.getFilter()!=null && !sqlRequestOptions.getFilter().isEmpty()){
-					sb.append(SELECT_WHERE);
-				}
-				f.format(SELECT_ORDER_BY, sqlRequestOptions.getSqlTri(), sqlRequestOptions.getSqlOrder(), debut, nombre);
-				sb.append(f.toString());
-				myPreparedStatement = con.prepareStatement(sb.toString());
-				if(sqlRequestOptions.getFilter()!=null && !sqlRequestOptions.getFilter().isEmpty()){
-					myPreparedStatement.setString(1, sqlRequestOptions.getSqlFilter());
-				}
-				if(f!=null){
-					f.close();
-				}
-				
-				return myPreparedStatement;
-			}
-		}, new RowComputer());
-		
-		return liste;
+		StringBuilder sb = new StringBuilder(SELECT_ALL_COMPUTERS_QUERY);
+		if(sqlRequestOptions.getFilter()!=null && !sqlRequestOptions.getFilter().isEmpty()){
+			sb.append(SELECT_WHERE);
+		}
+		f.format(SELECT_ORDER_BY, sqlRequestOptions.getSqlTri(), sqlRequestOptions.getSqlOrder());
+		sb.append(f.toString());
+		Query query = sessionFactory.getCurrentSession().createQuery(sb.toString());
+		if(sqlRequestOptions.getFilter()!=null && !sqlRequestOptions.getFilter().isEmpty()){
+			query.setParameter(0, sqlRequestOptions.getSqlFilter());
+		}
+		query.setFirstResult(debut);
+		query.setMaxResults(nombre);
+		if(f!=null){
+			f.close();
+		}
+		return (List<Computer>) query.list();
 	}
 	
 	@Override
 	public Computer getComputer(final int id){
-		
-		
-		List<Computer> liste = new ArrayList<Computer>();
-		
-		liste = jdbcTemplate.query(new PreparedStatementCreator() {
-			
-			@Override
-			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-				PreparedStatement myPreparedStatement;
-				
-				myPreparedStatement = con.prepareStatement(SELECT_ONE_COMPUTER_BY_ID_QUERY);
-				myPreparedStatement.setInt(1, id);
-				
-				return myPreparedStatement;
-			}
-		}, new RowComputer());
-		
-		return liste.get(0);
+		return (Computer) sessionFactory.getCurrentSession().createQuery(SELECT_ONE_COMPUTER_BY_ID_QUERY).setParameter(0, id).uniqueResult();
 	}
 	
 	@Override
 	public Integer getComputerCount(final SqlRequestOptions sqlRequestOptions){
 		
-		Integer count = null;
-		
-		count = jdbcTemplate.query(new PreparedStatementCreator() {
-		
-		@Override
-		public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-			PreparedStatement myPreparedStatement=null;
-				
-			StringBuilder sb = new StringBuilder(COUNT_COMPUTER);
-			if(sqlRequestOptions.getFilter()!=null && !sqlRequestOptions.getFilter().isEmpty()){
-				sb.append(SELECT_WHERE);
-			}
-			myPreparedStatement = con.prepareStatement(sb.toString());
-			if(sqlRequestOptions.getFilter()!=null && !sqlRequestOptions.getFilter().isEmpty()){
-				myPreparedStatement.setString(1, sqlRequestOptions.getSqlFilter());
-			}
-			
-			return myPreparedStatement;
+		StringBuilder sb = new StringBuilder(COUNT_COMPUTER);
+		if(sqlRequestOptions.getFilter()!=null && !sqlRequestOptions.getFilter().isEmpty()){
+			sb.append(SELECT_WHERE);
 		}
-	}, new ResultSetExtractor<Integer>() {
-		@Override
-		public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {
-			rs.first();
-			return rs.getInt("count");
-		}});
+		Query query = sessionFactory.getCurrentSession().createQuery(sb.toString());
+		if(sqlRequestOptions.getFilter()!=null && !sqlRequestOptions.getFilter().isEmpty()){
+			query.setParameter(0, sqlRequestOptions.getSqlFilter());
+		}
+		return ((Long)query.uniqueResult()).intValue();
 		
-		return count;
 	}
 	
 	@Override
 	public boolean deleteComputer(final int id){
 		int res=0;
-		
 		res = jdbcTemplate.update(new PreparedStatementCreator() {
 			
 			@Override
@@ -152,113 +103,25 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 	
 	@Override
 	public boolean updateComputer(final Computer computer){	
-		int res = jdbcTemplate.update(new PreparedStatementCreator() {
-			
-			@Override
-			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-				PreparedStatement myPreparedStatement=null;
-				myPreparedStatement = con.prepareStatement(UPDATE_COMPUTER);
-				myPreparedStatement.setString(1, computer.getName());
-				if(computer.getIntroduced()!=null) {
-					myPreparedStatement.setDate(2, new Date(computer.getIntroduced().toDate().getTime()));
-				} else {
-					myPreparedStatement.setDate(2, null);
-				}
-				if(computer.getDiscontinued()!=null) {
-					myPreparedStatement.setDate(3, new Date(computer.getDiscontinued().toDate().getTime()));
-				} else {
-					myPreparedStatement.setDate(3, null);
-				}
-				if(computer.getCompany()==null){
-					myPreparedStatement.setNull(4, Types.NULL);
-				} else {
-					myPreparedStatement.setInt(4, computer.getCompany().getId());
-				}
-				myPreparedStatement.setInt(5, computer.getId());
-				
-				return myPreparedStatement;
-			}
-		});
-		return res ==0 ? false :true;
+		
+		sessionFactory.getCurrentSession().update(computer);
+		return true;
 	}
 	
 	@Override
 	public boolean insertComputer(final Computer computer){
-		int res = 0;
-		
-		res = jdbcTemplate.update(new PreparedStatementCreator() {
-			@Override
-			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-				PreparedStatement myPreparedStatement=null;
-				myPreparedStatement = con.prepareStatement(INSERT_COMPUTER);
-				myPreparedStatement.setString(1, computer.getName());
-				if(computer.getIntroduced()!=null) {
-					myPreparedStatement.setDate(2, new Date(computer.getIntroduced().toDate().getTime()));
-				} else {
-					myPreparedStatement.setDate(2, null);
-				}
-				if(computer.getDiscontinued()!=null) {
-					myPreparedStatement.setDate(3, new Date(computer.getDiscontinued().toDate().getTime()));
-				} else {
-					myPreparedStatement.setDate(3, null);
-				}
-				if(computer.getCompany()==null){
-					myPreparedStatement.setNull(4, Types.NULL);
-				} else {
-					myPreparedStatement.setInt(4, computer.getCompany().getId());
-				}
-				
-				return myPreparedStatement;
-			}
-		});
-		return res == 0 ? false : true;
+		sessionFactory.getCurrentSession().save(computer);
+		return true;
 	}
 	
 	@Override
 	public boolean ComputerExists(final int id) {
-		
-		int count = jdbcTemplate.query(new PreparedStatementCreator() {
-			
-		@Override
-		public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-			PreparedStatement myPreparedStatement=null;
-			myPreparedStatement = con.prepareStatement(ID_EXISTS_QUERY);
-			myPreparedStatement.setInt(1, id);
-			
-			return myPreparedStatement;
-		}}, new ResultSetExtractor<Integer>() {
-			@Override
-			public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {
-				rs.first();
-				return rs.getInt("count");
-			}});
-		
-		return count == 1 ? true : false;
+		return ((Long)sessionFactory.getCurrentSession().createQuery(ID_EXISTS_QUERY).setParameter(0, id).uniqueResult()).intValue() == 1 ? true : false;
 		
 	}
-	
-	private class RowComputer implements RowMapper<Computer>{
-		@Override
-		public Computer mapRow(ResultSet rs, int rowNum) throws SQLException {
-			Computer c = new Computer();
-			c.setId(rs.getInt("cpu.id"));
-			c.setName(rs.getString("cpu.name"));
-			if(rs.getDate("cpu.introduced")==null) {
-				c.setIntroduced(null);
-			} else {
-				c.setIntroduced(new LocalDate(rs.getDate("cpu.introduced")));
-			}
-			if(rs.getDate("cpu.discontinued")==null) {
-				c.setDiscontinued(null);
-			} else {
-				c.setDiscontinued(new LocalDate(rs.getDate("cpu.discontinued")));
-			}
-			Company cpy = new Company();
-			cpy.setId(rs.getInt("cpy.id"));
-			cpy.setName(rs.getString("cpy.name"));
-			c.setCompany(cpy);
-			return c;
-		}
+
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
 	}
 
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
