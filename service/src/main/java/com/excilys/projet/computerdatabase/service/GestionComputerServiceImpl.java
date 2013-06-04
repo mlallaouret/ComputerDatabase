@@ -66,7 +66,7 @@ public class GestionComputerServiceImpl implements GestionComputerService {
 	@Transactional(readOnly = false)
 	public boolean deleteComputer(int id){
 		Assert.isTrue(computerDao.ComputerExists(id), "L'id de l'ordinateur n'existe pas.");
-		return computerDao.deleteComputer(id);
+		return computerDao.deleteComputer(computerDao.getComputer(id));
 	}
 	
 	@Override

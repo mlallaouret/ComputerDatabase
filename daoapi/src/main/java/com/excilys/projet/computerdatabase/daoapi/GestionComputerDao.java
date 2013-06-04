@@ -14,7 +14,7 @@ public interface GestionComputerDao {
 
 	Integer getComputerCount(SqlRequestOptions sqlRequestOptions);
 
-	boolean deleteComputer(int id);
+	boolean deleteComputer(Computer computer);
 
 	boolean updateComputer(Computer computer);
 

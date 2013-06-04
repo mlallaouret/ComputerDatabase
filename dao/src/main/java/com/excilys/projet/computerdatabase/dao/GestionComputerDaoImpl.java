@@ -1,8 +1,5 @@
 package com.excilys.projet.computerdatabase.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.Formatter;
 import java.util.List;
 
@@ -11,8 +8,6 @@ import com.excilys.projet.computerdatabase.daoapi.GestionComputerDao;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.stereotype.Repository;
 
 import com.excilys.projet.computerdatabase.model.Computer;
@@ -26,7 +21,6 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 	 */
 	private static final String SELECT_ALL_COMPUTERS_QUERY = "from Computer cpu";
 	private static final String SELECT_ONE_COMPUTER_BY_ID_QUERY = "from Computer where id = :id";
-	private static final String DELETE_COMPUTER = "delete from Computer where id=:id";
 	private static final String COUNT_COMPUTER = "select count(id) from Computer cpu";
 	private static final String ID_EXISTS_QUERY = "select count(id) from Computer where id = :id";
 	private static final String SELECT_WHERE = " where cpu.name LIKE :filter" ;
@@ -34,9 +28,6 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 	
 	@Autowired
 	private SessionFactory sessionFactory;
-	
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -83,20 +74,9 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 	}
 	
 	@Override
-	public boolean deleteComputer(final int id){
-		int res=0;
-		res = jdbcTemplate.update(new PreparedStatementCreator() {
-			
-			@Override
-			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-				PreparedStatement myPreparedStatement=null;
-				myPreparedStatement = con.prepareStatement(DELETE_COMPUTER);
-				myPreparedStatement.setInt(1, id);
-				
-				return myPreparedStatement;
-			}
-		});
-		return res == 0 ? false : true;
+	public boolean deleteComputer(final Computer computer){
+		sessionFactory.getCurrentSession().delete(computer);
+		return true;
 	}
 	
 	@Override
@@ -122,9 +102,4 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 		this.sessionFactory = sessionFactory;
 	}
 
-	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
-		this.jdbcTemplate = jdbcTemplate;
-	}
-
-	
 }
