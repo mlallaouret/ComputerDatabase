@@ -19,7 +19,7 @@ public class GestionComputerDaoImpl implements GestionComputerDao {
 	/**
 	 * Query
 	 */
-	private static final String SELECT_ALL_COMPUTERS_QUERY = "from Computer cpu";
+	private static final String SELECT_ALL_COMPUTERS_QUERY = "from Computer cpu ";
 	private static final String SELECT_ONE_COMPUTER_BY_ID_QUERY = "from Computer where id = :id";
 	private static final String COUNT_COMPUTER = "select count(id) from Computer cpu";
 	private static final String ID_EXISTS_QUERY = "select count(id) from Computer where id = :id";

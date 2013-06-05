@@ -14,7 +14,7 @@ public class SqlRequestOptions {
 	}
 	
 	private enum Column{
-		NAME("cpu.name"), INTRODUCED("cpu.introduced"), DISCONTINUED("cpu.discontinued"), COMPANY_NAME("cpy.name");
+		NAME("cpu.name"), INTRODUCED("cpu.introduced"), DISCONTINUED("cpu.discontinued"), COMPANY_NAME("cpu.company.name");
 		
 		private final String field;
 		
